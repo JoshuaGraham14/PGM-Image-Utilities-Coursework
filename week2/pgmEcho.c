@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv){
 	if (argc!=3){printf("ERROR!\n"); return XWAC;}	
-	unsigned char mn[2]={0,0};;
+	unsigned char mn[2]={0,0};
 	unsigned short*mN=(unsigned short*)mn;
 	char*cL=NULL;
 	unsigned int w=0,h=0;
@@ -40,7 +40,7 @@ int main(int argc, char **argv){
 	return XBIF;}}
 	else ungetc(nC,iF);
 	sC=fscanf(iF," %u %u %u",&w,&h,&mG);
-	if ((sC!=1)||(w<MNID)||(w>MXID)||(h<MNID)||(h>MXID)||(mG!=255)){
+	if ((sC!=3)||(w<MNID)||(w>MXID)||(h<MNID)||(h>MXID)||(mG!=255)){
 	free(cL);
 	fclose(iF);
 	printf("ERROR!\n");	
@@ -53,10 +53,10 @@ int main(int argc, char **argv){
 	printf("ERROR!\n");
 	return XBIF;}
 	unsigned char*nGV;
-	for (nGV=iD;nGV<iD+nIB;nGV++);{
+	for (nGV=iD;nGV<iD+nIB;nGV++){
 	int gV;
 	int sC=fscanf(iF," %u",&gV);
-	if ((!(sC-1))||(gV<0)||(gV>255)){
+	if ((sC!=1)||(gV<0)||(gV>255)){
 	free(cL);
 	free(iD);	
 	fclose(iF);
