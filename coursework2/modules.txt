@@ -5,6 +5,59 @@ Email: sc21jg@leeds.ac.uk
 Date Commenced: 25/02/2022
 // *************************
 
+
+*NOTE* I am re-writing this modules.txt plan, as I originally misunderstood the task.
+
+- Here are the modules which I intend to create:
+
+
+*-- pgmEcho.c --*
+This is the main module. It contains the main method which will use the other modules to carry
+out the task of taking an input pgm file and copying it to an output pgm file. 
+-> USED FOR: Task I.
+
+
+*-- pgmErrors.c --*
+This module will be used to validate the values from an input pgm file and print the error 
+messages (if there are any present). It will check:
+1) The magic number
+2) The comment line string
+3) The dimensions (width & height) are valid
+4) The max grey value is valid
+5) The image data
+6) Errors with writing to the file
+-> USED FOR: Task I, Task II, Task III, Task IV.
+
+
+*-- pgmImage.c --*
+This module will store a struct containing the data for a pgm file.
+The struct will store the data captured from the reading the input pgm file, and then later
+the values stored will be retrieved  
+-> USED FOR: Task I, Task II, Task III, Task IV.
+
+
+*-- pgmComp.c --*
+Module which contains main method for comparing two pgm file to test whether they are logically
+identical.
+-> USED FOR: Task II.
+
+
+*-- conversion.c --*
+This module will contain the ,aommethods to convert a pgm in ASCII form to binary or vice versa.
+-> USED FOR: Task III, IV.
+
+
+*-- pgmReduce.c --*
+Module which contains main method for comparing reducing an input pgm file by a factor of n.
+-> USED FOR: Task IV.
+
+
+
+
+
+//****************************************************************************************************//
+Original work which describes a brief overview of each task:
+
 Task I
 - Module pgmEcho.c
 Takes in as input a file of type .pgm and outputs it to a different file.
