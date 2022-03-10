@@ -153,21 +153,10 @@ int main(int argc, char **argv)
 		int scanCount = fscanf(inputFile, " %u", &grayValue);
 
 		/* sanity check	                 */
-		if ((scanCount != 1) || (grayValue < 0) || (grayValue > 255))
-			{ /* fscanf failed */
-			/* free memory           */
-			free(commentLine);
-			free(imageData);	
-
-			/* close file            */
-			fclose(inputFile);
-
-			/* print error message   */
-			printf("Error: Failed to read pgm image from file %s\n", argv[1]);	
-		
-			/* and return            */
-			return EXIT_BAD_INPUT_FILE;
-			} /* fscanf failed */
+		if (checkImageValue(inputFile, argv[1], imageData, commentLine, scanCount, grayValue) == 0)
+        {
+            return EXIT_BAD_INPUT_FILE;
+        }
 
 		/* set the pixel value           */
 		*nextGrayValue = (unsigned char) grayValue;

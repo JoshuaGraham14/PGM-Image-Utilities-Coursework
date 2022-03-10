@@ -85,3 +85,23 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
     } /* malloc failed */
     return 1;
 }
+
+int checkImageValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue)
+{
+    if ((scanCount != 1) || (grayValue < 0) || (grayValue > 255))
+    { /* fscanf failed */
+        /* free memory           */
+        free(commentLine);
+        free(imageData);
+
+        /* close file            */
+        fclose(filePointer);
+
+        /* print error message   */
+        printf("Error: Failed to read pgm image from file %s\n", filename);	
+
+        /* and return            */
+        return 0;
+    } /* fscanf failed */
+    return 1;
+}
