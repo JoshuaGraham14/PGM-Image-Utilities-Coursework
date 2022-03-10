@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include "pgmErrors.h"
+#include "pgmImage.h"
 
 #define EXIT_NO_ERRORS 0
 #define EXIT_WRONG_ARG_COUNT 1
