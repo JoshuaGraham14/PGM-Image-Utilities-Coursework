@@ -130,28 +130,10 @@ int main(int argc, char **argv)
 	scanCount = fscanf(inputFile, " %u %u %u", &(width), &(height), &(maxGray));
 
 	/* sanity checks on size & grays         */
-	/* must read exactly three values        */
-	if 	(
-		(scanCount != 3				)	||
-		(width 	< MIN_IMAGE_DIMENSION	) 	||
-		(width 	> MAX_IMAGE_DIMENSION	) 	||
-		(height < MIN_IMAGE_DIMENSION	) 	||
-		(height > MAX_IMAGE_DIMENSION	) 	||
-		(maxGray	!= 255		)
-		)
-		{ /* failed size sanity check    */
-		/* free up the memory            */
-		free(commentLine);
-
-		/* be tidy: close file pointer   */
-		fclose(inputFile);
-
-		/* print an error message */
-		printf("Error: Failed to read pgm image from file %s\n", argv[1]);	
-		
-		/* and return                    */
-		return EXIT_BAD_INPUT_FILE;
-		} /* failed size sanity check    */
+	if (checkSizeAndGrays(inputFile, argv[1], scanCount, width, height, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, maxGray, commentLine) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
 
 	/* allocate the data pointer             */
 	long nImageBytes = width * height * sizeof(unsigned char);
