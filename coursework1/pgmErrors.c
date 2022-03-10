@@ -105,3 +105,19 @@ int checkImageValue(FILE *filePointer, char *filename, unsigned char *imageData,
     } /* fscanf failed */
     return 1;
 }
+
+int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
+{
+    if (filePointer == NULL)
+    { /* NULL output file */
+        /* free memory                   */
+        free(commentLine);
+        free(imageData);
+
+        /* print an error message        */
+        printf("Error: Failed to write pgm image to file %s\n", filename);
+
+        return 0;
+    } /* NULL output file */
+    return 1;
+}

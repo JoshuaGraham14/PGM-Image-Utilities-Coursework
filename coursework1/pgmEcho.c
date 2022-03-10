@@ -168,6 +168,11 @@ int main(int argc, char **argv)
 	/* open a file for writing               */
 	FILE *outputFile = fopen(argv[2], "w");
 
+    if (checkOutputFile(inputFile, argv[1], imageData, commentLine) == 0)
+    {
+        return EXIT_BAD_OUTPUT_FILE;
+    }
+
 	/* check whether file opening worked     */
 	if (outputFile == NULL)
 		{ /* NULL output file */
