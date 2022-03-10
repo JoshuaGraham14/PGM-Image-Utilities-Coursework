@@ -21,3 +21,22 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
     } /* failed magic number check   */
     return 1;
 }
+
+int checkCommentLine(FILE *filePointer, char *filename, char *commentLine, int MAX_COMMENT_LINE_LENGTH)
+{
+	char *commentString = fgets(commentLine, MAX_COMMENT_LINE_LENGTH, filePointer);
+    /* NULL means failure            */
+    if (commentString == NULL)
+    {
+          /* close file            */
+        fclose(filePointer);
+
+        /* print an error message */
+        printf("Error: Failed to read pgm image from file %s\n", filename);
+    
+        /* and return            */
+        return 0;
+        } /* NULL comment read   */
+     /* comment line */
+    return 1;
+}

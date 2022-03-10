@@ -107,32 +107,23 @@ int main(int argc, char **argv)
 	/* check for a comment line              */
 	char nextChar = fgetc(inputFile);
 	if (nextChar == '#')
-		{ /* comment line                */
+    { /* comment line                */
 		/* allocate buffer               */
 		commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
-		/* fgets() reads a line          */
-		/* capture return value          */
-		char *commentString = fgets(commentLine, MAX_COMMENT_LINE_LENGTH, inputFile);
-		/* NULL means failure            */
-		if (commentString == NULL)
-			{ /* NULL comment read   */
-			/* free memory           */
-			free(commentLine);
-			/* close file            */
-			fclose(inputFile);
+        /* fgets() reads a line          */
+        /* capture return value          */
+        if (checkCommentLine(inputFile, argv[1], commentLine, MAX_COMMENT_LINE_LENGTH) == 0)
+        {
+            free(commentLine);
 
-			/* print an error message */
-			printf("Error: Failed to read pgm image from file %s\n", argv[1]);	
-		
-			/* and return            */
-			return EXIT_BAD_INPUT_FILE;
-			} /* NULL comment read   */
-		} /* comment line */
+            return EXIT_BAD_INPUT_FILE;
+        }
+    }
 	else
-		{ /* not a comment line */
+    { /* not a comment line */
 		/* put character back            */
 		ungetc(nextChar, inputFile);
-		} /* not a comment line */
+    } /* not a comment line */
 
 	/* read in width, height, grays          */
 	/* whitespace to skip blanks             */
