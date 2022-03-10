@@ -4,3 +4,4 @@ int checkSizeAndGrays(FILE *filePointer, char *filename, int scanCount, int widt
 int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine);
 int checkImageValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue);
 int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine);
+int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, size_t nBytesWritten);

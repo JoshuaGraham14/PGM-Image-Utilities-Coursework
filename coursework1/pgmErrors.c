@@ -121,3 +121,20 @@ int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData,
     } /* NULL output file */
     return 1;
 }
+
+int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, size_t nBytesWritten)
+{
+    if (nBytesWritten < 0)
+    { /* dimensional write failed    */
+        /* free memory                   */
+        free(commentLine);
+        free(imageData);
+
+        /* print an error message        */
+        printf("Error: Failed to write pgm image to file %s\n", filename);
+
+        /* return an error code          */
+        return 0;
+    } /* dimensional write failed    */
+    return 1;
+}
