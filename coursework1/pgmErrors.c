@@ -36,7 +36,7 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine, int M
     
         /* and return            */
         return 0;
-        } /* NULL comment read   */
+    } /* NULL comment read   */
      /* comment line */
     return 1;
 }
@@ -52,7 +52,7 @@ int checkSizeAndGrays(FILE *filePointer, char *filename, int scanCount, int widt
 		(height > MAX_IMAGE_DIMENSION	) 	||
 		(maxGray	!= 255		)
 		)
-		{ /* failed size sanity check    */
+	{ /* failed size sanity check    */
         free(commentLine);
 
 		/* be tidy: close file pointer   */
@@ -63,6 +63,25 @@ int checkSizeAndGrays(FILE *filePointer, char *filename, int scanCount, int widt
 		
 		/* and return                    */
 		return 0;
-		} /* failed size sanity check    */
+	} /* failed size sanity check    */
+    return 1;
+}
+
+int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
+{
+    if (imageData == NULL)
+    { /* malloc failed */
+        /* free up memory                */
+        free(commentLine);
+
+        /* close file pointer            */
+        fclose(filePointer);
+
+        /* print an error message */
+        printf("Error: Failed to read pgm image from file %s\n", filename);
+        
+        /* return error code             */
+        return 0;
+    } /* malloc failed */
     return 1;
 }

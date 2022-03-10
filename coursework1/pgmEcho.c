@@ -140,20 +140,10 @@ int main(int argc, char **argv)
 	imageData = (unsigned char *) malloc(nImageBytes);
 
 	/* sanity check for memory allocation    */
-	if (imageData == NULL)
-		{ /* malloc failed */
-		/* free up memory                */
-		free(commentLine);
-
-		/* close file pointer            */
-		fclose(inputFile);
-
-		/* print an error message */
-		printf("Error: Failed to read pgm image from file %s\n", argv[1]);	
-		
-		/* return error code             */
-		return EXIT_BAD_INPUT_FILE;
-		} /* malloc failed */
+	if (checkImageDataMemoryAllocation(inputFile, argv[1], imageData, commentLine) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
 
 	/* pointer for efficient read code       */
 	for (unsigned char *nextGrayValue = imageData; nextGrayValue < imageData + nImageBytes; nextGrayValue++)
