@@ -21,6 +21,8 @@
 /* library for memory routines     */
 #include <stdlib.h>
 
+#include "pgmErrors.h"
+
 #define EXIT_NO_ERRORS 0
 #define EXIT_WRONG_ARG_COUNT 1
 #define EXIT_BAD_INPUT_FILE 2
@@ -94,17 +96,10 @@ int main(int argc, char **argv)
 	magic_number[1] = getc(inputFile);
 
 	/* sanity check on the magic number      */
-	if (*magic_Number != MAGIC_NUMBER_ASCII_PGM)
-		{ /* failed magic number check   */
-		/* be tidy: close the file       */
-		fclose(inputFile);
-
-		/* print an error message */
-		printf("Error: Failed to read pgm image from file %s\n", argv[1]);	
-		
-		/* and return                    */
-		return EXIT_BAD_INPUT_FILE;
-		} /* failed magic number check   */
+    if (checkMagicNumber(inputFile, argv[1], *magic_Number, MAGIC_NUMBER_ASCII_PGM) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
 
 	/* scan whitespace if present            */
 	int scanCount = fscanf(inputFile, " ");
