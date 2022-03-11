@@ -55,9 +55,6 @@ int main(int argc, char **argv)
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
-
-	/* pointer to raw image data	         */
-	unsigned char *imageData = NULL;
 	
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
@@ -81,36 +78,20 @@ int main(int argc, char **argv)
 	/* scan whitespace if present            */
 	int scanCount = fscanf(inputFile, " ");
 
-    readCommentLine(inputFile, argv[1], inputImagePtr);
-
-	readDimensionsAndGrays(inputFile, argv[1], inputImagePtr);
-
-	/* allocate the data pointer             */
-	long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
-	imageData = (unsigned char *) malloc(nImageBytes);
-
-	/* sanity check for memory allocation    */
-	if (checkImageDataMemoryAllocation(inputFile, argv[1], imageData, inputImage.commentLine) == 0)
+    if (readCommentLine (inputFile, argv[1], inputImagePtr) == 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }
 
-	/* pointer for efficient read code       */
-	for (unsigned char *nextGrayValue = imageData; nextGrayValue < imageData + nImageBytes; nextGrayValue++)
-		{ /* per gray value */
-		/* read next value               */
-		int grayValue = -1;
-		int scanCount = fscanf(inputFile, " %u", &grayValue);
+    if (readDimensionsAndGrays (inputFile, argv[1], inputImagePtr) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
 
-		/* sanity check	                 */
-		if (checkImageValue(inputFile, argv[1], imageData, inputImage.commentLine, scanCount, grayValue) == 0)
-        {
-            return EXIT_BAD_INPUT_FILE;
-        }
-
-		/* set the pixel value           */
-		*nextGrayValue = (unsigned char) grayValue;
-		} /* per gray value */
+    if (readImageData (inputFile, argv[1], inputImagePtr) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
 
 	/* we're done with the file, so close it */
 	fclose(inputFile);
@@ -119,7 +100,7 @@ int main(int argc, char **argv)
 	FILE *outputFile = fopen(argv[2], "w");
 
     /* check whether file opening worked     */
-    if (checkOutputFile(outputFile, argv[2], imageData, inputImage.commentLine) == 0)
+    if (checkOutputFile(outputFile, argv[2], inputImage.imageData, inputImage.commentLine) == 0)
     {
         return EXIT_BAD_OUTPUT_FILE;
     }
@@ -128,22 +109,24 @@ int main(int argc, char **argv)
 	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", inputImage.width, inputImage.height, inputImage.maxGray);
 
 	/* check that dimensions wrote correctly */
-	if (checknBytesWritten(outputFile, argv[2], imageData, inputImage.commentLine, nBytesWritten) == 0)
+	if (checknBytesWritten(outputFile, argv[2], inputImage.imageData, inputImage.commentLine, nBytesWritten) == 0)
     {
         return EXIT_BAD_OUTPUT_FILE;
     }
 
+    long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
+
     /* pointer for efficient write code      */
-    for (unsigned char *nextGrayValue = imageData; nextGrayValue < imageData + nImageBytes; nextGrayValue++)
+    for (unsigned char *nextGrayValue = inputImage.imageData; nextGrayValue < inputImage.imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
     /* get next char's column        */
-		int nextCol = (nextGrayValue - imageData + 1) % inputImage.width;
+		int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
 
 		/* write the entry & whitespace  */
 		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );
 
 		/* sanity check on write         */
-		if (checknBytesWritten(outputFile, argv[2], imageData, inputImage.commentLine, nBytesWritten) == 0)
+		if (checknBytesWritten(outputFile, argv[2], inputImage.imageData, inputImage.commentLine, nBytesWritten) == 0)
         {
             return EXIT_BAD_OUTPUT_FILE;
         }

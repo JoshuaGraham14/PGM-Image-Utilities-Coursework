@@ -61,3 +61,34 @@ int readDimensionsAndGrays (FILE *filePointer, char *filename, Image *imagePoint
     }
     return 1;
 }
+
+int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
+{
+    /* allocate the data pointer             */
+	long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
+	imagePointer->imageData = (unsigned char *) malloc(nImageBytes);
+
+	/* sanity check for memory allocation    */
+	if (checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine) == 0)
+    {
+        return 0;
+    }
+
+	/* pointer for efficient read code       */
+	for (unsigned char *nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
+    { /* per gray value */
+		/* read next value               */
+		int grayValue = -1;
+		int scanCount = fscanf(filePointer, " %u", &grayValue);
+
+		/* sanity check	                 */
+		if (checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue) == 0)
+        {
+            return 0;
+        }
+
+		/* set the pixel value           */
+		*nextGrayValue = (unsigned char) grayValue;
+    } /* per gray value */
+    return 1;
+}

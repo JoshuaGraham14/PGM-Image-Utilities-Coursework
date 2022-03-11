@@ -86,7 +86,7 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
     return 1;
 }
 
-int checkImageValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue)
+int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue)
 {
     if ((scanCount != 1) || (grayValue < 0) || (grayValue > 255))
     { /* fscanf failed */
