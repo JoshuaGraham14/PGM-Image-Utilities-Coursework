@@ -18,8 +18,6 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
     imagePointer->magic_number[0] = getc(filePointer);
 	imagePointer->magic_number[1] = getc(filePointer);
 
-    printf("pgmImage: %s\n", imagePointer->magic_number);
-
     return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, MAGIC_NUMBER_ASCII_PGM);
 }
 
@@ -47,5 +45,19 @@ int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
 		/* put character back            */
 		ungetc(nextChar, filePointer);
     } /* not a comment line */
+    return 1;
+}
+
+int readDimensionsAndGrays (FILE *filePointer, char *filename, Image *imagePointer)
+{
+    /* read in width, height, grays          */
+	/* whitespace to skip blanks             */
+	int scanCount = fscanf(filePointer, " %u %u %u", &(imagePointer->width), &(imagePointer->height), &(imagePointer->maxGray));
+
+	/* sanity checks on size & grays         */
+	if (checkDimensionsAndGrays(filePointer, filename, scanCount, imagePointer->width, imagePointer->width, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, imagePointer->maxGray, imagePointer->commentLine) == 0)
+    {
+        return 0;
+    }
     return 1;
 }

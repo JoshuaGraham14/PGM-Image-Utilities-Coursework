@@ -56,14 +56,6 @@ int main(int argc, char **argv)
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
 
-	/* the logical width & height	         */
-	/* note: cannot be negative	         */
-	unsigned int width = 0, height = 0;
-
-	/* maximum gray value (assumed)	         */
-	/* make it an integer for ease	         */
-	unsigned int maxGray = 255;
-
 	/* pointer to raw image data	         */
 	unsigned char *imageData = NULL;
 	
@@ -91,18 +83,10 @@ int main(int argc, char **argv)
 
     readCommentLine(inputFile, argv[1], inputImagePtr);
 
-	/* read in width, height, grays          */
-	/* whitespace to skip blanks             */
-	scanCount = fscanf(inputFile, " %u %u %u", &(width), &(height), &(maxGray));
-
-	/* sanity checks on size & grays         */
-	if (checkSizeAndGrays(inputFile, argv[1], scanCount, width, height, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, maxGray, inputImage.commentLine) == 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
+	readDimensionsAndGrays(inputFile, argv[1], inputImagePtr);
 
 	/* allocate the data pointer             */
-	long nImageBytes = width * height * sizeof(unsigned char);
+	long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
 	imageData = (unsigned char *) malloc(nImageBytes);
 
 	/* sanity check for memory allocation    */
@@ -141,7 +125,7 @@ int main(int argc, char **argv)
     }
 	
 	/* write magic number, size & gray value */
-	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", width, height, maxGray);
+	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", inputImage.width, inputImage.height, inputImage.maxGray);
 
 	/* check that dimensions wrote correctly */
 	if (checknBytesWritten(outputFile, argv[2], imageData, inputImage.commentLine, nBytesWritten) == 0)
@@ -153,7 +137,7 @@ int main(int argc, char **argv)
     for (unsigned char *nextGrayValue = imageData; nextGrayValue < imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
     /* get next char's column        */
-		int nextCol = (nextGrayValue - imageData + 1) % width;
+		int nextCol = (nextGrayValue - imageData + 1) % inputImage.width;
 
 		/* write the entry & whitespace  */
 		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );

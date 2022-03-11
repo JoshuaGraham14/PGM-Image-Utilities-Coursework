@@ -8,7 +8,6 @@
 
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int MAGIC_NUMBER_ASCII_PGM)
 {
-    printf("pgmErrors: %hu\n", magic_number);
 	if (magic_number != MAGIC_NUMBER_ASCII_PGM)
     { /* failed magic number check   */
     /* be tidy: close the file       */
@@ -42,7 +41,7 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine, int M
     return 1;
 }
 
-int checkSizeAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int MIN_IMAGE_DIMENSION, int MAX_IMAGE_DIMENSION, int maxGray, char *commentLine)
+int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int MIN_IMAGE_DIMENSION, int MAX_IMAGE_DIMENSION, int maxGray, char *commentLine)
 {
 	/* must read exactly three values        */
 	if 	(
