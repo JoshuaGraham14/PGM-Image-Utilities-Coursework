@@ -22,3 +22,30 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
 
     return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, MAGIC_NUMBER_ASCII_PGM);
 }
+
+//void scanWhitespace()
+
+int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
+{
+    /* check for a comment line              */
+	char nextChar = fgetc(filePointer);
+	if (nextChar == '#')
+    { /* comment line                */
+		/* allocate buffer               */
+		imagePointer->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
+        /* fgets() reads a line          */
+        /* capture return value          */
+        if (checkCommentLine(filePointer, filename, imagePointer->commentLine, MAX_COMMENT_LINE_LENGTH) == 0)
+        {
+            free(imagePointer->commentLine);
+
+            return 0;
+        }
+    }
+	else
+    { /* not a comment line */
+		/* put character back            */
+		ungetc(nextChar, filePointer);
+    } /* not a comment line */
+    return 1;
+}

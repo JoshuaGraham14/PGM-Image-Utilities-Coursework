@@ -46,18 +46,15 @@
 /* non-zero error code on fail     */
 /***********************************/
 int main(int argc, char **argv)
-	{ /* main() */
+{ /* main() */
 	/* check for correct number of arguments */
 	if (argc != 3)	
-		{ /* wrong arg count */
+    { /* wrong arg count */
 		/* print an error message        */
 		printf("Usage: %s input_file output_file\n", argv[0]);
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
-		} /* wrong arg count */
-
-    /* we will store ONE comment	         */
-	char *commentLine = NULL;
+    } /* wrong arg count */
 
 	/* the logical width & height	         */
 	/* note: cannot be negative	         */
@@ -92,33 +89,14 @@ int main(int argc, char **argv)
 	/* scan whitespace if present            */
 	int scanCount = fscanf(inputFile, " ");
 
-	/* check for a comment line              */
-	char nextChar = fgetc(inputFile);
-	if (nextChar == '#')
-    { /* comment line                */
-		/* allocate buffer               */
-		commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
-        /* fgets() reads a line          */
-        /* capture return value          */
-        if (checkCommentLine(inputFile, argv[1], commentLine, MAX_COMMENT_LINE_LENGTH) == 0)
-        {
-            free(commentLine);
-
-            return EXIT_BAD_INPUT_FILE;
-        }
-    }
-	else
-    { /* not a comment line */
-		/* put character back            */
-		ungetc(nextChar, inputFile);
-    } /* not a comment line */
+    readCommentLine(inputFile, argv[1], inputImagePtr);
 
 	/* read in width, height, grays          */
 	/* whitespace to skip blanks             */
 	scanCount = fscanf(inputFile, " %u %u %u", &(width), &(height), &(maxGray));
 
 	/* sanity checks on size & grays         */
-	if (checkSizeAndGrays(inputFile, argv[1], scanCount, width, height, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, maxGray, commentLine) == 0)
+	if (checkSizeAndGrays(inputFile, argv[1], scanCount, width, height, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, maxGray, inputImage.commentLine) == 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }
@@ -128,7 +106,7 @@ int main(int argc, char **argv)
 	imageData = (unsigned char *) malloc(nImageBytes);
 
 	/* sanity check for memory allocation    */
-	if (checkImageDataMemoryAllocation(inputFile, argv[1], imageData, commentLine) == 0)
+	if (checkImageDataMemoryAllocation(inputFile, argv[1], imageData, inputImage.commentLine) == 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }
@@ -141,7 +119,7 @@ int main(int argc, char **argv)
 		int scanCount = fscanf(inputFile, " %u", &grayValue);
 
 		/* sanity check	                 */
-		if (checkImageValue(inputFile, argv[1], imageData, commentLine, scanCount, grayValue) == 0)
+		if (checkImageValue(inputFile, argv[1], imageData, inputImage.commentLine, scanCount, grayValue) == 0)
         {
             return EXIT_BAD_INPUT_FILE;
         }
@@ -157,7 +135,7 @@ int main(int argc, char **argv)
 	FILE *outputFile = fopen(argv[2], "w");
 
     /* check whether file opening worked     */
-    if (checkOutputFile(outputFile, argv[2], imageData, commentLine) == 0)
+    if (checkOutputFile(outputFile, argv[2], imageData, inputImage.commentLine) == 0)
     {
         return EXIT_BAD_OUTPUT_FILE;
     }
@@ -166,7 +144,7 @@ int main(int argc, char **argv)
 	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", width, height, maxGray);
 
 	/* check that dimensions wrote correctly */
-	if (checknBytesWritten(outputFile, argv[2], imageData, commentLine, nBytesWritten) == 0)
+	if (checknBytesWritten(outputFile, argv[2], imageData, inputImage.commentLine, nBytesWritten) == 0)
     {
         return EXIT_BAD_OUTPUT_FILE;
     }
@@ -181,7 +159,7 @@ int main(int argc, char **argv)
 		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );
 
 		/* sanity check on write         */
-		if (checknBytesWritten(outputFile, argv[2], imageData, commentLine, nBytesWritten) == 0)
+		if (checknBytesWritten(outputFile, argv[2], imageData, inputImage.commentLine, nBytesWritten) == 0)
         {
             return EXIT_BAD_OUTPUT_FILE;
         }

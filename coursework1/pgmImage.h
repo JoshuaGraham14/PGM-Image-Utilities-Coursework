@@ -10,3 +10,4 @@ typedef struct ImageStruct
 } Image;
 
 int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer);
+int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer);

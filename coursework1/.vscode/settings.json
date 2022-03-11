@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "pgmimage.h": "c"
+        "pgmimage.h": "c",
+        "pgmerrors.h": "c"
     }
 }
