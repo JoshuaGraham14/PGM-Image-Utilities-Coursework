@@ -8,3 +8,5 @@ typedef struct ImageStruct
 	unsigned int maxGray;
 	unsigned char *imageData;
 } Image;
+
+int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer);

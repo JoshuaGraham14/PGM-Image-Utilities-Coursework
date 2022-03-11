@@ -72,7 +72,8 @@ int main(int argc, char **argv)
 	
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
-    
+    Image *inputImagePtr = &inputImage;
+
 	/* now start reading in the data         */
 	/* try to open the file for text I/O     */
 	/* in ASCII mode b/c the header is text  */
@@ -83,11 +84,7 @@ int main(int argc, char **argv)
 		return EXIT_BAD_INPUT_FILE;
 
 	/* read in the magic number              */
-	inputImage.magic_number[0] = getc(inputFile);
-	inputImage.magic_number[1] = getc(inputFile);
-
-	/* sanity check on the magic number      */
-    if (checkMagicNumber(inputFile, argv[1], *inputImage.magic_Number, MAGIC_NUMBER_ASCII_PGM) == 0)
+    if (readMagicNumber (inputFile, argv[1], inputImagePtr) == 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }

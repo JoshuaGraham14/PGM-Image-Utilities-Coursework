@@ -8,6 +8,7 @@
 
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int MAGIC_NUMBER_ASCII_PGM)
 {
+    printf("pgmErrors: %hu\n", magic_number);
 	if (magic_number != MAGIC_NUMBER_ASCII_PGM)
     { /* failed magic number check   */
     /* be tidy: close the file       */
