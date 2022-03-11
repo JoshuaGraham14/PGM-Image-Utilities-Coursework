@@ -1,2 +1,2 @@
-make: pgmEcho.c pgmErrors.c
-	gcc -o make pgmEcho.c pgmErrors.c -I.
+make: pgmEcho.c pgmErrors.c pgmImage.c
+	gcc -o make pgmEcho.c pgmErrors.c pgmImage.c -I.

@@ -55,21 +55,8 @@ int main(int argc, char **argv)
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
 		} /* wrong arg count */
-	
-	/* variables for storing the image       */
-    	/* this is NOT good modularisation       */
-    	/* and you will eventually replace it    */
-    	/* for now, leave it here                */
 
-	/* the magic number		         */
-	/* stored as two bytes to avoid	         */
-	/* problems with endianness	         */
-	/* Raw:    0x5035 or P5		         */
-	/* ASCII:  0x5032 or P2		         */
-	unsigned char magic_number[2] = {'0','0'};
-	unsigned short *magic_Number = (unsigned short *) magic_number;
-	
-	/* we will store ONE comment	         */
+    /* we will store ONE comment	         */
 	char *commentLine = NULL;
 
 	/* the logical width & height	         */
@@ -83,6 +70,9 @@ int main(int argc, char **argv)
 	/* pointer to raw image data	         */
 	unsigned char *imageData = NULL;
 	
+	/* variables for storing the image - stored in an Image struct       */
+    Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
+    
 	/* now start reading in the data         */
 	/* try to open the file for text I/O     */
 	/* in ASCII mode b/c the header is text  */
@@ -93,11 +83,11 @@ int main(int argc, char **argv)
 		return EXIT_BAD_INPUT_FILE;
 
 	/* read in the magic number              */
-	magic_number[0] = getc(inputFile);
-	magic_number[1] = getc(inputFile);
+	inputImage.magic_number[0] = getc(inputFile);
+	inputImage.magic_number[1] = getc(inputFile);
 
 	/* sanity check on the magic number      */
-    if (checkMagicNumber(inputFile, argv[1], *magic_Number, MAGIC_NUMBER_ASCII_PGM) == 0)
+    if (checkMagicNumber(inputFile, argv[1], *inputImage.magic_Number, MAGIC_NUMBER_ASCII_PGM) == 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }
