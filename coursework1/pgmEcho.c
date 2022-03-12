@@ -61,40 +61,11 @@ int main(int argc, char **argv)
     Image *inputImagePtr = &inputImage;
 
 	/* now start reading in the data         */
-	/* try to open the file for text I/O     */
-	/* in ASCII mode b/c the header is text  */
-	FILE *inputFile = fopen(argv[1], "r");
-
-	/* if it fails, return error code        */
-	if (inputFile == NULL)
-		return EXIT_BAD_INPUT_FILE;
-
-	/* read in the magic number              */
-    if (readMagicNumber (inputFile, argv[1], inputImagePtr) == 0)
+    int inputReturnValue = readpgmFile(argv[1], inputImagePtr);
+	if (inputReturnValue != 1)
     {
-        return EXIT_BAD_INPUT_FILE;
+        return inputReturnValue;
     }
-
-	/* scan whitespace if present            */
-	int scanCount = fscanf(inputFile, " ");
-
-    if (readCommentLine (inputFile, argv[1], inputImagePtr) == 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
-
-    if (readDimensionsAndGrays (inputFile, argv[1], inputImagePtr) == 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
-
-    if (readImageData (inputFile, argv[1], inputImagePtr) == 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
-
-	/* we're done with the file, so close it */
-	fclose(inputFile);
 
 	/* open a file for writing               */
 	FILE *outputFile = fopen(argv[2], "w");

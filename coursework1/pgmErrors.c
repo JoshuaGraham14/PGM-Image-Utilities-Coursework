@@ -6,6 +6,15 @@
 
 #include "pgmErrors.h"
 
+int checkInputFile(FILE *filePointer)
+{
+    if (filePointer == NULL)
+    {
+        return 0;
+    }
+	return 1;
+}
+
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int MAGIC_NUMBER_ASCII_PGM)
 {
 	if (magic_number != MAGIC_NUMBER_ASCII_PGM)

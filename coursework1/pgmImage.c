@@ -7,11 +7,52 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
+#define EXIT_NO_ERRORS 0
+#define EXIT_WRONG_ARG_COUNT 1
+#define EXIT_BAD_INPUT_FILE 2
+#define EXIT_BAD_OUTPUT_FILE 3
+
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
 #define MIN_IMAGE_DIMENSION 1
 #define MAX_IMAGE_DIMENSION 65536
 #define MAX_COMMENT_LINE_LENGTH 128
+
+int readpgmFile(char *filename, Image *imagePointer)
+{
+    FILE *inputFile = fopen(filename, "r");
+
+    /* if it fails, return error code        */
+	checkInputFile(inputFile);
+
+	/* read in the magic number              */
+    if (readMagicNumber (inputFile, filename, imagePointer) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
+
+	/* scan whitespace if present            */
+	int scanCount = fscanf(inputFile, " ");
+
+    if (readCommentLine (inputFile, filename, imagePointer) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
+
+    if (readDimensionsAndGrays (inputFile, filename, imagePointer) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
+
+    if (readImageData (inputFile, filename, imagePointer) == 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
+
+    /* we're done with the file, so close it */
+    fclose(inputFile);
+    return 1;
+}
 
 int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
 {
