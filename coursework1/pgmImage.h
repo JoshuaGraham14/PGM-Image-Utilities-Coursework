@@ -14,3 +14,5 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer);
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer);
 int readDimensionsAndGrays (FILE *filePointer, char *filename, Image *imagePointer);
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer);
+
+int writepgmFile(char *filename, Image *imagePointer);

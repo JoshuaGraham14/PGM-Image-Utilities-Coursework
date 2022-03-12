@@ -29,12 +29,6 @@
 #define EXIT_BAD_INPUT_FILE 2
 #define EXIT_BAD_OUTPUT_FILE 3
 
-#define MAGIC_NUMBER_RAW_PGM 0x3550
-#define MAGIC_NUMBER_ASCII_PGM 0x3250
-#define MIN_IMAGE_DIMENSION 1
-#define MAX_IMAGE_DIMENSION 65536
-#define MAX_COMMENT_LINE_LENGTH 128
-
 /***********************************/
 /* main routine                    */
 /*                                 */
@@ -61,47 +55,17 @@ int main(int argc, char **argv)
     Image *inputImagePtr = &inputImage;
 
 	/* now start reading in the data         */
-    int inputReturnValue = readpgmFile(argv[1], inputImagePtr);
-	if (inputReturnValue != 1)
+    int returnValue = readpgmFile(argv[1], inputImagePtr);
+	if (returnValue != 1)
     {
-        return inputReturnValue;
+        return EXIT_BAD_INPUT_FILE;
     }
 
-	/* open a file for writing               */
-	FILE *outputFile = fopen(argv[2], "w");
-
-    /* check whether file opening worked     */
-    if (checkOutputFile(outputFile, argv[2], inputImage.imageData, inputImage.commentLine) == 0)
+	returnValue = writepgmFile(argv[2], inputImagePtr);
+    if (returnValue != 1)
     {
-        return EXIT_BAD_OUTPUT_FILE;
+         return EXIT_BAD_OUTPUT_FILE;
     }
-	
-	/* write magic number, size & gray value */
-	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", inputImage.width, inputImage.height, inputImage.maxGray);
-
-	/* check that dimensions wrote correctly */
-	if (checknBytesWritten(outputFile, argv[2], inputImage.imageData, inputImage.commentLine, nBytesWritten) == 0)
-    {
-        return EXIT_BAD_OUTPUT_FILE;
-    }
-
-    long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
-
-    /* pointer for efficient write code      */
-    for (unsigned char *nextGrayValue = inputImage.imageData; nextGrayValue < inputImage.imageData + nImageBytes; nextGrayValue++)
-    { /* per gray value */
-    /* get next char's column        */
-		int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
-
-		/* write the entry & whitespace  */
-		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );
-
-		/* sanity check on write         */
-		if (checknBytesWritten(outputFile, argv[2], inputImage.imageData, inputImage.commentLine, nBytesWritten) == 0)
-        {
-            return EXIT_BAD_OUTPUT_FILE;
-        }
-    } /* per gray value */
 
 	/* at this point, we are done and can exit with a success code */
 	return EXIT_NO_ERRORS;

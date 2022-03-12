@@ -7,11 +7,6 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-#define EXIT_NO_ERRORS 0
-#define EXIT_WRONG_ARG_COUNT 1
-#define EXIT_BAD_INPUT_FILE 2
-#define EXIT_BAD_OUTPUT_FILE 3
-
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
 #define MIN_IMAGE_DIMENSION 1
@@ -28,7 +23,7 @@ int readpgmFile(char *filename, Image *imagePointer)
 	/* read in the magic number              */
     if (readMagicNumber (inputFile, filename, imagePointer) == 0)
     {
-        return EXIT_BAD_INPUT_FILE;
+        return 0;
     }
 
 	/* scan whitespace if present            */
@@ -36,17 +31,17 @@ int readpgmFile(char *filename, Image *imagePointer)
 
     if (readCommentLine (inputFile, filename, imagePointer) == 0)
     {
-        return EXIT_BAD_INPUT_FILE;
+        return 0;
     }
 
     if (readDimensionsAndGrays (inputFile, filename, imagePointer) == 0)
     {
-        return EXIT_BAD_INPUT_FILE;
+        return 0;
     }
 
     if (readImageData (inputFile, filename, imagePointer) == 0)
     {
-        return EXIT_BAD_INPUT_FILE;
+        return 0;
     }
 
     /* we're done with the file, so close it */
@@ -61,8 +56,6 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
 
     return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, MAGIC_NUMBER_ASCII_PGM);
 }
-
-//void scanWhitespace()
 
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
 {
@@ -130,6 +123,46 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 
 		/* set the pixel value           */
 		*nextGrayValue = (unsigned char) grayValue;
+    } /* per gray value */
+    return 1;
+}
+
+int writepgmFile(char *filename, Image *imagePointer)
+{
+    /* open a file for writing               */
+	FILE *outputFile = fopen(filename, "w");
+
+    /* check whether file opening worked     */
+    if (checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine) == 0)
+    {
+        return 0;
+    }
+	
+	/* write magic number, size & gray value */
+	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
+
+	/* check that dimensions wrote correctly */
+	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 0)
+    {
+        return 0;
+    }
+
+    long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
+
+    /* pointer for efficient write code      */
+    for (unsigned char *nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
+    { /* per gray value */
+    /* get next char's column        */
+		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
+
+		/* write the entry & whitespace  */
+		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );
+
+		/* sanity check on write         */
+		if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 0)
+        {
+            return 0;
+        }
     } /* per gray value */
     return 1;
 }
