@@ -1,3 +1,25 @@
+/***********************************/
+/* COMP 1921  Programming Project  */
+/* Assignment_1                    */
+/* TASK II                         */
+/*                                 */
+/* Joshua Graham                   */
+/* ID: 201496708                   */
+/* sc21jg@leeds.ac.uk              */
+/*                                 */
+/* Date commenced: 13/03/22        */
+/***********************************/
+
+/***********************************/
+/* reads two pgm files and compares*/
+/* them to see if they are         */
+/* logically equivalent            */ 
+/***********************************/
+
+/***********************************/
+/* Main Routine                    */
+/***********************************/
+
 /* library for I/O routines        */
 #include <stdio.h>
 

@@ -1,14 +1,17 @@
 /***********************************/
-/* COMP 1921M Programming Project  */
-/* 2021-22 Spring Semester         */
+/* COMP 1921  Programming Project  */
+/* Assignment_1                    */
+/* TASK I                          */
 /*                                 */
-/* Hamish Carr                     */
+/* Joshua Graham                   */
+/* ID: 201496708                   */
+/* sc21jg@leeds.ac.uk              */
+/*                                 */
+/* Date commenced: 07/03/22        */
 /***********************************/
 
 /***********************************/
-/* A first iteration to take a pgm */
-/* file in binary and convert to   */
-/* ASCII or vice versa             */
+/* Improved pgm echo               */
 /***********************************/
 
 /***********************************/
@@ -68,5 +71,6 @@ int main(int argc, char **argv)
     }
 
 	/* at this point, we are done and can exit with a success code */
+    printf("ECHOED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
