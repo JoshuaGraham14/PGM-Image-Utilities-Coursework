@@ -28,7 +28,7 @@
 int main(int argc, char **argv)
 { /* main() */
 	/* check for correct number of arguments */
-	if (argc != 3)	
+	if (argc != 3)
     { /* wrong arg count */
 		/* print an error message        */
 		printf("Usage: %s input_file output_file\n", argv[0]);
@@ -57,11 +57,12 @@ int main(int argc, char **argv)
     }
 
     //COMPARE: magic number, width, height & maxGray
-    if (
+    if (!(
     strcmp((const char *)inputImage1.magic_number, (const char *)inputImage2.magic_number) == 0 &&
     inputImage1.width==inputImage2.width &&
     inputImage1.height==inputImage2.height &&
-    inputImage1.maxGray==inputImage2.maxGray)
+    inputImage1.maxGray==inputImage2.maxGray
+    ))
     {
         printf("DIFFERENT\n");
         return EXIT_NO_ERRORS;
