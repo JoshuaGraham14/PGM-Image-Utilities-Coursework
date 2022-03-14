@@ -59,7 +59,8 @@ int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, in
 		(width 	> MAX_IMAGE_DIMENSION	) 	||
 		(height < MIN_IMAGE_DIMENSION	) 	||
 		(height > MAX_IMAGE_DIMENSION	) 	||
-		(maxGray	!= 255		)
+        (maxGray	< 0		)               ||
+        (maxGray    > 255     )      
 		)
 	{ /* failed size sanity check    */
         free(commentLine);

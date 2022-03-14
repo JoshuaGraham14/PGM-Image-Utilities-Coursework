@@ -52,7 +52,7 @@ int readpgmFile(char *filename, Image *imagePointer)
 int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
 {
     imagePointer->magic_number[0] = getc(filePointer);
-	imagePointer->magic_number[1] = getc(filePointer);
+    imagePointer->magic_number[1] = getc(filePointer);
 
     return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, MAGIC_NUMBER_ASCII_PGM);
 }
@@ -139,6 +139,11 @@ int writepgmFile(char *filename, Image *imagePointer)
     {
         return 0;
     }
+
+    // if(strcmp((const char *)imagePointer->magic_number, (const char *)"P5") == 0)
+    // {
+    //     printf("%s\n", imagePointer->magic_Number);
+    // }
 	
 	/* write magic number, size & gray value */
 	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);

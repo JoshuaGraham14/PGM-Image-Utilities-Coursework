@@ -5,3 +5,6 @@ pgmEcho: pgmEcho.c pgmErrors.c pgmImage.c
 
 pgmComp: pgmComp.c pgmErrors.c pgmImage.c
 	gcc -o pgmComp pgmComp.c pgmErrors.c pgmImage.c -I.
+
+pgma2b: pgma2b.c pgmErrors.c pgmImage.c
+	gcc -o pgma2b pgma2b.c pgmErrors.c pgmImage.c -I.
