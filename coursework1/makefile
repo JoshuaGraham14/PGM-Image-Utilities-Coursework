@@ -1,7 +1,7 @@
-all: echo comp
+all: pgmEcho pgmComp
 
-echo: pgmEcho.c pgmErrors.c pgmImage.c
-	gcc -o echo pgmEcho.c pgmErrors.c pgmImage.c -I.
+pgmEcho: pgmEcho.c pgmErrors.c pgmImage.c
+	gcc -o pgmEcho pgmEcho.c pgmErrors.c pgmImage.c -I.
 
-comp: pgmComp.c pgmErrors.c pgmImage.c
-	gcc -o comp pgmComp.c pgmErrors.c pgmImage.c -I.
+pgmComp: pgmComp.c pgmErrors.c pgmImage.c
+	gcc -o pgmComp pgmComp.c pgmErrors.c pgmImage.c -I.

@@ -80,9 +80,9 @@ int main(int argc, char **argv)
 
     //COMPARE: magic number, width, height & maxGray
     if (!(
-    strcmp((const char *)inputImage1.magic_number, (const char *)inputImage2.magic_number) == 0 &&
-    inputImage1.width==inputImage2.width &&
-    inputImage1.height==inputImage2.height &&
+    strcmp((const char *)inputImage1.magic_number, (const char *)inputImage2.magic_number) == 0 ||
+    inputImage1.width==inputImage2.width ||
+    inputImage1.height==inputImage2.height ||
     inputImage1.maxGray==inputImage2.maxGray
     ))
     {
@@ -92,7 +92,8 @@ int main(int argc, char **argv)
 
     //COMPARE: image data
     long nImageBytes = inputImage1.width * inputImage1.height * sizeof(unsigned char);
-    for (int i = 0; i<nImageBytes; i++)
+    int i;
+    for (i = 0; i<nImageBytes; i++)
     {
         if(inputImage1.imageData[i] != inputImage2.imageData[i])
         {

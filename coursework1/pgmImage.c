@@ -108,8 +108,10 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
         return 0;
     }
 
+    unsigned char *nextGrayValue;
+
 	/* pointer for efficient read code       */
-	for (unsigned char *nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
+	for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
 		/* read next value               */
 		int grayValue = -1;
@@ -149,8 +151,9 @@ int writepgmFile(char *filename, Image *imagePointer)
 
     long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
 
+    unsigned char *nextGrayValue;
     /* pointer for efficient write code      */
-    for (unsigned char *nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
+    for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
     /* get next char's column        */
 		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
