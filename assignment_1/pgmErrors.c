@@ -16,9 +16,9 @@ int checkInputFile(FILE *filePointer)
 {
     if (filePointer == NULL)
     {
-        return 0;
+        return 1;
     }
-	return 1;
+	return 0;
 }
 
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number)
@@ -32,9 +32,9 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
         printf("Error: Failed to read pgm image from file%s\n", filename);
         
         /* and return                    */
-        return 0;
+        return 1;
     } /* failed magic number check   */
-    return 1;
+    return 0;
 }
 
 int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
@@ -46,14 +46,16 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
           /* close file            */
         fclose(filePointer);
 
+        free(commentLine);
+
         /* print an error message */
         printf("Error: Failed to read pgm image from file %s\n", filename);
     
         /* and return            */
-        return 0;
+        return 1;
     } /* NULL comment read   */
      /* comment line */
-    return 1;
+    return 0;
 }
 
 int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int maxGray, char *commentLine)
@@ -78,9 +80,9 @@ int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, in
 		printf("Error: Failed to read pgm image from file %s\n", filename);	
 		
 		/* and return                    */
-		return 0;
+		return 1;
 	} /* failed size sanity check    */
-    return 1;
+    return 0;
 }
 
 int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
@@ -97,9 +99,9 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
         printf("Error: Failed to read pgm image from file %s\n", filename);
         
         /* return error code             */
-        return 0;
+        return 1;
     } /* malloc failed */
-    return 1;
+    return 0;
 }
 
 int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue)
@@ -117,9 +119,9 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         printf("Error: Failed to read pgm image from file %s\n", filename);	
 
         /* and return            */
-        return 0;
+        return 1;
     } /* fscanf failed */
-    return 1;
+    return 0;
 }
 
 int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
@@ -133,9 +135,9 @@ int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData,
         /* print an error message        */
         printf("Error: Failed to write pgm image to file %s\n", filename);
 
-        return 0;
+        return 1;
     } /* NULL output file */
-    return 1;
+    return 0;
 }
 
 int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, size_t nBytesWritten)
@@ -150,7 +152,7 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageDa
         printf("Error: Failed to write pgm image to file %s\n", filename);
 
         /* return an error code          */
-        return 0;
+        return 1;
     } /* dimensional write failed    */
-    return 1;
+    return 0;
 }

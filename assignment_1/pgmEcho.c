@@ -24,8 +24,8 @@
 /* library for memory routines     */
 #include <stdlib.h>
 
-#include "pgmErrors.h"
 #include "pgmImage.h"
+#include "pgmErrors.h"
 
 #define EXIT_NO_ERRORS 0
 #define EXIT_WRONG_ARG_COUNT 1
@@ -59,13 +59,13 @@ int main(int argc, char **argv)
 
     /* now start reading in the data         */
     int returnValue = readpgmFile(argv[1], inputImagePtr);
-	if (returnValue != 1)
+	if (returnValue != 0)
     {
         return EXIT_BAD_INPUT_FILE;
     }
 
 	returnValue = writepgmFile(argv[2], inputImagePtr);
-    if (returnValue != 1)
+    if (returnValue != 0)
     {
          return EXIT_BAD_OUTPUT_FILE;
     }
