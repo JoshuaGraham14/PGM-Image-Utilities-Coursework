@@ -9,10 +9,6 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-#define MAGIC_NUMBER_RAW_PGM 0x3550
-#define MAGIC_NUMBER_ASCII_PGM 0x3250
-#define MIN_IMAGE_DIMENSION 1
-#define MAX_IMAGE_DIMENSION 65536
 #define MAX_COMMENT_LINE_LENGTH 128
 
 int readpgmFile(char *filename, Image *imagePointer)
@@ -56,7 +52,7 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
     imagePointer->magic_number[0] = getc(filePointer);
     imagePointer->magic_number[1] = getc(filePointer);
 
-    return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, MAGIC_NUMBER_ASCII_PGM);
+    return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number);
 }
 
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
@@ -69,7 +65,7 @@ int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
 		imagePointer->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
         /* fgets() reads a line          */
         /* capture return value          */
-        if (checkCommentLine(filePointer, filename, imagePointer->commentLine, MAX_COMMENT_LINE_LENGTH) == 0)
+        if (checkCommentLine(filePointer, filename, imagePointer->commentLine) == 0)
         {
             free(imagePointer->commentLine);
 
@@ -91,7 +87,7 @@ int readDimensionsAndGrays (FILE *filePointer, char *filename, Image *imagePoint
 	int scanCount = fscanf(filePointer, " %u %u %u", &(imagePointer->width), &(imagePointer->height), &(imagePointer->maxGray));
 
 	/* sanity checks on size & grays         */
-	if (checkDimensionsAndGrays(filePointer, filename, scanCount, imagePointer->width, imagePointer->width, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, imagePointer->maxGray, imagePointer->commentLine) == 0)
+	if (checkDimensionsAndGrays(filePointer, filename, scanCount, imagePointer->width, imagePointer->width, imagePointer->maxGray, imagePointer->commentLine) == 0)
     {
         return 0;
     }
@@ -142,13 +138,17 @@ int writepgmFile(char *filename, Image *imagePointer)
         return 0;
     }
 
-    if(strcmp((const char *)imagePointer->magic_number, (const char *)"P5") == 0)
+    /* write magic number, size & gray value */
+    size_t nBytesWritten;
+    if(imagePointer->magic_number[1] == (unsigned char)'2')
     {
         printf("%s\n", imagePointer->magic_number);
+        nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
     }
-	
-	/* write magic number, size & gray value */
-	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
+    else 
+    {
+        fwrite(imagePointer->imageData, 4, 4, outputFile);
+    }
 
 	/* check that dimensions wrote correctly */
 	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 0)

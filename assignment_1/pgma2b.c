@@ -1,7 +1,7 @@
 /***********************************/
 /* COMP 1921  Programming Project  */
 /* Assignment_1                    */
-/* TASK III                          */
+/* TASK III                        */
 /*                                 */
 /* Joshua Graham                   */
 /* ID: 201496708                   */

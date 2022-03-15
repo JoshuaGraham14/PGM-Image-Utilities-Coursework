@@ -6,6 +6,12 @@
 
 #include "pgmErrors.h"
 
+#define MAGIC_NUMBER_RAW_PGM 0x3550
+#define MAGIC_NUMBER_ASCII_PGM 0x3250
+#define MIN_IMAGE_DIMENSION 1
+#define MAX_IMAGE_DIMENSION 65536
+#define MAX_COMMENT_LINE_LENGTH 128
+
 int checkInputFile(FILE *filePointer)
 {
     if (filePointer == NULL)
@@ -15,15 +21,15 @@ int checkInputFile(FILE *filePointer)
 	return 1;
 }
 
-int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int MAGIC_NUMBER_ASCII_PGM)
+int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number)
 {
-	if (magic_number != MAGIC_NUMBER_ASCII_PGM)
+	if (magic_number != MAGIC_NUMBER_ASCII_PGM  && magic_number != MAGIC_NUMBER_RAW_PGM)
     { /* failed magic number check   */
     /* be tidy: close the file       */
         fclose(filePointer);
 
         /* print an error message */
-        printf("Error: Failed to read pgm image from file %s\n", filename);
+        printf("Error: Failed to read pgm image from file%s\n", filename);
         
         /* and return                    */
         return 0;
@@ -31,7 +37,7 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
     return 1;
 }
 
-int checkCommentLine(FILE *filePointer, char *filename, char *commentLine, int MAX_COMMENT_LINE_LENGTH)
+int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
 {
 	char *commentString = fgets(commentLine, MAX_COMMENT_LINE_LENGTH, filePointer);
     /* NULL means failure            */
@@ -50,7 +56,7 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine, int M
     return 1;
 }
 
-int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int MIN_IMAGE_DIMENSION, int MAX_IMAGE_DIMENSION, int maxGray, char *commentLine)
+int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int maxGray, char *commentLine)
 {
 	/* must read exactly three values        */
 	if 	(
