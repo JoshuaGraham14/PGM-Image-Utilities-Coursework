@@ -24,6 +24,8 @@
 /* library for memory routines     */
 #include <stdlib.h>
 
+#include <stdbool.h>
+
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
@@ -46,6 +48,19 @@ int main(int argc, char **argv)
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
     Image *inputImagePtr = &inputImage;
+
+    // *TO DO*: Check magic nuber is P5
+    int returnValue = readpgmFile(argv[1], inputImagePtr);
+	if (returnValue != 0)
+    {
+        return EXIT_BAD_INPUT_FILE;
+    }
+
+    returnValue = writepgmFile(argv[2], inputImagePtr, true);
+    if (returnValue != 0)
+    {
+        return EXIT_BAD_OUTPUT_FILE;
+    }
 
 	/* at this point, we are done and can exit with a success code */
     printf("ECHOED\n");

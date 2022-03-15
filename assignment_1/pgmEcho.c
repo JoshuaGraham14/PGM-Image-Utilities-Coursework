@@ -23,6 +23,7 @@
 
 /* library for memory routines     */
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "pgmImage.h"
 #include "pgmErrors.h"
@@ -64,7 +65,7 @@ int main(int argc, char **argv)
         return EXIT_BAD_INPUT_FILE;
     }
 
-	returnValue = writepgmFile(argv[2], inputImagePtr);
+	returnValue = writepgmFile(argv[2], inputImagePtr, false);
     if (returnValue != 0)
     {
          return EXIT_BAD_OUTPUT_FILE;
