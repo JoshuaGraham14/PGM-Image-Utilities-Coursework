@@ -80,15 +80,28 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     unsigned char *nextGrayValue;
 
 	/* pointer for efficient read code       */
+    if(imagePointer->magic_number[1] == (unsigned char)'5'){
+         getc(filePointer);
+    }
+   
 	for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
 		/* read next value               */
 		int grayValue = -1;
-		int scanCount = fscanf(filePointer, " %u", &grayValue);
+        int scanCount;
+        if(imagePointer->magic_number[1] == (unsigned char)'2')
+        {
+            scanCount = fscanf(filePointer, " %u", &grayValue);
+        }
+        else
+        {
+            scanCount = fread(&grayValue, 1, 1, filePointer);
+            grayValue=256+(int) grayValue; 
+        }
 
 		/* sanity check	                 */
-		if (checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue) == 1) return 1;
-
+        if (checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue) == 1) return 1;
+        
 		/* set the pixel value           */
 		*nextGrayValue = (unsigned char) grayValue;
     } /* per gray value */
@@ -102,15 +115,9 @@ int writepgmFile(char *filename, Image *imagePointer)
 
     /* check whether file opening worked     */
     if (checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine) == 1) return 1;
-
+    
     /* write magic number, size & gray value */
-    size_t nBytesWritten;
-    // if(imagePointer->magic_number[1] == (unsigned char)'5')
-    // {
-        
-    // }
-
-    nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
+    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
 	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
@@ -132,7 +139,6 @@ int writepgmFile(char *filename, Image *imagePointer)
         else 
         {
             fwrite(nextGrayValue, 1, 1, outputFile);
-            break;
         }
 
 		/* sanity check on write         */

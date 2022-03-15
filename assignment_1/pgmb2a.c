@@ -65,6 +65,6 @@ int main(int argc, char **argv)
     }
 
 	/* at this point, we are done and can exit with a success code */
-    printf("ECHOED\n");
+    printf("CONVERTED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */

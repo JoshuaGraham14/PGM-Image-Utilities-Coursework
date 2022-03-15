@@ -116,7 +116,7 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         fclose(filePointer);
 
         /* print error message   */
-        printf("Error: Failed to read pgm image from file %s\n", filename);	
+        printf("Error: Failed to read pgm image from file %s\n", filename);
 
         /* and return            */
         return 1;
