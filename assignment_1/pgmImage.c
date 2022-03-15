@@ -4,6 +4,8 @@
 /* library for memory routines     */
 #include <stdlib.h>
 
+#include <string.h>
+
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
@@ -140,10 +142,10 @@ int writepgmFile(char *filename, Image *imagePointer)
         return 0;
     }
 
-    // if(strcmp((const char *)imagePointer->magic_number, (const char *)"P5") == 0)
-    // {
-    //     printf("%s\n", imagePointer->magic_Number);
-    // }
+    if(strcmp((const char *)imagePointer->magic_number, (const char *)"P5") == 0)
+    {
+        printf("%s\n", imagePointer->magic_number);
+    }
 	
 	/* write magic number, size & gray value */
 	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
