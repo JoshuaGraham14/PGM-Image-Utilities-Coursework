@@ -95,7 +95,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     return 0;
 }
 
-int writepgmFile(char *filename, Image *imagePointer, bool convert)
+int writepgmFile(char *filename, Image *imagePointer)
 {
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
@@ -105,28 +105,12 @@ int writepgmFile(char *filename, Image *imagePointer, bool convert)
 
     /* write magic number, size & gray value */
     size_t nBytesWritten;
-    if(imagePointer->magic_number[1] == (unsigned char)'2')
-    {
-        if (convert)
-        {
-            nBytesWritten = fprintf(outputFile, "P5\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
-        }
-        else
-        {
-            nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
-        }
-    }
-    else 
-    {
-        if (convert)
-        {
-            nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
-        }
-        else
-        {
-            nBytesWritten = fprintf(outputFile, "P5\n%d %d\n%d\n", imagePointer->width, imagePointer->height, imagePointer->maxGray);
-        }
-    }
+    // if(imagePointer->magic_number[1] == (unsigned char)'5')
+    // {
+        
+    // }
+
+    nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
 	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
@@ -143,27 +127,12 @@ int writepgmFile(char *filename, Image *imagePointer, bool convert)
         /* write the entry & whitespace  */
         if(imagePointer->magic_number[1] == (unsigned char)'2')
         {
-            if (convert)
-            {
-                fwrite(imagePointer->imageData, 4, 4, outputFile);
-                break;
-            }
-            else
-            {
-                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
-            }
+            nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
         }
         else 
         {
-            if (convert)
-            {
-                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
-            }
-            else
-            {
-                fwrite(imagePointer->imageData, 4, 4, outputFile);
-                break;
-            }
+            fwrite(nextGrayValue, 1, 1, outputFile);
+            break;
         }
 
 		/* sanity check on write         */

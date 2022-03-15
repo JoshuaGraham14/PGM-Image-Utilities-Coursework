@@ -56,7 +56,9 @@ int main(int argc, char **argv)
         return EXIT_BAD_INPUT_FILE;
     }
 
-    returnValue = writepgmFile(argv[2], inputImagePtr, true);
+    inputImage.magic_number[1] = '2';
+
+    returnValue = writepgmFile(argv[2], inputImagePtr);
     if (returnValue != 0)
     {
         return EXIT_BAD_OUTPUT_FILE;
