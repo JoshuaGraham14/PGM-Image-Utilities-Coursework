@@ -46,6 +46,11 @@ int main(int argc, char **argv)
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
+
+    if (argv[2] < 1)
+    {
+        //reduction factor n must be greater than 0
+    }
 	
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
@@ -91,12 +96,19 @@ int main(int argc, char **argv)
 
         //printf("nextCol:%d, nextGray: %s\n", nextCol, nextGrayValue);
         //printf("widthCounter:%d, heightCounter: %d\n", widthCounter, heightCounter);
+        
+        int newCol = 1;
 
         if (widthCounter%reductionFactor==0 && heightCounter%reductionFactor==0)
         {
+            if ((widthCounter+reductionFactor+1) > originalWidth)
+            {
+                newCol = 0;
+            }
+            //printf("AAA: widthCounter:%d, heightCounter: %d\n", widthCounter, heightCounter);
             if(*inputImage.magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
-                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
+                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (newCol ? ' ' : '\n'));
             }
             else 
             {
@@ -122,28 +134,3 @@ int main(int argc, char **argv)
     printf("REDUCED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
-
-
-// int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
-
-//         printf("nextCol:%d, (nextCol-1):%d, MOD:%d\n", nextCol, (nextCol-1), (nextCol-1)%reductionFactor);
-
-//         /* write the entry & whitespace  */
-//         if ((nextCol-1)%reductionFactor == 0)
-//         {
-//             int temp = nextCol;
-//             printf("NEXT:%d\n", reductionFactor);
-//             if(((nextCol-1)+reductionFactor)%reductionFactor == 0)
-//             {
-//                 nextCol = 0;
-//             }
-//             if(*inputImage.magic_Number == MAGIC_NUMBER_ASCII_PGM)
-//             {
-//                 nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
-//             }
-//             else 
-//             {
-//                 fwrite(nextGrayValue, 1, 1, outputFile);
-//             }
-//             nextCol = temp;
-//         }
