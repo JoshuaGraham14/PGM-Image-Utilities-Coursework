@@ -39,10 +39,10 @@
 int main(int argc, char **argv)
 { /* main() */
 	/* check for correct number of arguments */
-	if (argc != 3)
+	if (argc != 4)
     { /* wrong arg count *//* main routine                    */
 		/* print an error message        */
-		printf("Usage: %s input_file output_file\n", argv[0]);
+		printf("Usage: %s input_file n output_file\n", argv[0]);
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
@@ -57,10 +57,93 @@ int main(int argc, char **argv)
     {
         return EXIT_BAD_INPUT_FILE;
     }
+
+    //REDUCE
+
+	/* open a file for writing               */
+    char* filename = argv[3];
+    int reductionFactor = atoi(argv[2]);
+	FILE *outputFile = fopen(filename, "w");
+
+    /* check whether file opening worked     */
+    if (checkOutputFile(outputFile, filename, inputImage.imageData, inputImage.commentLine) == 1) return 1;
     
-    //REDUCE HERE
+    int reducedWidth = (inputImage.width+reductionFactor-1)/reductionFactor;
+    int reducedHeight = (inputImage.height+reductionFactor-1)/reductionFactor;
+    int originalWidth = inputImage.width;
+    int originalHeight = inputImage.height;
+    /* write magic number, size & gray value */
+    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", inputImage.magic_number[1], reducedWidth, reducedHeight, inputImage.maxGray);
+
+	/* check that dimensions wrote correctly */
+	if (checknBytesWritten(outputFile, filename, inputImage.imageData, inputImage.commentLine, nBytesWritten) == 1) return 1;
+
+    long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
+
+    unsigned char *nextGrayValue;
+    int widthCounter = 0;
+    int heightCounter = 0;
+    /* pointer for efficient write code      */
+    for (nextGrayValue = inputImage.imageData; nextGrayValue < inputImage.imageData + nImageBytes; nextGrayValue++)
+    { /* per gray value */
+    /* get next char's column        */
+		int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
+
+        //printf("nextCol:%d, nextGray: %s\n", nextCol, nextGrayValue);
+        //printf("widthCounter:%d, heightCounter: %d\n", widthCounter, heightCounter);
+
+        if (widthCounter%reductionFactor==0 && heightCounter%reductionFactor==0)
+        {
+            if(*inputImage.magic_Number == MAGIC_NUMBER_ASCII_PGM)
+            {
+                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
+            }
+            else 
+            {
+                fwrite(nextGrayValue, 1, 1, outputFile);
+            }
+        }
+        
+		/* sanity check on write         */
+		if (checknBytesWritten(outputFile, filename, inputImage.imageData, inputImage.commentLine, nBytesWritten) == 1) return 1;
+
+        if(nextCol == 0)
+        {
+            heightCounter++;
+            widthCounter=0;
+        }
+        else
+        {
+            widthCounter++;
+        }
+    } /* per gray value */
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
+
+
+// int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
+
+//         printf("nextCol:%d, (nextCol-1):%d, MOD:%d\n", nextCol, (nextCol-1), (nextCol-1)%reductionFactor);
+
+//         /* write the entry & whitespace  */
+//         if ((nextCol-1)%reductionFactor == 0)
+//         {
+//             int temp = nextCol;
+//             printf("NEXT:%d\n", reductionFactor);
+//             if(((nextCol-1)+reductionFactor)%reductionFactor == 0)
+//             {
+//                 nextCol = 0;
+//             }
+//             if(*inputImage.magic_Number == MAGIC_NUMBER_ASCII_PGM)
+//             {
+//                 nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
+//             }
+//             else 
+//             {
+//                 fwrite(nextGrayValue, 1, 1, outputFile);
+//             }
+//             nextCol = temp;
+//         }

@@ -1,4 +1,4 @@
-all: pgmEcho pgmComp pgma2b pgmb2a
+all: pgmEcho pgmComp pgma2b pgmb2a pgmReduce
 
 pgmEcho: pgmEcho.c pgmErrors.c pgmImage.c
 	gcc -o pgmEcho pgmEcho.c pgmErrors.c pgmImage.c -I.
@@ -11,3 +11,6 @@ pgma2b: pgma2b.c pgmErrors.c pgmImage.c
 
 pgmb2a: pgmb2a.c pgmErrors.c pgmImage.c
 	gcc -o pgmb2a pgmb2a.c pgmErrors.c pgmImage.c -I.
+
+pgmReduce: pgmReduce.c pgmErrors.c pgmImage.c
+	gcc -o pgmReduce pgmReduce.c pgmErrors.c pgmImage.c -I.
