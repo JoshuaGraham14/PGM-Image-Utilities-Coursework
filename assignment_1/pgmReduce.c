@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 	if (argc != 4)
     { /* wrong arg count *//* main routine                    */
 		/* print an error message        */
-		printf("Usage: %s input_file n output_file\n", argv[0]);
+		printf("Usage: %s input_file reduction_factor output_file\n", argv[0]);
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */

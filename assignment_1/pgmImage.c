@@ -3,7 +3,7 @@
 
 /* library for memory routines     */
 #include <stdlib.h>
-
+#include <math.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -98,7 +98,8 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
         else
         {
             scanCount = fread(&grayValue, 1, 1, filePointer);
-            grayValue=256+(int) grayValue; 
+            grayValue=256+(int) grayValue;
+            grayValue=(grayValue*imagePointer->maxGray)/255;
         }
 
 		/* sanity check	                 */
@@ -140,6 +141,9 @@ int writepgmFile(char *filename, Image *imagePointer)
         }
         else 
         {
+            double proportionateValue = ceil(((double)*nextGrayValue/imagePointer->maxGray)*255);
+            // printf("%i\n", proportionateValue);
+            *nextGrayValue = proportionateValue;
             fwrite(nextGrayValue, 1, 1, outputFile);
         }
 
