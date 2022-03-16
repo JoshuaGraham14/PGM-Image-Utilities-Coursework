@@ -37,6 +37,8 @@
 #define EXIT_BAD_INPUT_FILE 2
 #define EXIT_BAD_OUTPUT_FILE 3
 
+int compareImages(Image *inputImage1, Image *inputImage2);
+
 /***********************************/
 /* main routine                    */
 /*                                 */
@@ -78,30 +80,42 @@ int main(int argc, char **argv)
          return EXIT_BAD_OUTPUT_FILE;
     }
 
-    //COMPARE: magic number, width, height & maxGray
-    if (!(
-    strcmp((const char *)inputImage1.magic_number, (const char *)inputImage2.magic_number) == 0 ||
-    inputImage1.width==inputImage2.width ||
-    inputImage1.height==inputImage2.height ||
-    inputImage1.maxGray==inputImage2.maxGray
-    ))
+    //COMPARE:
+    if (compareImages(inputImagePtr1, inputImagePtr2) == 1)
     {
         printf("DIFFERENT\n");
-        return EXIT_NO_ERRORS;
+    }
+    else 
+    {
+        printf("IDENTICAL\n");
+    }
+	return EXIT_NO_ERRORS;
+} /* main() */
+
+
+int compareImages(Image *inputImage1, Image *inputImage2)
+{
+    //COMPARE: magic number, width, height & maxGray
+    if (!(
+    strcmp((const char *)inputImage1->magic_number, (const char *)inputImage2->magic_number) == 0 ||
+    inputImage1->width==inputImage2->width ||
+    inputImage1->height==inputImage2->height ||
+    inputImage1->maxGray==inputImage2->maxGray
+    ))
+    {
+        return 1;
     }
 
     //COMPARE: image data
-    long nImageBytes = inputImage1.width * inputImage1.height * sizeof(unsigned char);
+    long nImageBytes = inputImage1->width * inputImage1->height * sizeof(unsigned char);
     int i;
     for (i = 0; i<nImageBytes; i++)
     {
-        if(inputImage1.imageData[i] != inputImage2.imageData[i])
+        if(inputImage1->imageData[i] != inputImage2->imageData[i])
         {
-            printf("DIFFERENT\n");
-            break;
+            return 1;
         }
     }
-	/* at this point, we are done and can exit with a success code */
-    printf("IDENTICAL\n");
-	return EXIT_NO_ERRORS;
-} /* main() */
+    
+    return 0;
+}

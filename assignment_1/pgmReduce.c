@@ -36,6 +36,8 @@
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
 
+int writeReduced(char *filename, Image *imagePointer, int reductionFactor);
+
 int main(int argc, char **argv)
 { /* main() */
 	/* check for correct number of arguments */
@@ -47,7 +49,7 @@ int main(int argc, char **argv)
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
 
-    if (argv[2] < 1)
+    if (atoi(argv[2]) < 1)
     {
         //reduction factor n must be greater than 0
     }
@@ -64,38 +66,45 @@ int main(int argc, char **argv)
     }
 
     //REDUCE
-
-	/* open a file for writing               */
-    char* filename = argv[3];
     int reductionFactor = atoi(argv[2]);
+    if (writeReduced(argv[3], inputImagePtr, reductionFactor) == 1)
+    {
+        printf("NOT REDUCED - ERROR");
+        return EXIT_BAD_OUTPUT_FILE;
+    }
+
+	/* at this point, we are done and can exit with a success code */
+    printf("REDUCED\n");
+	return EXIT_NO_ERRORS;
+} /* main() */
+
+int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
+{
+    /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
 
     /* check whether file opening worked     */
-    if (checkOutputFile(outputFile, filename, inputImage.imageData, inputImage.commentLine) == 1) return 1;
+    if (checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine) == 1) return 1;
     
-    int reducedWidth = (inputImage.width+reductionFactor-1)/reductionFactor;
-    int reducedHeight = (inputImage.height+reductionFactor-1)/reductionFactor;
-    int originalWidth = inputImage.width;
-    int originalHeight = inputImage.height;
+    int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
+    int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
+    int originalWidth = imagePointer->width;
     /* write magic number, size & gray value */
-    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", inputImage.magic_number[1], reducedWidth, reducedHeight, inputImage.maxGray);
+    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
-	if (checknBytesWritten(outputFile, filename, inputImage.imageData, inputImage.commentLine, nBytesWritten) == 1) return 1;
+	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
 
-    long nImageBytes = inputImage.width * inputImage.height * sizeof(unsigned char);
+    long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
 
     unsigned char *nextGrayValue;
     int widthCounter = 0;
     int heightCounter = 0;
     /* pointer for efficient write code      */
-    for (nextGrayValue = inputImage.imageData; nextGrayValue < inputImage.imageData + nImageBytes; nextGrayValue++)
+    for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
     /* get next char's column        */
-		int nextCol = (nextGrayValue - inputImage.imageData + 1) % inputImage.width;
-
-        //printf("nextCol:%d, nextGray: %s\n", nextCol, nextGrayValue);
-        //printf("widthCounter:%d, heightCounter: %d\n", widthCounter, heightCounter);
+		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
         
         int newCol = 1;
 
@@ -105,8 +114,8 @@ int main(int argc, char **argv)
             {
                 newCol = 0;
             }
-            //printf("AAA: widthCounter:%d, heightCounter: %d\n", widthCounter, heightCounter);
-            if(*inputImage.magic_Number == MAGIC_NUMBER_ASCII_PGM)
+
+            if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
                 nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (newCol ? ' ' : '\n'));
             }
@@ -117,7 +126,7 @@ int main(int argc, char **argv)
         }
         
 		/* sanity check on write         */
-		if (checknBytesWritten(outputFile, filename, inputImage.imageData, inputImage.commentLine, nBytesWritten) == 1) return 1;
+		if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
 
         if(nextCol == 0)
         {
@@ -129,8 +138,5 @@ int main(int argc, char **argv)
             widthCounter++;
         }
     } /* per gray value */
-
-	/* at this point, we are done and can exit with a success code */
-    printf("REDUCED\n");
-	return EXIT_NO_ERRORS;
-} /* main() */
+    return 0;
+}
