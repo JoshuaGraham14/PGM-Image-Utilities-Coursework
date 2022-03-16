@@ -82,7 +82,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     unsigned char *nextGrayValue;
 
 	/* pointer for efficient read code       */
-    if(imagePointer->magic_Number == MAGIC_NUMBER_RAW_PGM){
+    if(*imagePointer->magic_Number == MAGIC_NUMBER_RAW_PGM){
          getc(filePointer);
     }
    
@@ -91,7 +91,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 		/* read next value               */
 		int grayValue = -1;
         int scanCount;
-        if(imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
+        if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
             scanCount = fscanf(filePointer, " %u", &grayValue);
         }
@@ -134,7 +134,7 @@ int writepgmFile(char *filename, Image *imagePointer)
 		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
 
         /* write the entry & whitespace  */
-        if(imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
+        if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
             nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
         }
