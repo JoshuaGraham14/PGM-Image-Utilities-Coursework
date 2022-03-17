@@ -49,7 +49,8 @@ int main(int argc, char **argv)
 	if (argc != 3)
     { /* wrong arg count *//* main routine                    */
 		/* print an error message        */
-		printf("Usage: %s input_file output_file\n", argv[0]);
+        printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+        if (argc == 0) return EXIT_NO_ERRORS;
 		/* and return an error code      */
 		return EXIT_WRONG_ARG_COUNT;
     } /* wrong arg count */
