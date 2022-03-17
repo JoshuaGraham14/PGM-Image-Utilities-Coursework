@@ -30,28 +30,26 @@
 #include "pgmImage.h"
 
 #define EXIT_NO_ERRORS 0
-#define EXIT_WRONG_ARG_COUNT 1
 #define EXIT_BAD_INPUT_FILE 2
 #define EXIT_BAD_OUTPUT_FILE 3
 
 int main(int argc, char **argv)
 { /* main() */
-	/* check for correct number of arguments */
-	if (argc != 3)
-    { /* wrong arg count *//* main routine                    */
-		/* print an error message        */
+	
+    /* check for correct number of arguments */
+    int returnValue = checkArgumentCount(argc, 3);
+	if(returnValue != 0)
+    {
         printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
-        if (argc == 0) return EXIT_NO_ERRORS;
-		/* and return an error code      */
-		return EXIT_WRONG_ARG_COUNT;
-    } /* wrong arg count */
+        return returnValue;
+    }
 
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
     Image *inputImagePtr = &inputImage;
 
     // *TO DO*: Check magic nuber is P2
-    int returnValue = readpgmFile(argv[1], inputImagePtr);
+    returnValue = readpgmFile(argv[1], inputImagePtr);
 	if (returnValue != 0)
     {
         return EXIT_BAD_INPUT_FILE;
