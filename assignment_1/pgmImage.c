@@ -142,7 +142,7 @@ int writepgmFile(char *filename, Image *imagePointer)
         else 
         {
             double proportionateValue = ceil(((double)*nextGrayValue/imagePointer->maxGray)*255);
-            // printf("%i\n", proportionateValue);
+            //printf("%i\n", proportionateValue);
             *nextGrayValue = proportionateValue;
             fwrite(nextGrayValue, 1, 1, outputFile);
         }

@@ -1,16 +1,22 @@
-all: pgmEcho pgmComp pgma2b pgmb2a pgmReduce
+CC=gcc
+CCFLAGS=-ggdb -lm -std=c99 -Wall -Werror
+CFLAGS=-std=c99
+MODULES=pgmErrors.o pgmImage.o
+MAINS=pgmEcho.o pgmComp.o pgma2b.o pgmb2a.o pgmReduce.o
+TARGETS=pgmEcho pgmComp pgma2b pgmb2a pgmReduce
 
-pgmEcho: pgmEcho.c pgmErrors.c pgmImage.c
-	gcc -o pgmEcho pgmEcho.c pgmErrors.c pgmImage.c -I.
+all:	${TARGETS}
 
-pgmComp: pgmComp.c pgmErrors.c pgmImage.c
-	gcc -o pgmComp pgmComp.c pgmErrors.c pgmImage.c -I.
+clean:
+	rm 	${TARGETS} ${MAINS} ${MODULES}
 
-pgma2b: pgma2b.c pgmErrors.c pgmImage.c
-	gcc -o pgma2b pgma2b.c pgmErrors.c pgmImage.c -I.
-
-pgmb2a: pgmb2a.c pgmErrors.c pgmImage.c
-	gcc -o pgmb2a pgmb2a.c pgmErrors.c pgmImage.c -I.
-
-pgmReduce: pgmReduce.c pgmErrors.c pgmImage.c
-	gcc -o pgmReduce pgmReduce.c pgmErrors.c pgmImage.c -I.
+pgmEcho:	pgmEcho.o 	${MODULES}
+	${CC} 	${CCFLAGS} 	-o pgmEcho	 pgmEcho.o	 ${MODULES}
+pgmComp:	pgmComp.o 	${MODULES}
+	${CC}	${CCFLAGS} 	-o pgmComp 	 pgmComp.o	 ${MODULES}
+pgma2b:		pgma2b.o 	${MODULES}
+	${CC} 	${CCFLAGS} 	-o pgma2b	 pgma2b.o	 ${MODULES}
+pgmb2a:		pgmb2a.o 	${MODULES}
+	${CC}	${CCFLAGS} 	-o pgmb2a	 pgmb2a.o	 ${MODULES}
+pgmReduce:	pgmReduce.o	${MODULES}
+	${CC}	${CCFLAGS}	-o pgmReduce pgmReduce.o ${MODULES}
