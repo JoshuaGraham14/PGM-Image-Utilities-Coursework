@@ -35,36 +35,29 @@
 
 int main(int argc, char **argv)
 { /* main() */
+
 	/* check for correct number of arguments */
-	int returnValue = checkArgumentCount(argc, 3);
-	if(returnValue != 0)
+    int r; //return value
+	if((r = checkArgumentCount(argc, 3)) != 0)
     {
-        if (returnValue == -1)
+        if (r == -1)
         {
             printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
-        return returnValue;
+        return r;
     }
 
 	/* variables for storing the image - stored in an Image struct       */
     Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
     Image *inputImagePtr = &inputImage;
 
-    // *TO DO*: Check magic nuber is P5
-    returnValue = readpgmFile(argv[1], inputImagePtr);
-	if (returnValue != 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
+    // *TO DO*: Check magic nuber is P2
+    if ((r = readpgmFile(argv[1], inputImagePtr)) != 0) return r;
 
     inputImage.magic_number[1] = '2';
 
-    returnValue = writepgmFile(argv[2], inputImagePtr);
-    if (returnValue != 0)
-    {
-        return EXIT_BAD_OUTPUT_FILE;
-    }
+    if ((r = writepgmFile(argv[2], inputImagePtr)) != 0) return r;
 
 	/* at this point, we are done and can exit with a success code */
     printf("CONVERTED\n");

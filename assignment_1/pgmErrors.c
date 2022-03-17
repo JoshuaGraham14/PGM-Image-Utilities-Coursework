@@ -59,7 +59,7 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
         /* and return                    */
         return ERROR_BAD_MAGIC_NUMBER;
     } /* failed magic number check   */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
@@ -80,7 +80,7 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
         return ERROR_BAD_COMMENT_LINE;
     } /* NULL comment read   */
      /* comment line */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine)
@@ -105,7 +105,7 @@ int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width,
 		/* and return                    */
 		return ERROR_BAD_DIMENSIONS;
 	} /* failed size sanity check    */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, char *commentLine)
@@ -128,7 +128,7 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, 
 		/* and return                    */
 		return ERROR_BAD_MAX_GRAY_VALUE;
 	} /* failed size sanity check    */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
@@ -147,7 +147,7 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
         /* return error code             */
         return ERROR_IMAGE_MALLOC_FAILED;
     } /* malloc failed */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount, int grayValue)
@@ -167,7 +167,7 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         /* and return            */
         return ERROR_BAD_DATA;
     } /* fscanf failed */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount)
@@ -181,7 +181,7 @@ int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imag
         printf("ERROR: Miscellaneous (too many pixels for specified dimensions)\n");
         return ERROR_MISCELLANEOUS;
     }
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
@@ -197,7 +197,7 @@ int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData,
 
         return ERROR_OUTPUT_FAILED;
     } /* NULL output file */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, size_t nBytesWritten)
@@ -214,5 +214,5 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageDa
         /* return an error code          */
         return ERROR_OUTPUT_FAILED;
     } /* dimensional write failed    */
-    return 0;
+    return EXIT_NO_ERRORS;
 }

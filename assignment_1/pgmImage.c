@@ -10,6 +10,8 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
+#define EXIT_NO_ERRORS 0
+
 #define MAX_COMMENT_LINE_LENGTH 128
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
@@ -33,7 +35,7 @@ int readpgmFile(char *filename, Image *imagePointer)
 
     /* we're done with the file, so close it */
     fclose(inputFile);
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
@@ -64,7 +66,7 @@ int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
 		/* put character back            */
 		ungetc(nextChar, filePointer);
     } /* not a comment line */
-    return 0;
+    return EXIT_NO_ERRORS;
 }
 
 int readDimensions (FILE *filePointer, char *filename, Image *imagePointer)
@@ -171,5 +173,5 @@ int writepgmFile(char *filename, Image *imagePointer)
 		/* sanity check on write         */
 		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
     } /* per gray value */
-    return 0;
+    return EXIT_NO_ERRORS;
 }

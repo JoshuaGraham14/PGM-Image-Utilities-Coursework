@@ -33,10 +33,8 @@
 #include "pgmErrors.h"
 
 #define EXIT_NO_ERRORS 0
-#define EXIT_BAD_INPUT_FILE 2
-#define EXIT_BAD_OUTPUT_FILE 3
 
-int compareImages(Image *inputImage1, Image *inputImage2);
+void compareImages(Image *inputImage1, Image *inputImage2);
 
 /***********************************/
 /* main routine                    */
@@ -51,15 +49,15 @@ int compareImages(Image *inputImage1, Image *inputImage2);
 int main(int argc, char **argv)
 { /* main() */
 	/* check for correct number of arguments */
-	int returnValue = checkArgumentCount(argc, 3);
-	if(returnValue != 0)
+	int r; //return value
+	if((r = checkArgumentCount(argc, 3)) != 0)
     {
-        if (returnValue == -1)
+        if (r == -1)
         {
             printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
-        return returnValue;
+        return r;
     }
 	
 	/* variables for storing the image - stored in an Image struct       */
@@ -69,33 +67,17 @@ int main(int argc, char **argv)
     Image inputImage2 = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage2.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
     Image *inputImagePtr2 = &inputImage2;
 
-	/* now start reading in the data         */
-    returnValue = readpgmFile(argv[1], inputImagePtr1);
-	if (returnValue != 0)
-    {
-        return EXIT_BAD_INPUT_FILE;
-    }
-
-	returnValue = readpgmFile(argv[2], inputImagePtr2);
-    if (returnValue != 0)
-    {
-         return EXIT_BAD_OUTPUT_FILE;
-    }
+    //Read data:
+	if ((r = readpgmFile(argv[1], inputImagePtr1)) != 0) return r;
+    if ((r = readpgmFile(argv[2], inputImagePtr2)) != 0) return r;
 
     //COMPARE:
-    if (compareImages(inputImagePtr1, inputImagePtr2) == 1)
-    {
-        printf("DIFFERENT\n");
-    }
-    else 
-    {
-        printf("IDENTICAL\n");
-    }
+    compareImages(inputImagePtr1, inputImagePtr2);
 	return EXIT_NO_ERRORS;
 } /* main() */
 
 
-int compareImages(Image *inputImage1, Image *inputImage2)
+void compareImages(Image *inputImage1, Image *inputImage2)
 {
     //COMPARE: magic number, width, height & maxGray
     if (!(
@@ -105,7 +87,8 @@ int compareImages(Image *inputImage1, Image *inputImage2)
     inputImage1->maxGray==inputImage2->maxGray
     ))
     {
-        return 1;
+        printf("DIFFERENT\n");
+        return;
     }
 
     //COMPARE: image data
@@ -115,9 +98,9 @@ int compareImages(Image *inputImage1, Image *inputImage2)
     {
         if(inputImage1->imageData[i] != inputImage2->imageData[i])
         {
-            return 1;
+            printf("DIFFERENT\n");
+            return;
         }
     }
-    
-    return 0;
+    printf("IDENTICAL\n");
 }
