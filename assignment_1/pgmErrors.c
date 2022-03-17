@@ -29,7 +29,7 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
         fclose(filePointer);
 
         /* print an error message */
-        printf("Error: Failed to read pgm image from file%s\n", filename);
+        printf("Error: Failed to read pgm image from file %s\n", filename);
         
         /* and return                    */
         return 1;
@@ -58,17 +58,38 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
     return 0;
 }
 
-int checkDimensionsAndGrays(FILE *filePointer, char *filename, int scanCount, int width, int height, int maxGray, char *commentLine)
+int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine)
 {
 	/* must read exactly three values        */
 	if 	(
-		(scanCount != 3				)	||
+		(scanCount != 2				    )	||
 		(width 	< MIN_IMAGE_DIMENSION	) 	||
 		(width 	> MAX_IMAGE_DIMENSION	) 	||
 		(height < MIN_IMAGE_DIMENSION	) 	||
-		(height > MAX_IMAGE_DIMENSION	) 	||
-        (maxGray	< 0		)               ||
-        (maxGray    > 255     )      
+		(height > MAX_IMAGE_DIMENSION	)
+    )
+	{ /* failed size sanity check    */
+        free(commentLine);
+
+		/* be tidy: close file pointer   */
+		fclose(filePointer);
+
+		/* print an error message */
+		printf("Error: Failed to read pgm image from file %s\n", filename);	
+		
+		/* and return                    */
+		return 1;
+	} /* failed size sanity check    */
+    return 0;
+}
+
+int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, char *commentLine)
+{
+	/* must read exactly three values        */
+	if 	(
+		(scanCount != 1	    )	||
+        (maxGray	< 0		)   ||
+        (maxGray    > 255   )
 		)
 	{ /* failed size sanity check    */
         free(commentLine);
@@ -121,6 +142,20 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         /* and return            */
         return 1;
     } /* fscanf failed */
+    return 0;
+}
+
+int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount)
+{
+    //too many characters
+    if (scanCount >=1)
+    {
+        free(commentLine);
+        free(imageData);
+
+        printf("Error: Failed to read pgm image from file %s\n", filename);
+        return 1;
+    }
     return 0;
 }
 

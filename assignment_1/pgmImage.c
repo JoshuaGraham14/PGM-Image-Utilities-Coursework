@@ -21,11 +21,15 @@ int readpgmFile(char *filename, Image *imagePointer)
     /* if it fails, return error code        */
 	checkInputFile(inputFile);
 
+    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
     if (readMagicNumber (inputFile, filename, imagePointer) == 1) return 1;
-	int scanCount = fscanf(inputFile, " "); // scan whitespace if present */
-    if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
-    if (readDimensionsAndGrays (inputFile, filename, imagePointer) == 1) return 1;
+    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
+    if (readDimensions (inputFile, filename, imagePointer) == 1) return 1;
+    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
+    if (readMaxGray (inputFile, filename, imagePointer) == 1) return 1;
+    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
     if (readImageData (inputFile, filename, imagePointer) == 1) return 1;
+    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
 
     /* we're done with the file, so close it */
     fclose(inputFile);
@@ -42,10 +46,13 @@ int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
 
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
 {
+    int scanCount = fscanf(filePointer, " "); // scan whitespace if present */
+    //printf("SC:%d\n", scanCount);
     /* check for a comment line              */
 	char nextChar = fgetc(filePointer);
 	if (nextChar == '#')
     { /* comment line                */
+        //printf("COMMENT!!!");
 		/* allocate buffer               */
 		imagePointer->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
         /* fgets() reads a line          */
@@ -60,14 +67,18 @@ int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer)
     return 0;
 }
 
-int readDimensionsAndGrays (FILE *filePointer, char *filename, Image *imagePointer)
+int readDimensions (FILE *filePointer, char *filename, Image *imagePointer)
 {
-    /* read in width, height, grays          */
+    /* read in width, height          */
 	/* whitespace to skip blanks             */
-	int scanCount = fscanf(filePointer, " %u %u %u", &(imagePointer->width), &(imagePointer->height), &(imagePointer->maxGray));
+	int scanCount = fscanf(filePointer, " %u %u", &(imagePointer->width), &(imagePointer->height));
+    return checkDimensions(filePointer, filename, scanCount, imagePointer->width, imagePointer->height, imagePointer->commentLine);
+}
 
-	/* sanity checks on size & grays         */
-	return checkDimensionsAndGrays(filePointer, filename, scanCount, imagePointer->width, imagePointer->width, imagePointer->maxGray, imagePointer->commentLine);
+int readMaxGray (FILE *filePointer, char *filename, Image *imagePointer)
+{
+    int scanCount = fscanf(filePointer, " %u", &(imagePointer->maxGray));
+    return checkMaxGray(filePointer, filename, scanCount, imagePointer->maxGray, imagePointer->commentLine);
 }
 
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
@@ -82,15 +93,18 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     unsigned char *nextGrayValue;
 
 	/* pointer for efficient read code       */
-    if(*imagePointer->magic_Number == MAGIC_NUMBER_RAW_PGM){
-         getc(filePointer);
-    }
-   
+    // if(*imagePointer->magic_Number == MAGIC_NUMBER_RAW_PGM){
+    //     //getc(filePointer);
+    // }
+
+    int grayValue;
+    int scanCount = 1;
+    
 	for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
     { /* per gray value */
 		/* read next value               */
-		int grayValue = -1;
-        int scanCount;
+        // /* */if (readCommentLine (filePointer, filename, imagePointer) == 1) return 1;
+	    grayValue = -1;
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
             scanCount = fscanf(filePointer, " %u", &grayValue);
@@ -103,12 +117,16 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
         }
 
 		/* sanity check	                 */
+        //printf("%d, %d\n", scanCount, grayValue);
         if (checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue) == 1) return 1;
         
 		/* set the pixel value           */
 		*nextGrayValue = (unsigned char) grayValue;
     } /* per gray value */
-    return 0;
+    scanCount = fscanf(filePointer, " %u", &grayValue);
+    //printf("%d, %d\n", scanCount, grayValue);
+    //IF too many pixels return 1 - //ELSE return 0.
+    return checkIfTooManyPixels(filePointer, filename, imagePointer->imageData,  imagePointer->commentLine, scanCount);
 }
 
 int writepgmFile(char *filename, Image *imagePointer)
