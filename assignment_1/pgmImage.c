@@ -17,19 +17,19 @@
 int readpgmFile(char *filename, Image *imagePointer)
 {
     FILE *inputFile = fopen(filename, "r");
+    //checkInputFile
+    int r;
+    if ((r = checkInputFile(inputFile, filename)) != 0) return r;
 
-    /* if it fails, return error code        */
-	checkInputFile(inputFile);
-
-    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
-    if (readMagicNumber (inputFile, filename, imagePointer) == 1) return 1;
-    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
-    if (readDimensions (inputFile, filename, imagePointer) == 1) return 1;
-    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
-    if (readMaxGray (inputFile, filename, imagePointer) == 1) return 1;
-    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
-    if (readImageData (inputFile, filename, imagePointer) == 1) return 1;
-    /* */if (readCommentLine (inputFile, filename, imagePointer) == 1) return 1;
+    /*//*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    if ((r = readMagicNumber (inputFile, filename, imagePointer)) != 0) return r;
+    /*//*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    if ((r = readDimensions (inputFile, filename, imagePointer)) != 0) return r;
+    /*//*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    if ((r = readMaxGray (inputFile, filename, imagePointer)) != 0) return r;
+    /*//*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    if ((r = readImageData (inputFile, filename, imagePointer)) != 0) return r;
+    /*//*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* we're done with the file, so close it */
     fclose(inputFile);
@@ -88,7 +88,8 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 	imagePointer->imageData = (unsigned char *) malloc(nImageBytes);
 
 	/* sanity check for memory allocation    */
-	if (checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine) == 1) return 1;
+    int r;
+	if ((r = checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
 
     unsigned char *nextGrayValue;
 
@@ -118,7 +119,8 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 
 		/* sanity check	                 */
         //printf("%d, %d\n", scanCount, grayValue);
-        if (checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue) == 1) return 1;
+        int r;
+        if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue)) != 0) return r;
         
 		/* set the pixel value           */
 		*nextGrayValue = (unsigned char) grayValue;
@@ -135,13 +137,14 @@ int writepgmFile(char *filename, Image *imagePointer)
 	FILE *outputFile = fopen(filename, "w");
 
     /* check whether file opening worked     */
-    if (checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine) == 1) return 1;
+    int r;
+    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
     
     /* write magic number, size & gray value */
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
-	if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
+	if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
 
     long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
 
@@ -166,7 +169,7 @@ int writepgmFile(char *filename, Image *imagePointer)
         }
 
 		/* sanity check on write         */
-		if (checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten) == 1) return 1;
+		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
     } /* per gray value */
     return 0;
 }

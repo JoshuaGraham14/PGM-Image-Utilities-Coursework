@@ -21,26 +21,29 @@
 #define ERROR_BAD_MAX_GRAY_VALUE 6
 #define ERROR_IMAGE_MALLOC_FAILED 7
 #define ERROR_BAD_DATA 8
-#define OUTPUT_FAILED 9
-#define MISCELLANEOUS 100
+#define ERROR_OUTPUT_FAILED 9
+#define ERROR_MISCELLANEOUS 100
 
 int checkArgumentCount(int argc, int numOfArgs)
 {
     if (argc != numOfArgs)
     { /* wrong arg count */
-        if (argc == 0) return EXIT_NO_ERRORS;
+        if (argc == 0) return -1;
+
+        printf("ERROR: Bad Argument Count\n");
+        return ERROR_BAD_ARGUMENT_COUNT;
     } /* wrong arg count */
-    printf("ERROR: Bad Argument Count\n");
-    return ERROR_BAD_ARGUMENT_COUNT;
+    return EXIT_NO_ERRORS;
 }
 
-int checkInputFile(FILE *filePointer)
+int checkInputFile(FILE *filePointer, char *filename)
 {
     if (filePointer == NULL)
     {
-        return 1;
+        printf("ERROR: Bad File Name (%s)\n", filename);
+        return ERROR_BAD_FILE_NAME;
     }
-	return 0;
+	return EXIT_NO_ERRORS;
 }
 
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number)
@@ -51,10 +54,10 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
         fclose(filePointer);
 
         /* print an error message */
-        printf("Error: Failed to read pgm image from file %s\n", filename);
+        printf("ERROR: Bad Magic Number (%s)\n", filename);
         
         /* and return                    */
-        return 1;
+        return ERROR_BAD_MAGIC_NUMBER;
     } /* failed magic number check   */
     return 0;
 }
@@ -71,10 +74,10 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
         free(commentLine);
 
         /* print an error message */
-        printf("Error: Failed to read pgm image from file %s\n", filename);
+        printf("ERROR: Bad Comment Line (%s)\n", filename);
     
         /* and return            */
-        return 1;
+        return ERROR_BAD_COMMENT_LINE;
     } /* NULL comment read   */
      /* comment line */
     return 0;
@@ -97,10 +100,10 @@ int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width,
 		fclose(filePointer);
 
 		/* print an error message */
-		printf("Error: Failed to read pgm image from file %s\n", filename);	
+		printf("ERROR: Bad Dimensions (%s)\n", filename);	
 		
 		/* and return                    */
-		return 1;
+		return ERROR_BAD_DIMENSIONS;
 	} /* failed size sanity check    */
     return 0;
 }
@@ -120,10 +123,10 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, 
 		fclose(filePointer);
 
 		/* print an error message */
-		printf("Error: Failed to read pgm image from file %s\n", filename);	
+		printf("ERROR: Bad Max Gray Value (%s)\n", filename);	
 		
 		/* and return                    */
-		return 1;
+		return ERROR_BAD_MAX_GRAY_VALUE;
 	} /* failed size sanity check    */
     return 0;
 }
@@ -139,10 +142,10 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
         fclose(filePointer);
 
         /* print an error message */
-        printf("Error: Failed to read pgm image from file %s\n", filename);
+        printf("ERROR: Image Malloc Failed\n");
         
         /* return error code             */
-        return 1;
+        return ERROR_IMAGE_MALLOC_FAILED;
     } /* malloc failed */
     return 0;
 }
@@ -159,10 +162,10 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         fclose(filePointer);
 
         /* print error message   */
-        printf("Error: Failed to read pgm image from file %s\n", filename);
+        printf("ERROR: Bad Data (%s) \n", filename);
 
         /* and return            */
-        return 1;
+        return ERROR_BAD_DATA;
     } /* fscanf failed */
     return 0;
 }
@@ -175,8 +178,8 @@ int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imag
         free(commentLine);
         free(imageData);
 
-        printf("Error: Failed to read pgm image from file %s\n", filename);
-        return 1;
+        printf("ERROR: Miscellaneous (too many pixels for specified dimensions)\n");
+        return ERROR_MISCELLANEOUS;
     }
     return 0;
 }
@@ -190,9 +193,9 @@ int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData,
         free(imageData);
 
         /* print an error message        */
-        printf("Error: Failed to write pgm image to file %s\n", filename);
+        printf("ERROR: Output Failed (%s)\n", filename);
 
-        return 1;
+        return ERROR_OUTPUT_FAILED;
     } /* NULL output file */
     return 0;
 }
@@ -206,10 +209,10 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageDa
         free(imageData);
 
         /* print an error message        */
-        printf("Error: Failed to write pgm image to file %s\n", filename);
+        printf("ERROR: Output Failed (%s)\n", filename);
 
         /* return an error code          */
-        return 1;
+        return ERROR_OUTPUT_FAILED;
     } /* dimensional write failed    */
     return 0;
 }

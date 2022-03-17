@@ -1,5 +1,5 @@
 int checkArgumentCount(int argc, int numOfArgs);
-int checkInputFile(FILE *filePointer);
+int checkInputFile(FILE *filePointer, char *filename);
 int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number);
 int checkCommentLine(FILE *filePointer, char *filename, char *commentLine);
 int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine);

@@ -54,7 +54,11 @@ int main(int argc, char **argv)
 	int returnValue = checkArgumentCount(argc, 3);
 	if(returnValue != 0)
     {
-        printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+        if (returnValue == -1)
+        {
+            printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+            return EXIT_NO_ERRORS;
+        }
         return returnValue;
     }
 	
@@ -66,7 +70,7 @@ int main(int argc, char **argv)
     Image *inputImagePtr2 = &inputImage2;
 
 	/* now start reading in the data         */
-    int returnValue = readpgmFile(argv[1], inputImagePtr1);
+    returnValue = readpgmFile(argv[1], inputImagePtr1);
 	if (returnValue != 0)
     {
         return EXIT_BAD_INPUT_FILE;

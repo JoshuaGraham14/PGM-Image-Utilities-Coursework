@@ -49,7 +49,11 @@ int main(int argc, char **argv)
     int returnValue = checkArgumentCount(argc, 3);
 	if(returnValue != 0)
     {
-        printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+        if (returnValue == -1)
+        {
+            printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+            return EXIT_NO_ERRORS;
+        }
         return returnValue;
     }
 	
