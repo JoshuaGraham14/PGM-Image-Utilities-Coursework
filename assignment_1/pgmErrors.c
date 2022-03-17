@@ -30,6 +30,7 @@ int checkArgumentCount(int argc, int numOfArgs)
     { /* wrong arg count */
         if (argc == 0) return EXIT_NO_ERRORS;
     } /* wrong arg count */
+    printf("ERROR: Bad Argument Count\n");
     return ERROR_BAD_ARGUMENT_COUNT;
 }
 
