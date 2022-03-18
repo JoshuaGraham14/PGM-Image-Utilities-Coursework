@@ -28,7 +28,7 @@ int checkArgumentCount(int argc, int numOfArgs)
 {
     if (argc != numOfArgs)
     { /* wrong arg count */
-        if (argc == 0) return -1;
+        if (argc == 1) return -1;
 
         printf("ERROR: Bad Argument Count\n");
         return ERROR_BAD_ARGUMENT_COUNT;
@@ -166,7 +166,7 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
         fclose(filePointer);
 
         /* print error message   */
-        printf("ERROR: Bad Data (%s) \n", filename);
+        printf("ERROR: Bad Data (%s)\n", filename);
 
         /* and return            */
         return ERROR_BAD_DATA;
