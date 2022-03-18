@@ -1,5 +1,86 @@
 #!/bin/sh
 
+#----------- Testing valid pgm files ----------#
+echo -n -e "* TESTING VALID PGM FILES *\n"
+
+echo -n "Test 1 - pgmEcho: "
+EXPECTED="ECHOED"
+RESULT=$(./pgmEcho pgmFiles/saturn.pgm pgmFiles/temp.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 2 - pgmComp - identical: "
+EXPECTED="IDENTICAL"
+RESULT=$(./pgmComp pgmFiles/saturn.pgm pgmFiles/temp.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 3 - pgmComp - different: "
+EXPECTED="DIFFERENT"
+RESULT=$(./pgmComp pgmFiles/saturn.pgm pgmFiles/first.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 4 - pgma2b: "
+EXPECTED="CONVERTED"
+RESULT=$(./pgma2b pgmFiles/saturn.pgm pgmFiles/temp.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 5 - pgmb2a: "
+EXPECTED="CONVERTED"
+RESULT=$(./pgmb2a pgmFiles/saturn.pgm pgmFiles/temp.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 6 - pgmReduce: "
+EXPECTED="REDUCED"
+RESULT=$(./pgmReduce pgmFiles/saturn.pgm 2 pgmFiles/temp.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
 #----------- Testing invalid pgm files ----------#
 echo -n -e "* TESTING INVALID PGM FILES *\n"
 
