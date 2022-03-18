@@ -27,9 +27,6 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-/* Constants */
-#define EXIT_NO_ERRORS 0
-
 int main(int argc, char **argv)
 { /* main() */
 	

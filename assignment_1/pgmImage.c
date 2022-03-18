@@ -27,14 +27,6 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-/* Constants */
-#define EXIT_NO_ERRORS 0
-
-#define MAX_COMMENT_LINE_LENGTH 128
-#define MAGIC_NUMBER_RAW_PGM 0x3550
-#define MAGIC_NUMBER_ASCII_PGM 0x3250
-
-
 /* FUNC: fills imagePointer with NULL data values for Image struct */
 void createNewImage(Image *imagePointer)
 {
@@ -53,36 +45,36 @@ int readpgmFile(char *filename, Image *imagePointer)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
-    /*NOTE: for the following functions, return the return value of the function only if it was not successful/*
-    /*--------------------------------------------------------------------------------------------------------/*
+    // NOTE: for the following functions, return the return value of the function only if it was not successful 
+    // ********************************************************************************************************
 
     /* check the input file to see if can be opened*/
     int r; //return value variable.
     if ((r = checkInputFile(inputFile, filename)) != 0) return r;
 
-    /*/comment check/*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* read the magic number: */
     if ((r = readMagicNumber (inputFile, filename, imagePointer)) != 0) return r;
     
-    /*/comment check/*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* read the dimensions: */
     if ((r = readDimensions (inputFile, filename, imagePointer)) != 0) return r;
 
-    /*/comment check/*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* read the max gray value: */
     if ((r = readMaxGray (inputFile, filename, imagePointer)) != 0) return r;
 
-    /*/comment check/*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* read the image data: */
     if ((r = readImageData (inputFile, filename, imagePointer)) != 0) return r;
 
-    /*/comment check/*/if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
-    /*--------------------------------------------------------------------------------------------------------/*
+    // ********************************************************************************************************
 
     /* we're done with the file, so close it */
     fclose(inputFile);

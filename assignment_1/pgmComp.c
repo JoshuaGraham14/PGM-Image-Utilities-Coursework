@@ -29,9 +29,6 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
-/* Constants */
-#define EXIT_NO_ERRORS 0
-
 //compareImages function declared
 void compareImages(Image *inputImage1, Image *inputImage2);
 

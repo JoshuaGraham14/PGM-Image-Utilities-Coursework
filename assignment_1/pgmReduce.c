@@ -28,12 +28,6 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-/* Constants */
-#define EXIT_NO_ERRORS 0
-
-#define MAGIC_NUMBER_RAW_PGM 0x3550
-#define MAGIC_NUMBER_ASCII_PGM 0x3250
-
 //writeReduced function declared
 int writeReduced(char *filename, Image *imagePointer, int reductionFactor);
 

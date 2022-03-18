@@ -29,9 +29,6 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
-/* Constants */
-#define EXIT_NO_ERRORS 0
-
 /***********************************/
 /* main routine                    */
 /*                                 */
