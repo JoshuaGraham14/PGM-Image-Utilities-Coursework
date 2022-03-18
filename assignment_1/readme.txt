@@ -1,6 +1,13 @@
-PGM Utilities
+/* Joshua Graham                   */
+/* ID: 201496708                   */
+/* sc21jg@leeds.ac.uk              */
 
-INSTRUCTIONS:
+PGM Utilities README file
+
+
+INSTRUCTIONS
+------------
+
 To run:
 - First clean the makefile: 'make clean'.
 - Then make the makefile: 'make all'
@@ -11,7 +18,10 @@ To run:
     - pgmb2a
     - pgmReduce
 
-MODULES:
+
+MODULES
+-------
+
 - Module pgmEcho.c
 Takes in as input a file of type .pgm and outputs it to a different file.
 INPUTS: command-line parameters: inputImage, outputImage.

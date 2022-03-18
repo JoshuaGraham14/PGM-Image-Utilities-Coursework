@@ -221,6 +221,7 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageDa
     return EXIT_NO_ERRORS;
 }
 
+/* Check reduction factor is an integer and is greater than 0 */
 int checkReductionFactor(char *reductionFactorCLI)
 {
     if (atoi(reductionFactorCLI))

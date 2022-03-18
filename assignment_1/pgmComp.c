@@ -11,29 +11,27 @@
 /***********************************/
 
 /***********************************/
-/* reads two pgm files and compares*/
+/* Reads two pgm files and compares*/
 /* them to see if they are         */
-/* logically equivalent            */ 
+/* logically equivalent.           */ 
 /***********************************/
 
 /***********************************/
 /* Main Routine                    */
 /***********************************/
 
-/* library for I/O routines        */
-#include <stdio.h>
+/* Libraries */
+#include <stdio.h> //library for I/O routines
+#include <stdlib.h> //library for memory routines
+#include <string.h> //library for string manipulation
 
-/* library for memory routines     */
-#include <stdlib.h>
-
-#include <string.h>
-#include <stdbool.h>
-
+/* Header files */
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
 #define EXIT_NO_ERRORS 0
 
+//compareImages function declared
 void compareImages(Image *inputImage1, Image *inputImage2);
 
 /***********************************/
@@ -48,35 +46,53 @@ void compareImages(Image *inputImage1, Image *inputImage2);
 /***********************************/
 int main(int argc, char **argv)
 { /* main() */
+
 	/* check for correct number of arguments */
-	int r; //return value
+    int r; //return value variable
+    /* check if there were 3 CLI arguments   */
 	if((r = checkArgumentCount(argc, 3)) != 0)
     {
+        /* if there weren't 3 CLI arguments:   */
         if (r == -1)
         {
+            /* if there were no CLI arguments    */
+            /* output usage message and return 0 */
             printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
+        /* else return the return value of the checkArgumentCount() method */
         return r;
     }
-	
-	/* variables for storing the image - stored in an Image struct       */
-    Image *imagePtr1 = malloc(sizeof(Image));
-    createNewImage(imagePtr1);
 
+	/* create an imagePtr to store the pgm image data as an Image struct */
+    Image *imagePtr1 = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
+    createNewImage(imagePtr1); // fills imagePtr1 struct field values with NULL data 
+
+    /* do the same for imagePtr2/second input file */
     Image *imagePtr2 = malloc(sizeof(Image));
     createNewImage(imagePtr2);
 
-    //Read data:
+    /* Read data from both input files and only return r (the return value) if it wasn't successful */
 	if ((r = readpgmFile(argv[1], imagePtr1)) != 0) return r;
     if ((r = readpgmFile(argv[2], imagePtr2)) != 0) return r;
 
-    //COMPARE:
+    /* Compare the two files: */
     compareImages(imagePtr1, imagePtr2);
 	return EXIT_NO_ERRORS;
 } /* main() */
 
-
+/***********************************/
+/* FUNC: compareImages             */
+/*                                 */
+/* Parameters:                     */
+/* - inputImage1: Image pointer    */
+/* - inputImage2: Image pointer    */
+/*                                 */
+/* prints "DIFFERENT" if inputs    */
+/* are different or prints         */
+/* "IDENTICAL" if inputs are       */
+/* identical                       */
+/***********************************/
 void compareImages(Image *inputImage1, Image *inputImage2)
 {
     //COMPARE: magic number, width, height & maxGray
@@ -87,20 +103,26 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     inputImage1->maxGray==inputImage2->maxGray
     ))
     {
+        /* files are different */
         printf("DIFFERENT\n");
         return;
     }
 
     //COMPARE: image data
+    /* iterate through each imageData array from each input */
+    /* file simultaneously and compare the two values       */
     long nImageBytes = inputImage1->width * inputImage1->height * sizeof(unsigned char);
     int i;
     for (i = 0; i<nImageBytes; i++)
     {
+        /* check if the current pixel from each file match */
         if(inputImage1->imageData[i] != inputImage2->imageData[i])
         {
+            /* files are different */
             printf("DIFFERENT\n");
             return;
         }
     }
+    /* if no differences found -> files are identical */
     printf("IDENTICAL\n");
 }
