@@ -9,6 +9,7 @@ typedef struct ImageStruct
 	unsigned char *imageData;
 } Image;
 
+void createNewImage(Image *imagePointer);
 int readpgmFile(char *filename, Image *imagePointer);
 int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer);
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer);

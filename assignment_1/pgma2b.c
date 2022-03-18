@@ -47,15 +47,15 @@ int main(int argc, char **argv)
     }
 
 	/* variables for storing the image - stored in an Image struct       */
-    Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
-    Image *inputImagePtr = &inputImage;
+    Image *imagePtr = malloc(sizeof(Image));
+    createNewImage(imagePtr);
 
     // *TO DO*: Check magic nuber is P2
-    if ((r = readpgmFile(argv[1], inputImagePtr)) != 0) return r;
+    if ((r = readpgmFile(argv[1], imagePtr)) != 0) return r;
 
-    inputImage.magic_number[1] = '5';
+    imagePtr->magic_number[1] = '5';
 
-    if ((r = writepgmFile(argv[2], inputImagePtr)) != 0) return r;
+    if ((r = writepgmFile(argv[2], imagePtr)) != 0) return r;
 
 	/* at this point, we are done and can exit with a success code */
     printf("CONVERTED\n");

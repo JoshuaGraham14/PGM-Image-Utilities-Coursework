@@ -56,15 +56,15 @@ int main(int argc, char **argv)
     }
 	
 	/* variables for storing the image - stored in an Image struct       */
-    Image inputImage = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
-    Image *inputImagePtr = &inputImage;
+    Image *imagePtr = malloc(sizeof(Image));
+    createNewImage(imagePtr);
 
     /* now start reading in the data         */
-    if ((r = readpgmFile(argv[1], inputImagePtr)) != 0) return r;
+    if ((r = readpgmFile(argv[1], imagePtr)) != 0) return r;
 
     //REDUCE
     int reductionFactor = atoi(argv[2]);
-    if ((r = writeReduced(argv[3], inputImagePtr, reductionFactor)) != 0) return r;
+    if ((r = writeReduced(argv[3], imagePtr, reductionFactor)) != 0) return r;
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");

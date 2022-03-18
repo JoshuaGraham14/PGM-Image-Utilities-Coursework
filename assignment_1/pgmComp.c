@@ -61,18 +61,18 @@ int main(int argc, char **argv)
     }
 	
 	/* variables for storing the image - stored in an Image struct       */
-    Image inputImage1 = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage1.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
-    Image *inputImagePtr1 = &inputImage1;
+    Image *imagePtr1 = malloc(sizeof(Image));
+    createNewImage(imagePtr1);
 
-    Image inputImage2 = {.magic_number={'0','0'}, .magic_Number=(unsigned short *) inputImage2.magic_number, .commentLine=NULL, .width=0, .height=0, .maxGray=255, .imageData=NULL};
-    Image *inputImagePtr2 = &inputImage2;
+    Image *imagePtr2 = malloc(sizeof(Image));
+    createNewImage(imagePtr2);
 
     //Read data:
-	if ((r = readpgmFile(argv[1], inputImagePtr1)) != 0) return r;
-    if ((r = readpgmFile(argv[2], inputImagePtr2)) != 0) return r;
+	if ((r = readpgmFile(argv[1], imagePtr1)) != 0) return r;
+    if ((r = readpgmFile(argv[2], imagePtr2)) != 0) return r;
 
     //COMPARE:
-    compareImages(inputImagePtr1, inputImagePtr2);
+    compareImages(imagePtr1, imagePtr2);
 	return EXIT_NO_ERRORS;
 } /* main() */
 
