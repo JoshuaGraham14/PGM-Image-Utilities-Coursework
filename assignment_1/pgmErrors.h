@@ -9,3 +9,4 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char *imageData,
 int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, int scanCount);
 int checkOutputFile(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine);
 int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine, size_t nBytesWritten);
+int checkReductionFactor(char *reductionFactorCLI);

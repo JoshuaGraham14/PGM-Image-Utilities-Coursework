@@ -49,11 +49,8 @@ int main(int argc, char **argv)
         return r;
     }
 
-    //*TO DO * - Check reduction factor is int + > 0
-    if (atoi(argv[2]) < 1)
-    {
-        //reduction factor n must be greater than 0
-    }
+    //Check reduction factor is int and is > 0
+    if((r = checkReductionFactor(argv[2])) != 0) return r;
 	
 	/* variables for storing the image - stored in an Image struct       */
     Image *imagePtr = malloc(sizeof(Image));

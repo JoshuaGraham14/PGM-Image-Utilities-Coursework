@@ -220,3 +220,22 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char *imageDa
     } /* dimensional write failed    */
     return EXIT_NO_ERRORS;
 }
+
+int checkReductionFactor(char *reductionFactorCLI)
+{
+    if (atoi(reductionFactorCLI))
+    {
+        int reductionFactor = atoi(reductionFactorCLI);
+        if (reductionFactor <= 0)
+        {
+            printf("ERROR: Miscellaneous (reduction factor invalid)\n");
+            return ERROR_MISCELLANEOUS; 
+        }
+    }
+    else
+    {
+        printf("ERROR: Miscellaneous (reduction factor invalid)\n");
+        return ERROR_MISCELLANEOUS; 
+    }
+    return EXIT_NO_ERRORS;
+}
