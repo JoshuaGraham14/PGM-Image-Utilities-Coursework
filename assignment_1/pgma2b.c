@@ -27,6 +27,7 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
+/* Constants */
 #define EXIT_NO_ERRORS 0
 
 int main(int argc, char **argv)
@@ -53,7 +54,8 @@ int main(int argc, char **argv)
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
     createNewImage(imagePtr); // fills imagePtr1 struct field values with NULL data 
 
-    /* Read data from input file, store in imagePtr and only return r (the return value) if it wasn't successful */
+    /* Read data from input file, store data in imagePtr                */
+    /* Only return r (the return value) if it reading wasn't successful */
     if ((r = readpgmFile(argv[1], imagePtr)) != 0) return r;
 
     /* Set the magicNumber to "P5" as the ASCII file will be written to in binary */

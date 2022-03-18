@@ -28,6 +28,7 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
+/* Constants */
 #define EXIT_NO_ERRORS 0
 
 #define MAGIC_NUMBER_RAW_PGM 0x3550
@@ -81,7 +82,7 @@ int main(int argc, char **argv)
 /* FUNC: writeReduced              */
 /*                                 */
 /* Parameters:                     */
-/* - filname: filename string      */
+/* - filename: filename string     */
 /* - imagePointer: Image pointer   */
 /* - reductionFactor: Reduction Factor */
 /*                                 */
