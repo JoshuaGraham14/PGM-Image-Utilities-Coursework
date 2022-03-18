@@ -64,22 +64,26 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
 
 int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
 {
-	char *commentString = fgets(commentLine, MAX_COMMENT_LINE_LENGTH, filePointer);
-    /* NULL means failure            */
-    if (commentString == NULL)
+    int x = 1;
+    char *commentString = commentLine;;
+    while(*commentString != '\n')
     {
-          /* close file            */
-        fclose(filePointer);
+        *commentString=fgetc(filePointer);
+        //printf("%s\n", commentString);
+        if(x>128 || commentString == NULL)
+        {
+            fclose(filePointer);
 
-        free(commentLine);
+            free(commentLine);
 
-        /* print an error message */
-        printf("ERROR: Bad Comment Line (%s)\n", filename);
+            /* print an error message */
+            printf("ERROR: Bad Comment Line (%s)\n", filename);
     
-        /* and return            */
-        return ERROR_BAD_COMMENT_LINE;
-    } /* NULL comment read   */
-     /* comment line */
+            /* and return            */
+            return ERROR_BAD_COMMENT_LINE;
+        }
+        x++;
+    }
     return EXIT_NO_ERRORS;
 }
 
