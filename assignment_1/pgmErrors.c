@@ -117,9 +117,9 @@ int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width,
 	if 	(
 		(scanCount != 2				    )	||
 		(width 	< MIN_IMAGE_DIMENSION	) 	||
-		(width 	> MAX_IMAGE_DIMENSION	) 	||
+		(width 	>= MAX_IMAGE_DIMENSION	) 	||
 		(height < MIN_IMAGE_DIMENSION	) 	||
-		(height > MAX_IMAGE_DIMENSION	)
+		(height >= MAX_IMAGE_DIMENSION	)
     )
 	{ /* failed size sanity check    */
         /* free memory           */
