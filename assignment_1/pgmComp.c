@@ -55,7 +55,7 @@ int main(int argc, char **argv)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
-            printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+            printf("Usage: %s inputImage.pgm inputImage.pgm\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
