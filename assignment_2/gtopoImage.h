@@ -8,3 +8,4 @@ typedef struct ImageStruct
 int createNewImage(Image *imagePointer, char *width, char *height);
 int readGtopoFile(char *filename, Image *imagePointer);
 int writeGtopoFile(char *filename, Image *imagePointer);
+short readValue(FILE *filePointer);

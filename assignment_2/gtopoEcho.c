@@ -63,23 +63,9 @@ int main(int argc, char **argv)
     //     return r;
     // }
 
-    FILE *filePointer = fopen(argv[1], "r"); //open file in read mode.
-
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
     if ((r = createNewImage(imagePtr, argv[2], argv[3])) != 0) return r; // fills imagePtr struct field values with NULL data
-
-    short x;
-
-    for (int i=0; i<imagePtr->height; i++)
-    {
-        for (int j=0; j<imagePtr->width; j++)
-        {
-            short x = readValue(filePointer);
-            printf("%d ", x);
-        }
-        printf("\n");
-    }
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
@@ -92,21 +78,3 @@ int main(int argc, char **argv)
     printf("ECHOED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
-
-short readValue(FILE *filePointer)
-{
-    int left8bit;
-    int right8bit;
-    int scanCount;
-
-    left8bit = 0;
-    scanCount = fread(&left8bit, 1, 1, filePointer);
-    left8bit -= 256;
-    right8bit = 0;
-    scanCount = fread(&right8bit, 1, 1, filePointer);
-    right8bit -= 256;
-    int16_t positiveRight8bit = right8bit & 255; //remove negative
-    int16_t result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
-
-    return result;
-}

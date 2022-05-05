@@ -34,8 +34,8 @@ int createNewImage(Image *imagePointer, char *width, char *height)
 	if ((r = checkWidthAndHeight(width, height)) != 0) return r;
 
     //if width and height provided are valid
-    imagePointer -> width=atoi(width);
-    imagePointer -> height=atoi(height);
+    imagePointer->width =atoi(width);
+    imagePointer->height=atoi(height);
     imagePointer->imageData=NULL;
 
     return EXIT_NO_ERRORS;
@@ -44,7 +44,19 @@ int createNewImage(Image *imagePointer, char *width, char *height)
 /* FUNC: collection of other pgmImage methods - used to read in a pgmFile */
 int readGtopoFile(char *filename, Image *imagePointer)
 {
-    FILE *inputFile = fopen(filename, "r"); //open file in read mode.
+    FILE *filePointer = fopen(filename, "r"); //open file in read mode.
+
+    short x;
+
+    for (int i=0; i<imagePointer->height; i++)
+    {
+        for (int j=0; j<imagePointer->width; j++)
+        {
+            short x = readValue(filePointer);
+            printf("%d ", x);
+        }
+        printf("\n");
+    }
 
     return EXIT_NO_ERRORS; //success
 }
@@ -53,4 +65,22 @@ int readGtopoFile(char *filename, Image *imagePointer)
 int writeGtopoFile(char *filename, Image *imagePointer)
 {
     return EXIT_NO_ERRORS;
+}
+
+short readValue(FILE *filePointer)
+{
+    int left8bit;
+    int right8bit;
+    int scanCount;
+
+    left8bit = 0;
+    scanCount = fread(&left8bit, 1, 1, filePointer);
+    left8bit -= 256;
+    right8bit = 0;
+    scanCount = fread(&right8bit, 1, 1, filePointer);
+    right8bit -= 256;
+    int16_t positiveRight8bit = right8bit & 255; //remove negative
+    int16_t result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
+
+    return result;
 }
