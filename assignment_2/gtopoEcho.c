@@ -47,10 +47,10 @@ int main(int argc, char **argv)
 
 	/* check for correct number of arguments */
     int r; //return value variable
-    /* check if there were 4 CLI arguments   */
-	if((r = checkArgumentCount(argc, 4)) != 0)
+    /* check if there were 5 CLI arguments   */
+	if((r = checkArgumentCount(argc, 5)) != 0)
     {
-        /* if there weren't 4 CLI arguments:   */
+        /* if there weren't 5 CLI arguments:   */
         if (r == -1)
         {
             /* if there were no CLI arguments    */
