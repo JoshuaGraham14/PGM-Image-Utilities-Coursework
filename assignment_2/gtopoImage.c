@@ -30,13 +30,8 @@
 /* FUNC: fills imagePointer with NULL data values for Image struct */
 void createNewImage(Image *imagePointer)
 {
-    imagePointer -> magic_number[0]='0';
-    imagePointer -> magic_number[1]='0';
-    imagePointer -> magic_Number= (unsigned short *) imagePointer->magic_number;
-    imagePointer -> commentLine=NULL;
     imagePointer -> width=0;
     imagePointer -> height=0;
-    imagePointer -> maxGray=255;
     imagePointer->imageData=NULL;
 }
 
