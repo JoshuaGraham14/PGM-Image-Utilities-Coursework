@@ -65,13 +65,15 @@ int main(int argc, char **argv)
 
     FILE *filePointer = fopen(argv[1], "r"); //open file in read mode.
 
-    short x;
-    int height = atoi(argv[2]);
-    int width = atoi(argv[3]);
+	/* create an imagePtr to store the pgm image data as an Image struct */
+    Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
+    if ((r = createNewImage(imagePtr, argv[2], argv[3])) != 0) return r; // fills imagePtr struct field values with NULL data
 
-    for (int i=0; i<height; i++)
+    short x;
+
+    for (int i=0; i<imagePtr->height; i++)
     {
-        for (int j=0; j<width; j++)
+        for (int j=0; j<imagePtr->width; j++)
         {
             short x = readValue(filePointer);
             printf("%d ", x);
@@ -79,16 +81,12 @@ int main(int argc, char **argv)
         printf("\n");
     }
 
-	/* create an imagePtr to store the pgm image data as an Image struct */
-    Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    createNewImage(imagePtr); // fills imagePtr struct field values with NULL data 
-
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
 	if ((r = readGtopoFile(argv[1], imagePtr)) != 0) return r;
 
     /* Write data to output file and only return r (the return value) if it wasn't successful */
-	if ((r = writeGtopoFile(argv[2], imagePtr)) != 0) return r;
+	if ((r = writeGtopoFile(argv[4], imagePtr)) != 0) return r;
 
 	/* at this point, we are done and can exit with a success code */
     printf("ECHOED\n");

@@ -16,3 +16,5 @@
 #define ERROR_BAD_DATA 8
 #define ERROR_OUTPUT_FAILED 9
 #define ERROR_MISCELLANEOUS 100
+
+int checkWidthAndHeight(char *width, char *height);

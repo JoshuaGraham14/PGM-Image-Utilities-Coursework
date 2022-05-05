@@ -28,11 +28,17 @@
 #include "gtopoImage.h"
 
 /* FUNC: fills imagePointer with NULL data values for Image struct */
-void createNewImage(Image *imagePointer)
+int createNewImage(Image *imagePointer, char *width, char *height)
 {
-    imagePointer -> width=0;
-    imagePointer -> height=0;
+    int r; //return value variable.
+	if ((r = checkWidthAndHeight(width, height)) != 0) return r;
+
+    //if width and height provided are valid
+    imagePointer -> width=atoi(width);
+    imagePointer -> height=atoi(height);
     imagePointer->imageData=NULL;
+
+    return EXIT_NO_ERRORS;
 }
 
 /* FUNC: collection of other pgmImage methods - used to read in a pgmFile */
