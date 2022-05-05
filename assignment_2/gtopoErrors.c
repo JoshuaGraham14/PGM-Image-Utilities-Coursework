@@ -24,6 +24,38 @@
 /* Header files */
 #include "gtopoErrors.h"
 
+/* FUNC: checks the number of arguments supplied against the specified number of arguments */
+int checkArgumentCount(int argc, int numOfArgs)
+{
+    if (argc != numOfArgs)
+    { /* wrong arg count */
+        /* IF there were no arguments */
+        if (argc == 1) return -1;
+
+        /* ELSE output error message and return with error code */ 
+        printf("ERROR: Bad Argument Count\n");
+        return ERROR_BAD_ARGUMENT_COUNT;
+    } /* wrong arg count */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
+/* FUNC: checks the input file is valid */
+int checkInputFile(FILE *filePointer, char *filename)
+{
+    /* if it fails, return error code        */
+    if (filePointer == NULL)
+    {
+         /* print an error message */
+        printf("ERROR: Bad File Name (%s)\n", filename);
+        return ERROR_BAD_FILE_NAME;
+    }
+
+    /* ELSE return with success code */
+	return EXIT_NO_ERRORS;
+}
+
 /* FUNC: Check reduction factor is an integer and is greater than 0 */
 int checkWidthAndHeight(char *width, char *height)
 {

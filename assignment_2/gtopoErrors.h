@@ -17,4 +17,6 @@
 #define ERROR_OUTPUT_FAILED 9
 #define ERROR_MISCELLANEOUS 100
 
+int checkArgumentCount(int argc, int numOfArgs);
+int checkInputFile(FILE *filePointer, char *filename);
 int checkWidthAndHeight(char *width, char *height);

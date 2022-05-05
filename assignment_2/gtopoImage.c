@@ -46,6 +46,9 @@ int readGtopoFile(char *filename, Image *imagePointer)
 {
     FILE *filePointer = fopen(filename, "r"); //open file in read mode.
 
+    int r; //return value variable.
+    if ((r = checkInputFile(filePointer, filename)) != 0) return r;
+
     short x;
 
     for (int i=0; i<imagePointer->height; i++)
