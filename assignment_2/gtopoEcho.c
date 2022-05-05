@@ -39,6 +39,9 @@
 /* returns 0 on success            */
 /* non-zero error code on fail     */
 /***********************************/
+
+short readValue(FILE *filePointer);
+
 int main(int argc, char **argv)
 { /* main() */
 
@@ -60,12 +63,21 @@ int main(int argc, char **argv)
     //     return r;
     // }
 
-    FILE *filePointer = argv[1];
+    FILE *filePointer = fopen(argv[1], "r"); //open file in read mode.
 
-	int grayValue;
-    int scanCount = 1;
-    scanCount = fread(&grayValue, 1, 1, filePointer);
-    printf("%d", grayValue);
+    short x;
+    int height = atoi(argv[2]);
+    int width = atoi(argv[3]);
+
+    for (int i=0; i<height; i++)
+    {
+        for (int j=0; j<width; j++)
+        {
+            short x = readValue(filePointer);
+            printf("%d ", x);
+        }
+        printf("\n");
+    }
 
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
@@ -82,3 +94,21 @@ int main(int argc, char **argv)
     printf("ECHOED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
+
+short readValue(FILE *filePointer)
+{
+    int left8bit;
+    int right8bit;
+    int scanCount;
+
+    left8bit = 0;
+    scanCount = fread(&left8bit, 1, 1, filePointer);
+    left8bit -= 256;
+    right8bit = 0;
+    scanCount = fread(&right8bit, 1, 1, filePointer);
+    right8bit -= 256;
+    int16_t positiveRight8bit = right8bit & 255; //remove negative
+    int16_t result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
+
+    return result;
+}
