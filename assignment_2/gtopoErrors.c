@@ -84,3 +84,45 @@ int checkWidthAndHeight(char *width, char *height)
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
 }
+
+/* FUNC: checks if the image malloc is valid */
+int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData)
+{
+    /* sanity check for memory allocation    */
+    if (imageData == NULL)
+    { /* malloc failed */
+        /* close file pointer            */
+        fclose(filePointer);
+
+        /* print an error message */
+        printf("ERROR: Image Malloc Failed\n");
+        
+        /* return error code             */
+        return ERROR_IMAGE_MALLOC_FAILED;
+    } /* malloc failed */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
+/* FUNC: checks if the image pixel is valid */
+int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pixelValue)
+{
+    if ((pixelValue < -9999) || (pixelValue > 9999))
+    { /* fscanf failed */
+        /* free memory           */
+        free(imageData);
+
+        /* close file            */
+        fclose(filePointer);
+
+        /* print error message   */
+        printf("ERROR: Bad Data (%s)\n", filename);
+
+        /* and return error code */
+        return ERROR_BAD_DATA;
+    } /* fscanf failed */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}

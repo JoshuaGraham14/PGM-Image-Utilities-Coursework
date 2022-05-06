@@ -49,25 +49,75 @@ int readGtopoFile(char *filename, Image *imagePointer)
     int r; //return value variable.
     if ((r = checkInputFile(filePointer, filename)) != 0) return r;
 
-    short x;
+    //int n = getImageSize(filePointer);
+    //printf("\nImage Size: %d\n", n);
 
-    for (int i=0; i<imagePointer->height; i++)
-    {
-        for (int j=0; j<imagePointer->width; j++)
-        {
-            short x = readValue(filePointer);
-            printf("%d ", x);
-        }
-        printf("\n");
+    if ((r = readImageData(filePointer, filename, imagePointer)) != 0) return r;
+
+    /* we're done with the file, so close it */
+    fclose(filePointer);
+    return EXIT_NO_ERRORS; //success
+}
+
+/* FUNC: reads the Image imageData */
+int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
+{
+    /* allocate the data pointer             */
+	long nImageBytes = imagePointer->width * imagePointer->height;
+	imagePointer->imageData = malloc(nImageBytes);
+
+    /* sanity check for memory allocation    */
+    int r; //return value variable.
+	if ((r = checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData) != 0)) return r;
+    
+    // short x;
+    
+    // for (int i=0; i<imagePointer->height; i++)
+    // {
+    //     for (int j=0; j<imagePointer->width; j++)
+    //     {
+    //         x = readValue(filePointer);
+    //         printf("%d ", x);
+    //     }
+    //     printf("\n");
+    // }
+
+    short *nextPixelValue; //assign pointer
+
+    int pixelValue;
+    int scanCount = 1;
+
+    for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
+    { /* per pixel value */
+        pixelValue = readValue(filePointer);
+        printf("%d ", pixelValue);
+
+        if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, pixelValue) != 0)) return r;
+
+        *nextPixelValue = (short) pixelValue;
     }
 
-    return EXIT_NO_ERRORS; //success
+    return EXIT_NO_ERRORS;
 }
 
 /* FUNC: writes to an input file data from an input Image */
 int writeGtopoFile(char *filename, Image *imagePointer)
 {
     return EXIT_NO_ERRORS;
+}
+
+int getImageSize(FILE *filePointer)
+{
+    short x=1;
+    int t = 0;
+
+    while (x!=0)
+    {
+        t+=1;
+        x = readValue(filePointer);
+    }
+
+    return t-1;
 }
 
 short readValue(FILE *filePointer)
@@ -82,8 +132,8 @@ short readValue(FILE *filePointer)
     right8bit = 0;
     scanCount = fread(&right8bit, 1, 1, filePointer);
     right8bit -= 256;
-    int16_t positiveRight8bit = right8bit & 255; //remove negative
-    int16_t result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
+    short positiveRight8bit = right8bit & 255; //remove negative
+    short result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
 
     return result;
 }
