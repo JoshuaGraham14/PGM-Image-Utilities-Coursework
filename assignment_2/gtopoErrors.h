@@ -22,3 +22,5 @@ int checkInputFile(FILE *filePointer, char *filename);
 int checkWidthAndHeight(char *width, char *height);
 int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData);
 int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pixelValue);
+int checkOutputFile(FILE *filePointer, char *filename, short *imageData);
+int checknBytesWritten(FILE *filePointer, char *filename, short *imageData);

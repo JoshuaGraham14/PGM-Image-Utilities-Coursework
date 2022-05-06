@@ -103,6 +103,28 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 /* FUNC: writes to an input file data from an input Image */
 int writeGtopoFile(char *filename, Image *imagePointer)
 {
+    printf("\nWRITE: \n");
+    /* open a file for writing               */
+	FILE *outputFile = fopen(filename, "w");
+ 
+    /* check whether file opening worked     */
+    int r;
+    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData)) != 0) return r;
+
+    /* allocate the data pointer             */
+    long nImageBytes = imagePointer->width * imagePointer->height;
+
+    short *nextPixelValue; //assign pointer
+
+    for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
+    { /* per pixel value */
+        printf("%d ", *nextPixelValue);
+        writeValue(outputFile, nextPixelValue);
+        
+        /* sanity check on write         */
+		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData)) != 0) return r;
+    }
+
     return EXIT_NO_ERRORS;
 }
 
@@ -136,4 +158,22 @@ short readValue(FILE *filePointer)
     short result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
 
     return result;
+}
+
+void writeValue(FILE *filePointer, short *valueToWrite)
+{
+    uint8_t bytes [sizeof(int)] = 
+    {
+        ((short)*valueToWrite >> 0) & 0xFF,  // shift by 0 not needed, of course, just stylistic
+        ((short)*valueToWrite >> 8) & 0xFF,
+    };
+
+    printf("%d ", bytes[1]);
+    printf("%d ", bytes[0]);
+
+    unsigned char *byte1 = &bytes[0];
+    unsigned char *byte2 = &bytes[1];
+
+    fwrite(byte2, 1, 1, filePointer);
+    fwrite(byte1, 1, 1, filePointer);
 }

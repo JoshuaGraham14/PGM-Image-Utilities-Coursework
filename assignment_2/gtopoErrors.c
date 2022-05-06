@@ -126,3 +126,43 @@ int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pix
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
 }
+
+/* FUNC: checks if the output file is valid */
+int checkOutputFile(FILE *filePointer, char *filename, short *imageData)
+{
+    /* check whether file opening worked     */
+    if (filePointer == NULL)
+    { /* NULL output file */
+        /* free memory                   */
+        free(imageData);
+
+        /* print an error message        */
+        printf("ERROR: Output Failed (%s)\n", filename);
+
+        /* and return error code         */
+        return ERROR_OUTPUT_FAILED;
+    } /* NULL output file */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
+/* FUNC: checks the n bytes written to is valid */
+int checknBytesWritten(FILE *filePointer, char *filename, short *imageData)
+{
+    /* check that dimensions wrote correctly */
+    // if (nBytesWritten < 0)
+    // { /* dimensional write failed    */
+    //     /* free memory                   */
+    //     free(imageData);
+
+    //     /* print an error message        */
+    //     printf("ERROR: Output Failed (%s)\n", filename);
+
+    //     /* return an error code          */
+    //     return ERROR_OUTPUT_FAILED;
+    // } /* dimensional write failed    */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
