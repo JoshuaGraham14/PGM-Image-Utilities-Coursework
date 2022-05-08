@@ -40,8 +40,6 @@
 /* non-zero error code on fail     */
 /***********************************/
 
-short readValue(FILE *filePointer);
-
 int main(int argc, char **argv)
 { /* main() */
 

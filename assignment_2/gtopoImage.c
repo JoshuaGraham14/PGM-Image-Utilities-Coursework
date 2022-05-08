@@ -103,7 +103,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 /* FUNC: writes to an input file data from an input Image */
 int writeGtopoFile(char *filename, Image *imagePointer)
 {
-    printf("\nWRITE: \n");
+    //printf("\nWRITE: \n");
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
  
@@ -118,7 +118,7 @@ int writeGtopoFile(char *filename, Image *imagePointer)
 
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
-        printf("%d ", *nextPixelValue);
+        //printf("%d ", *nextPixelValue);
         writeValue(outputFile, nextPixelValue);
         
         /* sanity check on write         */
@@ -168,8 +168,8 @@ void writeValue(FILE *filePointer, short *valueToWrite)
         ((short)*valueToWrite >> 8) & 0xFF,
     };
 
-    printf("%d ", bytes[1]);
-    printf("%d ", bytes[0]);
+    //printf("%d ", bytes[1]);
+    //printf("%d ", bytes[0]);
 
     unsigned char *byte1 = &bytes[0];
     unsigned char *byte2 = &bytes[1];
