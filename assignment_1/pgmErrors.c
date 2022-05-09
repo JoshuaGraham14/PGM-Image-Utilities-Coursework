@@ -227,10 +227,10 @@ int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char *imag
         fclose(filePointer);
 
         /* print error message   */
-        printf("ERROR: Miscellaneous (too many pixels for specified dimensions)\n");
+        printf("ERROR: Bad Data (%s)\n", filename);
 
         /* and return error code */
-        return ERROR_MISCELLANEOUS;
+        return ERROR_BAD_DATA;
     }
     return EXIT_NO_ERRORS;
 }
