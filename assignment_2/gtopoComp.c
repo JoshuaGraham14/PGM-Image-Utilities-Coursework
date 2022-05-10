@@ -70,11 +70,8 @@ int main(int argc, char **argv)
     if ((r = createNewImage(imagePtr2, argv[2], argv[3])) != 0) return r;
 
     /* Read data from both input files and only return r (the return value) if it wasn't successful */
-    printf("\n");
 	if ((r = readGtopoFile(argv[1], imagePtr1)) != 0) return r;
-    printf("\n");
     if ((r = readGtopoFile(argv[4], imagePtr2)) != 0) return r;
-    printf("\n");
 
     /* Compare the two files: */
     compareImages(imagePtr1, imagePtr2);
@@ -113,14 +110,14 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     int i;
     for (i = 0; i<nImageBytes; i++)
     {
-        //printf("inputImage1[%d]: %d; inputImage2[%d]: %d\n", i, inputImage1->imageData[i], i, inputImage2->imageData[i]);
+        printf("inputImage1[%d]: %d; inputImage2[%d]: %d\n", i, inputImage1->imageData[i], i, inputImage2->imageData[i]);
         /* check if the current pixel from each file match */
         if(inputImage1->imageData[i] != inputImage2->imageData[i])
         {
             //printf("%d ", pixelValue);
             /* files are different */
             printf("DIFFERENT\n");
-            //return;
+            return;
         }
     }
     /* if no differences found -> files are identical */

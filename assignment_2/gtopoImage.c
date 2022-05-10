@@ -63,7 +63,8 @@ int readGtopoFile(char *filename, Image *imagePointer)
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 {
     /* allocate the data pointer             */
-	long nImageBytes = imagePointer->width * imagePointer->height * (sizeof(short));
+	long nImageBytes = imagePointer->width * imagePointer->height;
+    // printf("nImageBytes: %d", nImageBytes);
 	imagePointer->imageData = (short*) malloc(nImageBytes);
 
     /* sanity check for memory allocation    */
@@ -84,13 +85,20 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 
     short *nextPixelValue; //assign pointer
 
-    int pixelValue;
+    short pixelValue;
     int scanCount = 1;
+
+    int x = 1;
 
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
+        //pixelValue = 1;
         pixelValue = readValue(filePointer);
         //printf("%d ", pixelValue);
+        // printf("\nx: %d ", x);
+        // printf("\tNextpixelvalue: %d ", nextPixelValue);
+        // printf("\tpixelValue: %d ", pixelValue);
+        // printf("\tmax: %d ", (imagePointer->imageData + nImageBytes));
 
         if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, pixelValue) != 0)) return r;
 
@@ -118,8 +126,8 @@ int writeGtopoFile(char *filename, Image *imagePointer)
 
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
-        printf("%d ", *nextPixelValue);
-        //writeValue(outputFile, nextPixelValue);
+        //printf("%d ", *nextPixelValue);
+        writeValue(outputFile, nextPixelValue);
         
         /* sanity check on write         */
 		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData)) != 0) return r;
@@ -162,18 +170,12 @@ short readValue(FILE *filePointer)
 
 void writeValue(FILE *filePointer, short *valueToWrite)
 {
-    // uint8_t bytes [sizeof(int)] = 
-    // {
-    //     ((short)*valueToWrite >> 0) & 0xFF,  // shift by 0 not needed, of course, just stylistic
-    //     ((short)*valueToWrite >> 8) & 0xFF,
-    // };
+    char c1 = *valueToWrite >> 8;
+    char c2 = *valueToWrite & 0x00ff;
 
-    // //printf("%d ", bytes[1]);
-    // //printf("%d ", bytes[0]);
+    // printf("\nc1: %d", c1);
+    // printf("\tc2: %d", c2);
 
-    // unsigned char *byte1 = &bytes[0];
-    // unsigned char *byte2 = &bytes[1];
-
-    // fwrite(byte2, 1, 1, filePointer);
-    // fwrite(byte1, 1, 1, filePointer);
+    fwrite(&c1, 1, 1, filePointer);
+    fwrite(&c2, 1, 1, filePointer);
 }
