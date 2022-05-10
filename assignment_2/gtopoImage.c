@@ -63,8 +63,8 @@ int readGtopoFile(char *filename, Image *imagePointer)
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 {
     /* allocate the data pointer             */
-	long nImageBytes = imagePointer->width * imagePointer->height;
-	imagePointer->imageData = malloc(nImageBytes);
+	long nImageBytes = imagePointer->width * imagePointer->height * (sizeof(short));
+	imagePointer->imageData = (short*) malloc(nImageBytes);
 
     /* sanity check for memory allocation    */
     int r; //return value variable.
@@ -90,7 +90,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
         pixelValue = readValue(filePointer);
-        printf("%d ", pixelValue);
+        //printf("%d ", pixelValue);
 
         if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, pixelValue) != 0)) return r;
 
@@ -118,8 +118,8 @@ int writeGtopoFile(char *filename, Image *imagePointer)
 
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
-        //printf("%d ", *nextPixelValue);
-        writeValue(outputFile, nextPixelValue);
+        printf("%d ", *nextPixelValue);
+        //writeValue(outputFile, nextPixelValue);
         
         /* sanity check on write         */
 		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData)) != 0) return r;
@@ -162,18 +162,18 @@ short readValue(FILE *filePointer)
 
 void writeValue(FILE *filePointer, short *valueToWrite)
 {
-    uint8_t bytes [sizeof(int)] = 
-    {
-        ((short)*valueToWrite >> 0) & 0xFF,  // shift by 0 not needed, of course, just stylistic
-        ((short)*valueToWrite >> 8) & 0xFF,
-    };
+    // uint8_t bytes [sizeof(int)] = 
+    // {
+    //     ((short)*valueToWrite >> 0) & 0xFF,  // shift by 0 not needed, of course, just stylistic
+    //     ((short)*valueToWrite >> 8) & 0xFF,
+    // };
 
-    //printf("%d ", bytes[1]);
-    //printf("%d ", bytes[0]);
+    // //printf("%d ", bytes[1]);
+    // //printf("%d ", bytes[0]);
 
-    unsigned char *byte1 = &bytes[0];
-    unsigned char *byte2 = &bytes[1];
+    // unsigned char *byte1 = &bytes[0];
+    // unsigned char *byte2 = &bytes[1];
 
-    fwrite(byte2, 1, 1, filePointer);
-    fwrite(byte1, 1, 1, filePointer);
+    // fwrite(byte2, 1, 1, filePointer);
+    // fwrite(byte1, 1, 1, filePointer);
 }

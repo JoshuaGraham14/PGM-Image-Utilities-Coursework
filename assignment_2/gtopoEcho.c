@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 	if ((r = readGtopoFile(argv[1], imagePtr)) != 0) return r;
 
     /* Write data to output file and only return r (the return value) if it wasn't successful */
-	if ((r = writeGtopoFile(argv[4], imagePtr)) != 0) return r;
+	//if ((r = writeGtopoFile(argv[4], imagePtr)) != 0) return r;
 
 	/* at this point, we are done and can exit with a success code */
     printf("ECHOED\n");

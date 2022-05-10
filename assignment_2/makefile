@@ -1,5 +1,5 @@
 CC=gcc
-CCFLAGS=-ggdb -lm -std=c99 -Wall -Werror
+CCFLAGS=-g -std=c99 -Wall -Werror
 CFLAGS=-std=c99
 MODULES=gtopoErrors.o gtopoImage.o
 MAINS=gtopoEcho.o gtopoComp.o
