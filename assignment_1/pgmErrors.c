@@ -61,7 +61,9 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
 {
     /* sanity check on the magic number      */
     /* if it fails, return error code        */
-	if (magic_number != MAGIC_NUMBER_ASCII_PGM  && magic_number != MAGIC_NUMBER_RAW_PGM)
+	if ((magic_number != MAGIC_NUMBER_ASCII_PGM  && magic_number != MAGIC_NUMBER_RAW_PGM) ||
+    (mode == 1 && magic_number == MAGIC_NUMBER_RAW_PGM) || 
+    (mode == 2 && magic_number == MAGIC_NUMBER_ASCII_PGM))
     { /* failed magic number check   */
         /* close the file       */
         fclose(filePointer);
@@ -72,21 +74,6 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
         /* and return error code             */
         return ERROR_BAD_MAGIC_NUMBER;
     } /* failed magic number check   */
-
-    if (mode == 1 && magic_number == MAGIC_NUMBER_RAW_PGM)
-    {
-        /* print an error message */
-        printf("ERROR: Bad Magic Number (%s)\n", filename);
-        /* and return error code             */
-        return ERROR_BAD_MAGIC_NUMBER;
-    }
-    else if (mode == 2 && magic_number == MAGIC_NUMBER_ASCII_PGM)
-    {
-        /* print an error message */
-        printf("ERROR: Bad Magic Number (%s)\n", filename);
-        /* and return error code             */
-        return ERROR_BAD_MAGIC_NUMBER;
-    }
 
     /* ELSE return with success code */
     return EXIT_NO_ERRORS; 

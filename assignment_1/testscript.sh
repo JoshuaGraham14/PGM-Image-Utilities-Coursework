@@ -57,7 +57,7 @@ fi
 
 echo -n "Test 5 - pgmb2a: "
 EXPECTED="CONVERTED"
-RESULT=$(./pgmb2a pgmFiles/saturn.pgm pgmFiles/temp.pgm)
+RESULT=$(./pgmb2a pgmFiles/temp.pgm pgmFiles/temp2.pgm)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
 then
