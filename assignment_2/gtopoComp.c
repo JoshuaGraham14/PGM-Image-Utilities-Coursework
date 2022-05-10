@@ -110,7 +110,7 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     int i;
     for (i = 0; i<nImageBytes; i++)
     {
-        printf("inputImage1[%d]: %d; inputImage2[%d]: %d\n", i, inputImage1->imageData[i], i, inputImage2->imageData[i]);
+        //printf("inputImage1[%d]: %d; inputImage2[%d]: %d\n", i, inputImage1->imageData[i], i, inputImage2->imageData[i]);
         /* check if the current pixel from each file match */
         if(inputImage1->imageData[i] != inputImage2->imageData[i])
         {

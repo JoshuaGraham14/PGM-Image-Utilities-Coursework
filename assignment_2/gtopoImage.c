@@ -65,7 +65,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     /* allocate the data pointer             */
 	long nImageBytes = imagePointer->width * imagePointer->height;
     // printf("nImageBytes: %d", nImageBytes);
-	imagePointer->imageData = (short*) malloc(nImageBytes);
+	imagePointer->imageData = (short*) malloc(nImageBytes * sizeof(short));
 
     /* sanity check for memory allocation    */
     int r; //return value variable.
@@ -87,8 +87,6 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 
     short pixelValue;
     int scanCount = 1;
-
-    int x = 1;
 
     for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
     { /* per pixel value */
