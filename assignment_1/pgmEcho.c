@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
-	if ((r = readpgmFile(argv[1], imagePtr)) != 0) return r;
+	if ((r = readpgmFile(argv[1], imagePtr, 0)) != 0) return r;
 
     /* Write data to output file and only return r (the return value) if it wasn't successful */
 	if ((r = writepgmFile(argv[2], imagePtr)) != 0) return r;

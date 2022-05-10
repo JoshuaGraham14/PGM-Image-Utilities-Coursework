@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
-    if ((r = readpgmFile(argv[1], imagePtr)) != 0) return r;
+    if ((r = readpgmFile(argv[1], imagePtr, 2)) != 0) return r;
 
     /* Set the magicNumber to "P2" as the binary file will be written to in ASCII */
     imagePtr->magic_number[1] = '2';

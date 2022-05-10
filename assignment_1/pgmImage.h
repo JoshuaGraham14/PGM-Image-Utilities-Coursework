@@ -10,8 +10,8 @@ typedef struct ImageStruct
 } Image;
 
 void createNewImage(Image *imagePointer);
-int readpgmFile(char *filename, Image *imagePointer);
-int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer);
+int readpgmFile(char *filename, Image *imagePointer, int mode);
+int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer, int mode);
 int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer);
 int readDimensions (FILE *filePointer, char *filename, Image *imagePointer);
 int readMaxGray (FILE *filePointer, char *filename, Image *imagePointer);

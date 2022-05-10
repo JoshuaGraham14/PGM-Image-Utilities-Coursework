@@ -41,7 +41,7 @@ void createNewImage(Image *imagePointer)
 }
 
 /* FUNC: collection of other pgmImage methods - used to read in a pgmFile */
-int readpgmFile(char *filename, Image *imagePointer)
+int readpgmFile(char *filename, Image *imagePointer, int mode)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
@@ -55,7 +55,7 @@ int readpgmFile(char *filename, Image *imagePointer)
     /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
     /* read the magic number: */
-    if ((r = readMagicNumber (inputFile, filename, imagePointer)) != 0) return r;
+    if ((r = readMagicNumber (inputFile, filename, imagePointer, mode)) != 0) return r;
     
     /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
@@ -82,14 +82,14 @@ int readpgmFile(char *filename, Image *imagePointer)
 }
 
 /* FUNC: reads the Image magic number */
-int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer)
+int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer, int mode)
 {
     /* read in the magic number              */
     imagePointer->magic_number[0] = getc(filePointer);
     imagePointer->magic_number[1] = getc(filePointer);
 
     /* check the magic number is valid */
-    return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number);
+    return checkMagicNumber(filePointer, filename, *imagePointer->magic_Number, mode);
 }
 
 /* FUNC: reads the Image comment line */

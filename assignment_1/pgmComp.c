@@ -71,8 +71,8 @@ int main(int argc, char **argv)
     createNewImage(imagePtr2);
 
     /* Read data from both input files and only return r (the return value) if it wasn't successful */
-	if ((r = readpgmFile(argv[1], imagePtr1)) != 0) return r;
-    if ((r = readpgmFile(argv[2], imagePtr2)) != 0) return r;
+	if ((r = readpgmFile(argv[1], imagePtr1, 0)) != 0) return r;
+    if ((r = readpgmFile(argv[2], imagePtr2, 0)) != 0) return r;
 
     /* Compare the two files: */
     compareImages(imagePtr1, imagePtr2);

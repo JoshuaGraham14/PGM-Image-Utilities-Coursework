@@ -19,7 +19,7 @@
 
 int checkArgumentCount(int argc, int numOfArgs);
 int checkInputFile(FILE *filePointer, char *filename);
-int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number);
+int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int mode);
 int checkCommentLine(FILE *filePointer, char *filename, char *commentLine);
 int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine);
 int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, char *commentLine);
