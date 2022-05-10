@@ -202,7 +202,7 @@ else
 fi
 
 echo -n "Test 10 - Too Many Image Data Pixels: "
-EXPECTED="ERROR: Miscellaneous (too many pixels for specified dimensions)"
+EXPECTED="ERROR: Bad Data (pgmFiles/saturn_tooManyImageDataPixels.pgm)"
 RESULT=$(./pgmEcho pgmFiles/saturn_tooManyImageDataPixels.pgm pgmFiles/temp.pgm)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
@@ -244,7 +244,7 @@ else
 fi
 
 echo -n "Test 3 - 0 args for pgmComp: "
-EXPECTED="Usage: ./pgmComp inputImage.pgm outputImage.pgm"
+EXPECTED="Usage: ./pgmComp inputImage.pgm inputImage.pgm"
 RESULT=$(./pgmComp)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]

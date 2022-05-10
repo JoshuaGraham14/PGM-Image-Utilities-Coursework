@@ -215,9 +215,8 @@ int writepgmFile(char *filename, Image *imagePointer)
         }
         else 
         {
-            /* write binary value proportionate to 255     */
-            double proportionateValue = ceil(((double)*nextGrayValue/imagePointer->maxGray)*255);
-            *nextGrayValue = proportionateValue;
+            //double proportionateValue = (((double)*nextGrayValue/imagePointer->maxGray)*255);
+            //*nextGrayValue = proportionateValue;
             fwrite(nextGrayValue, 1, 1, outputFile);
         }
 

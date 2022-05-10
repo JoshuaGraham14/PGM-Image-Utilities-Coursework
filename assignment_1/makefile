@@ -1,5 +1,5 @@
 CC=gcc
-CCFLAGS=-ggdb -lm -std=c99 -Wall -Werror
+CCFLAGS=-g -std=c99 -Wall -Werror
 CFLAGS=-std=c99
 MODULES=pgmErrors.o pgmImage.o
 MAINS=pgmEcho.o pgmComp.o pgma2b.o pgmb2a.o pgmReduce.o
