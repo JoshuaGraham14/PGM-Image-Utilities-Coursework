@@ -170,7 +170,30 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, 
 }
 
 /* FUNC: checks if the image malloc is valid */
-int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine)
+int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine)
+{
+    /* sanity check for memory allocation    */
+    if (imageData == NULL)
+    { /* malloc failed */
+        /* free up memory                */
+        free(commentLine);
+
+        /* close file pointer            */
+        fclose(filePointer);
+
+        /* print an error message */
+        printf("ERROR: Image Malloc Failed\n");
+        
+        /* return error code             */
+        return ERROR_IMAGE_MALLOC_FAILED;
+    } /* malloc failed */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
+/* FUNC: checks if the image malloc is valid */
+int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
 {
     /* sanity check for memory allocation    */
     if (imageData == NULL)

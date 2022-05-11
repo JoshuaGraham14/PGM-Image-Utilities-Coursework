@@ -143,33 +143,19 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 
     /* allocate the data pointer             */
     imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
+    /* sanity check for memory allocation    */
+    if ((r = check2dImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
 	int i;
     int j;
     for (i = 0; i < height; i++)
     {
         imagePointer->imageData[i] = malloc (width * sizeof(unsigned char));
+        if ((r = check1dImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData[i], imagePointer->commentLine)) != 0) return r;
     }
-
-	/* sanity check for memory allocation    */
-     //return value variable.
-	if ((r = checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
 
     //Read data:
     int pixelValue;
     int scanCount = 1;
-
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", (unsigned char)pixelValue);
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", pixelValue);
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", pixelValue);
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", pixelValue);
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", pixelValue);
-    // scanCount = fread(&pixelValue, 1, 1, filePointer);
-    // printf("grayValue: %d\n", pixelValue);
 
     for (i = 0; i < height; i++)
     {
