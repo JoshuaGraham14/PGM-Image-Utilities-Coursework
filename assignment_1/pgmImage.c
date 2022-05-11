@@ -137,49 +137,55 @@ int readMaxGray (FILE *filePointer, char *filename, Image *imagePointer)
 /* FUNC: reads the Image imageData */
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 {
+    int height = imagePointer->height;
+    int width = imagePointer->width;
+    int r;
+
     /* allocate the data pointer             */
-	long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
-	imagePointer->imageData = (unsigned char *) malloc(nImageBytes);
+    imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
+	int i;
+    int j;
+    for (i = 0; i < height; i++)
+    {
+        imagePointer->imageData[i] = malloc (width * sizeof(unsigned char));
+    }
 
 	/* sanity check for memory allocation    */
-    int r; //return value variable.
+     //return value variable.
 	if ((r = checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
 
-    unsigned char *nextGrayValue; //assign pointer
-
-    int grayValue;
+    //Read data:
+    int pixelValue;
     int scanCount = 1;
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
+            {
+                /* read next value               */
+                scanCount = fscanf(filePointer, " %u", &pixelValue);
+            }
+            else
+            {
+                /* read next binary value               */
+                scanCount = fread(&pixelValue, 1, 1, filePointer);
+                /* calibrate binary value by adding 256       */
+                pixelValue=256+(int) pixelValue; 
+                /* read binary value proportionate to 255     */
+                pixelValue=(pixelValue*imagePointer->maxGray)/255;
+            }
+
+            //int r;
+            if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, pixelValue, height)) != 0) return r;
+
+            imagePointer->imageData[i][j] = pixelValue;
+        }
+    }
     
-	for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
-    { /* per gray value */
-	    grayValue = -1;
-
-        /* check whether you are reading in ASCII or binary format */
-        if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
-        {
-            /* read next value               */
-            scanCount = fscanf(filePointer, " %u", &grayValue);
-        }
-        else
-        {
-            /* read next binary value               */
-            scanCount = fread(&grayValue, 1, 1, filePointer);
-            /* calibrate binary value by adding 256       */
-            grayValue=256+(int) grayValue; 
-            /* read binary value proportionate to 255     */
-            grayValue=(grayValue*imagePointer->maxGray)/255;
-        }
-
-		/* sanity check	                 */
-        int r;
-        if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, imagePointer->commentLine, scanCount, grayValue)) != 0) return r;
-        
-		/* set the pixel value           */
-		*nextGrayValue = (unsigned char) grayValue;
-    } /* per gray value */
-    scanCount = fscanf(filePointer, " %u", &grayValue);
+    scanCount = fscanf(filePointer, " %u", &pixelValue);
     /* IF too many pixels return 1 - //ELSE return 0. */
-    return checkIfTooManyPixels(filePointer, filename, imagePointer->imageData,  imagePointer->commentLine, scanCount);
+    return checkIfTooManyPixels(filePointer, filename, imagePointer->imageData,  imagePointer->commentLine, scanCount, height);
 }
 
 /* FUNC: writes to an input file data from an input Image */
@@ -188,40 +194,43 @@ int writepgmFile(char *filename, Image *imagePointer)
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
 
+    int height = imagePointer->height;
+    int width = imagePointer->width;
+
     /* check whether file opening worked     */
     int r;
-    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
+    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, height)) != 0) return r;
     
     /* write magic number, size & gray value */
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
-	if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
+	if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
 
-    /* allocate the data pointer             */
-    long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
+    int i;
+    int j;
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            /* write the entry & whitespace  */
+            if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
+            {
+                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[i][j]);
+            }
+            else 
+            {
+                fwrite(&imagePointer->imageData[i][j], 1, 1, outputFile);
+            }
 
-    unsigned char *nextGrayValue; //assign pointer
-    /* pointer for efficient write code      */
-    for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
-    { /* per gray value */
-        /* get next char's column        */
-		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
-
-        /* write the entry & whitespace  */
+            /* sanity check on write         */
+            if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
+        }
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
-            nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n'));
+            fprintf(outputFile, "%c", '\n');
         }
-        else 
-        {
-            //double proportionateValue = (((double)*nextGrayValue/imagePointer->maxGray)*255);
-            //*nextGrayValue = proportionateValue;
-            fwrite(nextGrayValue, 1, 1, outputFile);
-        }
+    }
 
-		/* sanity check on write         */
-		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
-    } /* per gray value */
     return EXIT_NO_ERRORS;
 }

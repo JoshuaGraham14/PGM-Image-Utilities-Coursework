@@ -6,7 +6,7 @@ typedef struct ImageStruct
 	unsigned int width;
     unsigned int height;
 	unsigned int maxGray;
-	unsigned char *imageData;
+	unsigned char **imageData;
 } Image;
 
 void createNewImage(Image *imagePointer);
