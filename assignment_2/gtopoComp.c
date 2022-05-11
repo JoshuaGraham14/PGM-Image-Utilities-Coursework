@@ -106,20 +106,27 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     //COMPARE: image data
     /* iterate through each imageData array from each input */
     /* file simultaneously and compare the two values       */
-    long nImageBytes = inputImage1->width * inputImage1->height;
+    
     int i;
-    for (i = 0; i<nImageBytes; i++)
+    int j;
+
+    int height = inputImage1->height;
+    int width = inputImage1->width;
+
+    for (i = 0; i < height; i++)
     {
-        //printf("inputImage1[%d]: %d; inputImage2[%d]: %d\n", i, inputImage1->imageData[i], i, inputImage2->imageData[i]);
-        /* check if the current pixel from each file match */
-        if(inputImage1->imageData[i] != inputImage2->imageData[i])
+        for (j = 0; j < width; j++)
         {
-            //printf("%d ", pixelValue);
-            /* files are different */
-            printf("DIFFERENT\n");
-            return;
+            printf("inputImage1[%d][%d]: %d; inputImage2[%d][%d]: %d\n", i,j, inputImage1->imageData[i][j], i,j, inputImage2->imageData[i][j]);
+            if(inputImage1->imageData[i][j] != inputImage2->imageData[i][j])
+            {
+                /* files are different */
+                printf("DIFFERENT\n");
+                return;
+            }
         }
     }
+
     /* if no differences found -> files are identical */
     printf("IDENTICAL\n");
 }

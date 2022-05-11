@@ -86,11 +86,33 @@ int checkWidthAndHeight(char *width, char *height)
 }
 
 /* FUNC: checks if the image malloc is valid */
-int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData)
+int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, short **imageData)
 {
     /* sanity check for memory allocation    */
     if (imageData == NULL)
     { /* malloc failed */
+
+        /* close file pointer            */
+        fclose(filePointer);
+
+        /* print an error message */
+        printf("ERROR: Image Malloc Failed\n");
+        
+        /* return error code             */
+        return ERROR_IMAGE_MALLOC_FAILED;
+    } /* malloc failed */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
+/* FUNC: checks if the image malloc is valid */
+int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData)
+{
+    /* sanity check for memory allocation    */
+    if (imageData == NULL)
+    { /* malloc failed */
+
         /* close file pointer            */
         fclose(filePointer);
 
@@ -106,7 +128,7 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, short *ima
 }
 
 /* FUNC: checks if the image pixel is valid */
-int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pixelValue)
+int checkPixelValue(FILE *filePointer, char *filename, short **imageData, int pixelValue, int height)
 {
     if ((pixelValue < -9999) || (pixelValue > 9999))
     { /* fscanf failed */
@@ -128,7 +150,7 @@ int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pix
 }
 
 /* FUNC: checks if the output file is valid */
-int checkOutputFile(FILE *filePointer, char *filename, short *imageData)
+int checkOutputFile(FILE *filePointer, char *filename, short **imageData, int height)
 {
     /* check whether file opening worked     */
     if (filePointer == NULL)
@@ -148,7 +170,7 @@ int checkOutputFile(FILE *filePointer, char *filename, short *imageData)
 }
 
 /* FUNC: checks the n bytes written to is valid */
-int checknBytesWritten(FILE *filePointer, char *filename, short *imageData)
+int checknBytesWritten(FILE *filePointer, char *filename, short **imageData, int height)
 {
     /* check that dimensions wrote correctly */
     // if (nBytesWritten < 0)
@@ -165,4 +187,14 @@ int checknBytesWritten(FILE *filePointer, char *filename, short *imageData)
 
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
+}
+
+void freeImageData (unsigned char **imageData, int height)
+{
+    int i;
+    for (i = 0; i < height; i++)
+    {
+        free(imageData[i]);
+    }
+    free(imageData);
 }

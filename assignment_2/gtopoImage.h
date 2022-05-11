@@ -2,7 +2,7 @@ typedef struct ImageStruct
 {
 	unsigned int width;
     unsigned int height;
-	short *imageData;
+	short **imageData;
 } Image;
 
 int createNewImage(Image *imagePointer, char *width, char *height);

@@ -49,9 +49,6 @@ int readGtopoFile(char *filename, Image *imagePointer)
     int r; //return value variable.
     if ((r = checkInputFile(filePointer, filename)) != 0) return r;
 
-    //int n = getImageSize(filePointer);
-    //printf("\nImage Size: %d\n", n);
-
     if ((r = readImageData(filePointer, filename, imagePointer)) != 0) return r;
 
     /* we're done with the file, so close it */
@@ -62,45 +59,41 @@ int readGtopoFile(char *filename, Image *imagePointer)
 /* FUNC: reads the Image imageData */
 int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 {
+    int height = imagePointer->height;
+    int width = imagePointer->width;
+    int r;
+
     /* allocate the data pointer             */
-	long nImageBytes = imagePointer->width * imagePointer->height;
-    // printf("nImageBytes: %d", nImageBytes);
-	imagePointer->imageData = (short*) malloc(nImageBytes * sizeof(short));
-
+    imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
     /* sanity check for memory allocation    */
-    int r; //return value variable.
-	if ((r = checkImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData) != 0)) return r;
-    
-    // short x;
-    
-    // for (int i=0; i<imagePointer->height; i++)
-    // {
-    //     for (int j=0; j<imagePointer->width; j++)
-    //     {
-    //         x = readValue(filePointer);
-    //         printf("%d ", x);
-    //     }
-    //     printf("\n");
-    // }
+    if ((r = check2dImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData)) != 0) return r;
+	int i;
+    int j;
+    for (i = 0; i < height; i++)
+    {
+        imagePointer->imageData[i] = malloc (width * sizeof(short));
+        if ((r = check1dImageDataMemoryAllocation(filePointer, filename, imagePointer->imageData[i])) != 0) return r;
+    }
 
-    short *nextPixelValue; //assign pointer
-
+    //Read data:
     short pixelValue;
     int scanCount = 1;
 
-    for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
-    { /* per pixel value */
-        //pixelValue = 1;
-        pixelValue = readValue(filePointer);
-        //printf("%d ", pixelValue);
-        // printf("\nx: %d ", x);
-        // printf("\tNextpixelvalue: %d ", nextPixelValue);
-        // printf("\tpixelValue: %d ", pixelValue);
-        // printf("\tmax: %d ", (imagePointer->imageData + nImageBytes));
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            pixelValue = readValue(filePointer);
+            //printf("%d ", pixelValue);
+            // printf("\nx: %d ", x);
+            // printf("\tNextpixelvalue: %d ", nextPixelValue);
+            // printf("\tpixelValue: %d ", pixelValue);
+            // printf("\tmax: %d ", (imagePointer->imageData + nImageBytes));
 
-        if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, pixelValue) != 0)) return r;
+            if ((r = checkPixelValue(filePointer, filename, imagePointer->imageData, pixelValue, height) != 0)) return r;
 
-        *nextPixelValue = (short) pixelValue;
+            imagePointer->imageData[i][j] = pixelValue;
+        }
     }
 
     return EXIT_NO_ERRORS;
@@ -112,23 +105,24 @@ int writeGtopoFile(char *filename, Image *imagePointer)
     //printf("\nWRITE: \n");
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
+
+    int height = imagePointer->height;
+    int width = imagePointer->width;
  
     /* check whether file opening worked     */
     int r;
-    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData)) != 0) return r;
+    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, height)) != 0) return r;
 
-    /* allocate the data pointer             */
-    long nImageBytes = imagePointer->width * imagePointer->height;
+    int i;
+    int j;
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            writeValue(outputFile, &imagePointer->imageData[i][j]);
 
-    short *nextPixelValue; //assign pointer
-
-    for (nextPixelValue = imagePointer->imageData; nextPixelValue < imagePointer->imageData + nImageBytes; nextPixelValue++)
-    { /* per pixel value */
-        //printf("%d ", *nextPixelValue);
-        writeValue(outputFile, nextPixelValue);
-        
-        /* sanity check on write         */
-		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData)) != 0) return r;
+            if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, height)) != 0) return r;
+        }
     }
 
     return EXIT_NO_ERRORS;

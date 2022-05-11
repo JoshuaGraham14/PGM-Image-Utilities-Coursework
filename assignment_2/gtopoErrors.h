@@ -20,7 +20,9 @@
 int checkArgumentCount(int argc, int numOfArgs);
 int checkInputFile(FILE *filePointer, char *filename);
 int checkWidthAndHeight(char *width, char *height);
-int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData);
-int checkPixelValue(FILE *filePointer, char *filename, short *imageData, int pixelValue);
-int checkOutputFile(FILE *filePointer, char *filename, short *imageData);
-int checknBytesWritten(FILE *filePointer, char *filename, short *imageData);
+int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, short **imageData);
+int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData);
+int checkPixelValue(FILE *filePointer, char *filename, short **imageData, int pixelValue, int height);
+int checkOutputFile(FILE *filePointer, char *filename, short **imageData, int height);
+int checknBytesWritten(FILE *filePointer, char *filename, short **imageData, int height);
+void freeImageData (unsigned char **imageData, int height);
