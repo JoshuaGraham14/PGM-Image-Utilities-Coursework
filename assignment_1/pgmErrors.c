@@ -195,6 +195,7 @@ int checkImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned c
 /* FUNC: checks if the image pixel is valid */
 int checkPixelValue(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int scanCount, int grayValue, int height)
 {
+    //printf("sc: %d; gv: %d", scanCount, grayValue);
     if ((scanCount != 1) || (grayValue < 0) || (grayValue > 255))
     { /* fscanf failed */
         /* free memory           */
@@ -266,7 +267,7 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char **imageD
     { /* dimensional write failed    */
         /* free memory                   */
         free(commentLine);
-        freeImageData (imageData, height);
+        freeImageData(imageData, height);
 
         /* print an error message        */
         printf("ERROR: Output Failed (%s)\n", filename);

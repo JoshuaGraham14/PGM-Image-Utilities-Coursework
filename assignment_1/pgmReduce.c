@@ -88,76 +88,49 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
 
+    int height = imagePointer->height;
+    int width = imagePointer->width;
+
     int r;  //return value variable
     /* check whether file opening worked - return r only if not successful */
-    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine)) != 0) return r;
+    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, height)) != 0) return r;
     
     int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
     int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
-    int originalWidth = imagePointer->width;
 
     /* write magic number, reduced size & gray value */
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly - return r only if not successful */
-	if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
+	if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
 
-    /* allocate the data pointer             */
-    long nImageBytes = imagePointer->width * imagePointer->height * sizeof(unsigned char);
-
-    unsigned char *nextGrayValue;
-    /* int variables to track width and height of imageData iteration */
-    int widthCounter = 0;
-    int heightCounter = 0;
-    /* pointer for efficient write code      */
-    for (nextGrayValue = imagePointer->imageData; nextGrayValue < imagePointer->imageData + nImageBytes; nextGrayValue++)
-    { /* per gray value */
-        /* get next char's column        */
-		int nextCol = (nextGrayValue - imagePointer->imageData + 1) % imagePointer->width;
-        
-        /* create newCol variable        */
-        int newCol = 1;
-
-        /* IF: widthCounter MOD reductionFactor = 0 AND heightCounter MOD reductionFactor = 0 */
-        /* then store this pixel */
-        if (widthCounter%reductionFactor==0 && heightCounter%reductionFactor==0)
+    int i;
+    int j;
+    for (i = 0; i < height; i+=reductionFactor)
+    {
+        for (j = 0; j < width; j+=reductionFactor)
         {
-            /* check whether the pixel pointer has reached the end of reduced width (i.e, the end of a reduced size row)*/
-            if ((widthCounter+reductionFactor+1) > originalWidth)
-            {
-                /* if so -> newCol is True (i.e, =0) */
-                newCol = 0;
-            }
-
-            /* check whether you are writing in ASCII or binary format */
+            //printf("%d ", imagePointer->imageData[i][j]);
+            /* write the entry & whitespace  */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
-                /* write the entry & whitespace  */
-                nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (newCol ? ' ' : '\n'));
+                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[i][j]);
             }
             else 
             {
-                /* write the entry to disk in binary  */
-                fwrite(nextGrayValue, 1, 1, outputFile);
+                //printf("\n%d, %d", imagePointer->imageData[i][j], &imagePointer->imageData[i][j]);
+                fwrite(&imagePointer->imageData[i][j], 1, 1, outputFile);
             }
-        }
-        
-		/* sanity check on write - return r only if not successful */
-		if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten)) != 0) return r;
 
-        /* check whether the pixel pointer has reached the end of the original files width (i.e, the end of a row)*/
-        if(nextCol == 0)
-        {
-            /* has reached end of row */ 
-            heightCounter++; //increment heightCounter, as we are moving to a new row.
-            widthCounter=0; //widthCounter set back to column 0.
+            /* sanity check on write         */
+            if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
         }
-        else
+        if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
-            /* hasn't reached end of row */ 
-            widthCounter++; //increment widthCounter, as we are moving to a new column in the same row.
+            fprintf(outputFile, "%c", '\n');
         }
-    } /* per gray value */
+    }
+    
     /* no errors so exit with return with success code */
     return EXIT_NO_ERRORS;
 }

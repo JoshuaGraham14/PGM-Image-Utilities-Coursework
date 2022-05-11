@@ -157,10 +157,25 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     //Read data:
     int pixelValue;
     int scanCount = 1;
+
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", (unsigned char)pixelValue);
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", pixelValue);
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", pixelValue);
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", pixelValue);
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", pixelValue);
+    // scanCount = fread(&pixelValue, 1, 1, filePointer);
+    // printf("grayValue: %d\n", pixelValue);
+
     for (i = 0; i < height; i++)
     {
         for (j = 0; j < width; j++)
         {
+            //break;
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
                 /* read next value               */
@@ -171,7 +186,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
                 /* read next binary value               */
                 scanCount = fread(&pixelValue, 1, 1, filePointer);
                 /* calibrate binary value by adding 256       */
-                pixelValue=256+(int) pixelValue; 
+                pixelValue=(int)(unsigned char)pixelValue;
                 /* read binary value proportionate to 255     */
                 pixelValue=(pixelValue*imagePointer->maxGray)/255;
             }
@@ -220,6 +235,7 @@ int writepgmFile(char *filename, Image *imagePointer)
             }
             else 
             {
+                //printf("\n%d, %d", imagePointer->imageData[i][j], &imagePointer->imageData[i][j]);
                 fwrite(&imagePointer->imageData[i][j], 1, 1, outputFile);
             }
 
