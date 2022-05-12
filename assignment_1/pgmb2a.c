@@ -27,6 +27,16 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
+/***********************************/
+/* main routine                    */
+/*                                 */
+/* 3 CLI parameters:               */
+/* argv[0]: executable name        */
+/* argv[1]: input file name (Binary) */
+/* argv[2]: ouput file name        */
+/* returns 0 on success            */
+/* non-zero error code on fail     */
+/***********************************/
 int main(int argc, char **argv)
 { /* main() */
 	

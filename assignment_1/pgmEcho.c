@@ -32,7 +32,7 @@
 /***********************************/
 /* main routine                    */
 /*                                 */
-/* CLI parameters:                 */
+/* 3 CLI parameters:               */
 /* argv[0]: executable name        */
 /* argv[1]: input file name        */
 /* argv[2]: output file name       */

@@ -31,6 +31,17 @@
 //writeReduced function declared
 int writeReduced(char *filename, Image *imagePointer, int reductionFactor);
 
+/***********************************/
+/* main routine                    */
+/*                                 */
+/* 4 CLI parameters:               */
+/* argv[0]: executable name        */
+/* argv[1]: input file name        */
+/* argv[2]: int reduction factor   */
+/* argv[3]: ouput file name        */
+/* returns 0 on success            */
+/* non-zero error code on fail     */
+/***********************************/
 int main(int argc, char **argv)
 { /* main() */
 

@@ -35,7 +35,7 @@ void compareImages(Image *inputImage1, Image *inputImage2);
 /***********************************/
 /* main routine                    */
 /*                                 */
-/* CLI parameters:                 */
+/* 3 CLI parameters:               */
 /* argv[0]: executable name        */
 /* argv[1]: 1st input file name    */
 /* argv[2]: 2nd input file name    */
