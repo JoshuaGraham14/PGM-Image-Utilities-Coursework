@@ -169,7 +169,7 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, 
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image malloc is valid */
+/* FUNC: checks if the image malloc is valid for the 2d array*/
 int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine)
 {
     /* sanity check for memory allocation    */
@@ -192,7 +192,7 @@ int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image malloc is valid */
+/* FUNC: checks if the image malloc is valid for each 1d array*/
 int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
 {
     /* sanity check for memory allocation    */
