@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 	if ((r = readGtopoFile(argv[1], imagePtr)) != 0) return r;
 
     /* Reduce the file */
-    int reductionFactor = atoi(argv[2]); //get the reduction factor.
+    int reductionFactor = atoi(argv[4]); //get the reduction factor.
     /* Call the write reduced function - return r only if not successful */
     if ((r = writeReduced(argv[5], imagePtr, reductionFactor)) != 0) return r;
 
@@ -113,10 +113,11 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
     {
         for (j = 0; j < width; j+=reductionFactor)
         {
+            //printf("inputImage[%d][%d]: %d\n", i, j, imagePointer->imageData[i][j]);
             writeValue(outputFile, &imagePointer->imageData[i][j]);
         }
     }
     
-    /* no errors so exit with return with success code */
+    /* no errors so exit with return with success code */  
     return EXIT_NO_ERRORS;
 }
