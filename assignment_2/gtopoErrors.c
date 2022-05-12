@@ -189,6 +189,34 @@ int checknBytesWritten(FILE *filePointer, char *filename, short **imageData, int
     return EXIT_NO_ERRORS;
 }
 
+/* FUNC: Check reduction factor is an integer and is greater than 0 */
+int checkReductionFactor(char *reductionFactorCLI)
+{
+    /* if reduction factor is an integer */
+    if (atoi(reductionFactorCLI))
+    {
+        int reductionFactor = atoi(reductionFactorCLI);
+        /* if reduction factor is less than or equal to 0 */
+        if (reductionFactor <= 0)
+        {
+            /* print an error message        */
+            printf("ERROR: Miscellaneous (reduction factor invalid)\n");
+            /* return an error code          */
+            return ERROR_MISCELLANEOUS; 
+        }
+    }
+    else
+    {   
+        /* print an error message        */
+        printf("ERROR: Miscellaneous (reduction factor invalid)\n");
+        /* return an error code          */
+        return ERROR_MISCELLANEOUS; 
+    }
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
+
 void freeImageData (unsigned char **imageData, int height)
 {
     int i;

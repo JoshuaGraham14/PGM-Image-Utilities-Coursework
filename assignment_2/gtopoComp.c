@@ -37,7 +37,9 @@ void compareImages(Image *inputImage1, Image *inputImage2);
 /* CLI parameters:                 */
 /* argv[0]: executable name        */
 /* argv[1]: 1st input file name    */
-/* argv[2]: 2nd input file name    */
+/* argv[2]: width                  */
+/* argv[3]: height                 */
+/* argv[4]: 2nd input file name    */
 /* returns 0 on success            */
 /* non-zero error code on fail     */
 /***********************************/
@@ -117,7 +119,7 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     {
         for (j = 0; j < width; j++)
         {
-            printf("inputImage1[%d][%d]: %d; inputImage2[%d][%d]: %d\n", i,j, inputImage1->imageData[i][j], i,j, inputImage2->imageData[i][j]);
+            //printf("inputImage1[%d][%d]: %d; inputImage2[%d][%d]: %d\n", i,j, inputImage1->imageData[i][j], i,j, inputImage2->imageData[i][j]);
             if(inputImage1->imageData[i][j] != inputImage2->imageData[i][j])
             {
                 /* files are different */

@@ -331,6 +331,7 @@ int checkReductionFactor(char *reductionFactorCLI)
     return EXIT_NO_ERRORS;
 }
 
+/* FUNC: Frees the image data 2d array */
 void freeImageData (unsigned char **imageData, int height)
 {
     int i;

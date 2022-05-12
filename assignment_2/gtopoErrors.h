@@ -25,4 +25,5 @@ int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, short *i
 int checkPixelValue(FILE *filePointer, char *filename, short **imageData, int pixelValue, int height);
 int checkOutputFile(FILE *filePointer, char *filename, short **imageData, int height);
 int checknBytesWritten(FILE *filePointer, char *filename, short **imageData, int height);
+int checkReductionFactor(char *reductionFactorCLI);
 void freeImageData (unsigned char **imageData, int height);
