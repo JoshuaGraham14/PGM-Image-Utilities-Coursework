@@ -64,7 +64,8 @@ int main(int argc, char **argv)
     }
 
     /* Check reduction factor is valid */
-    if((r = checkReductionFactor(argv[2])) != 0) return r;
+    if((r = validateFactorInput(argv[2])) != 0) return r;
+    if((r = validateTileOutputTemplate(argv[3])) != 0) return r;
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
@@ -117,7 +118,7 @@ int writeTiles(char *filename, Image *imagePointer, int reductionFactor)
             FILE *outputFile = fopen(filenameToWrite, "w");
             int r;  //return value variable
             /* check whether file opening worked - return r only if not successful */
-            if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, height)) != 0) return r;
+            if ((r = checkOutputFile(outputFile, filename, imagePointer)) != 0) return r;
 
             int reducedWidth = (imagePointer->width)/(reductionFactor);
             int reducedHeight = (imagePointer->height)/(reductionFactor);
@@ -125,7 +126,7 @@ int writeTiles(char *filename, Image *imagePointer, int reductionFactor)
             /* write magic number, reduced size & gray value */
             size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
             /* check that dimensions wrote correctly - return r only if not successful */
-            if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
+            if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
 
             int x;
             int y;
@@ -146,7 +147,7 @@ int writeTiles(char *filename, Image *imagePointer, int reductionFactor)
                     }
 
                     /* sanity check on write         */
-                    if ((r = checknBytesWritten(outputFile, filename, imagePointer->imageData, imagePointer->commentLine, nBytesWritten, height)) != 0) return r;
+                    if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
                 }
                 if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
                 {

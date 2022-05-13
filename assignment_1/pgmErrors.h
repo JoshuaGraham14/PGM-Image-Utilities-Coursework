@@ -1,3 +1,7 @@
+#ifndef ERRORS_HEADER_FILE
+#define ERRORS_HEADER_FILE
+#include "pgmImage.h"
+
 /* Constants */
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
@@ -24,37 +28,42 @@ int checkArgumentCount(int argc, int numOfArgs);
 int checkInputFile(FILE *filePointer, char *filename);
 
 /* FUNC: checks if the magic number is valid */
-int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int mode);
+int checkMagicNumber(FILE *filePointer, char *filename, Image *imagePointer, int mode);
 
 /* FUNC: checks if the comment line is valid */
-int checkCommentLine(FILE *filePointer, char *filename, char *commentLine);
+int checkCommentLine(FILE *filePointer, char *filename, Image *imagePointer);
 
 /* FUNC: checks if the dimensions is valid */
-int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine);
+int checkDimensions(FILE *filePointer, char *filename, int scanCount, Image *imagePointer);
 
 /* FUNC: checks if the max gray is valid */
-int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, char *commentLine);
+int checkMaxGray(FILE *filePointer, char *filename, int scanCount, Image *imagePointer);
 
 /* FUNC: checks if the image malloc is valid for the 2d array*/
-int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine);
+int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer);
 
 /* FUNC: checks if the image malloc is valid for each 1d array*/
-int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine);
+int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer, int rowNum);
 
 /* FUNC: checks if the image pixel is valid */
-int checkPixelValue(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int scanCount, int grayValue, int height);
+int checkPixelValue(FILE *filePointer, char *filename, Image *imagePointer, int scanCount, int pixelValue);
 
 /* FUNC: checks if the imageData contains more pixels than specified by dimensions */
-int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int scanCount, int height);
+int checkIfTooManyPixels (FILE *filePointer, char *filename, Image *imagePointer, int scanCount);
 
 /* FUNC: checks if the output file is valid */
-int checkOutputFile(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int height);
+int checkOutputFile(FILE *filePointer, char *filename, Image *imagePointer);
 
 /* FUNC: checks the n bytes written to is valid */
-int checknBytesWritten(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, size_t nBytesWritten, int height);
+int checknBytesWritten(FILE *filePointer, char *filename, Image *imagePointer, size_t nBytesWritten);
 
 /* FUNC: Check reduction factor is an integer and is greater than 0 */
-int checkReductionFactor(char *reductionFactorCLI);
+int validateFactorInput(char *charFactorInput);
+
+/* FUNC: Check tiling output file template is correct */
+int validateTileOutputTemplate(char *outputTemplateString);
 
 /* FUNC: Frees the image data 2d array */
-void freeImageData (unsigned char **imageData, int height);
+void freeImageData (Image *imagePointer);
+
+#endif

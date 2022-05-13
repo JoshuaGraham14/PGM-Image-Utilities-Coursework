@@ -20,9 +20,11 @@
 /* Libraries */
 #include <stdio.h> //library for I/O routines
 #include <stdlib.h> //library for memory routines
+#include <string.h> //library for string manipulation
 
 /* Header files */
 #include "pgmErrors.h"
+#include "pgmImage.h"
 
 /* FUNC: checks the number of arguments supplied against the specified number of arguments */
 int checkArgumentCount(int argc, int numOfArgs)
@@ -57,13 +59,13 @@ int checkInputFile(FILE *filePointer, char *filename)
 }
 
 /* FUNC: checks if the magic number is valid */
-int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_number, int mode)
+int checkMagicNumber(FILE *filePointer, char *filename, Image *imagePointer, int mode)
 {
     /* sanity check on the magic number      */
     /* if it fails, return error code        */
-	if ((magic_number != MAGIC_NUMBER_ASCII_PGM  && magic_number != MAGIC_NUMBER_RAW_PGM) ||
-    (mode == 1 && magic_number == MAGIC_NUMBER_RAW_PGM) || 
-    (mode == 2 && magic_number == MAGIC_NUMBER_ASCII_PGM))
+	if ((*imagePointer->magic_Number != MAGIC_NUMBER_ASCII_PGM  && *imagePointer->magic_Number != MAGIC_NUMBER_RAW_PGM) ||
+    (mode == 1 && *imagePointer->magic_Number == MAGIC_NUMBER_RAW_PGM) || 
+    (mode == 2 && *imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM))
     { /* failed magic number check   */
         /* close the file       */
         fclose(filePointer);
@@ -76,14 +78,14 @@ int checkMagicNumber(FILE *filePointer, char *filename, unsigned short magic_num
     } /* failed magic number check   */
 
     /* ELSE return with success code */
-    return EXIT_NO_ERRORS; 
+    return EXIT_NO_ERRORS;
 }
 
 /* FUNC: checks if the comment line is valid */
-int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
+int checkCommentLine(FILE *filePointer, char *filename, Image *imagePointer)
 {
     int x = 1; //variable to count number of characters read.
-    char *commentString = commentLine; //prepare pointer
+    char *commentString = imagePointer->commentLine; //prepare pointer
     /* while the comment string hasn't finished: */
     while(*commentString != '\n')
     {
@@ -96,7 +98,7 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
             fclose(filePointer);
 
             /* free memory           */
-            free(commentLine);
+            free(imagePointer->commentLine);
 
             /* print an error message */
             printf("ERROR: Bad Comment Line (%s)\n", filename);
@@ -112,20 +114,20 @@ int checkCommentLine(FILE *filePointer, char *filename, char *commentLine)
 }
 
 /* FUNC: checks if the dimensions is valid */
-int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width, int height, char *commentLine)
+int checkDimensions(FILE *filePointer, char *filename, int scanCount, Image *imagePointer)
 {
 	/* must read exactly three values         */
     /* + check width and height are in bounds */
 	if 	(
 		(scanCount != 2				    )	||
-		(width 	< MIN_IMAGE_DIMENSION	) 	||
-		(width 	>= MAX_IMAGE_DIMENSION	) 	||
-		(height < MIN_IMAGE_DIMENSION	) 	||
-		(height >= MAX_IMAGE_DIMENSION	)
+		(imagePointer->width 	< MIN_IMAGE_DIMENSION	) 	||
+		(imagePointer->width 	>= MAX_IMAGE_DIMENSION	) 	||
+		(imagePointer->height < MIN_IMAGE_DIMENSION	) 	||
+		(imagePointer->height >= MAX_IMAGE_DIMENSION	)
     )
 	{ /* failed size sanity check    */
         /* free memory           */
-        free(commentLine);
+        free(imagePointer->commentLine);
 
 		/* close file pointer   */
 		fclose(filePointer);
@@ -142,18 +144,18 @@ int checkDimensions(FILE *filePointer, char *filename, int scanCount, int width,
 }
 
 /* FUNC: checks if the max gray is valid */
-int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, char *commentLine)
+int checkMaxGray(FILE *filePointer, char *filename, int scanCount, Image *imagePointer)
 {
 	/* must read exactly three values        */
     /* + check maxGray is in bounds          */
 	if 	(
-		(scanCount != 1	    )	||
-        (maxGray	< 0		)   ||
-        (maxGray    > 255   )
+		(scanCount != 1	    )	            ||
+        (imagePointer->maxGray	< 0		)   ||
+        (imagePointer->maxGray  > 255   )
 		)
 	{ /* failed size sanity check    */
         /* free memory           */
-        free(commentLine);
+        free(imagePointer->commentLine);
 
 		/* close file pointer   */
 		fclose(filePointer);
@@ -170,13 +172,13 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, int maxGray, 
 }
 
 /* FUNC: checks if the image malloc is valid for the 2d array*/
-int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine)
+int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer)
 {
     /* sanity check for memory allocation    */
-    if (imageData == NULL)
+    if (imagePointer->imageData == NULL)
     { /* malloc failed */
         /* free up memory                */
-        free(commentLine);
+        free(imagePointer->commentLine);
 
         /* close file pointer            */
         fclose(filePointer);
@@ -193,13 +195,13 @@ int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned
 }
 
 /* FUNC: checks if the image malloc is valid for each 1d array*/
-int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned char *imageData, char *commentLine)
+int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer, int rowNum)
 {
     /* sanity check for memory allocation    */
-    if (imageData == NULL)
+    if (imagePointer->imageData[rowNum] == NULL)
     { /* malloc failed */
         /* free up memory                */
-        free(commentLine);
+        free(imagePointer->commentLine);
 
         /* close file pointer            */
         fclose(filePointer);
@@ -215,15 +217,15 @@ int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, unsigned
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image pixel is valid */
-int checkPixelValue(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int scanCount, int grayValue, int height)
+/* FUNC: checks if the image pixel value is valid */
+int checkPixelValue(FILE *filePointer, char *filename, Image *imagePointer, int scanCount, int pixelValue)
 {
-    //printf("sc: %d; gv: %d", scanCount, grayValue);
-    if ((scanCount != 1) || (grayValue < 0) || (grayValue > 255))
+    //printf("sc: %d; gv: %d", scanCount, pixelValue);
+    if ((scanCount != 1) || (pixelValue < 0) || (pixelValue > 255))
     { /* fscanf failed */
         /* free memory           */
-        free(commentLine);
-        freeImageData (imageData, height);
+        free(imagePointer->commentLine);
+        freeImageData (imagePointer);
 
         /* close file            */
         fclose(filePointer);
@@ -240,14 +242,14 @@ int checkPixelValue(FILE *filePointer, char *filename, unsigned char **imageData
 }
 
 /* FUNC: checks if the imageData contains more pixels than specified by dimensions */
-int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int scanCount, int height)
+int checkIfTooManyPixels (FILE *filePointer, char *filename, Image *imagePointer, int scanCount)
 {
     //too many characters
     if (scanCount >=1)
     {
         /* free memory           */
-        free(commentLine);
-        freeImageData (imageData, height);
+        free(imagePointer->commentLine);
+        freeImageData (imagePointer);
 
         /* close file            */
         fclose(filePointer);
@@ -262,14 +264,14 @@ int checkIfTooManyPixels (FILE *filePointer, char *filename, unsigned char **ima
 }
 
 /* FUNC: checks if the output file is valid */
-int checkOutputFile(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, int height)
+int checkOutputFile(FILE *filePointer, char *filename, Image *imagePointer)
 {
     /* check whether file opening worked     */
     if (filePointer == NULL)
     { /* NULL output file */
         /* free memory                   */
-        free(commentLine);
-        freeImageData (imageData, height);
+        free(imagePointer->commentLine);
+        freeImageData (imagePointer);
 
         /* print an error message        */
         printf("ERROR: Output Failed (%s)\n", filename);
@@ -283,14 +285,14 @@ int checkOutputFile(FILE *filePointer, char *filename, unsigned char **imageData
 }
 
 /* FUNC: checks the n bytes written to is valid */
-int checknBytesWritten(FILE *filePointer, char *filename, unsigned char **imageData, char *commentLine, size_t nBytesWritten, int height)
+int checknBytesWritten(FILE *filePointer, char *filename, Image *imagePointer, size_t nBytesWritten)
 {
     /* check that dimensions wrote correctly */
     if (nBytesWritten < 0)
     { /* dimensional write failed    */
         /* free memory                   */
-        free(commentLine);
-        freeImageData(imageData, height);
+        free(imagePointer->commentLine);
+        freeImageData(imagePointer);
 
         /* print an error message        */
         printf("ERROR: Output Failed (%s)\n", filename);
@@ -304,40 +306,56 @@ int checknBytesWritten(FILE *filePointer, char *filename, unsigned char **imageD
 }
 
 /* FUNC: Check reduction factor is an integer and is greater than 0 */
-int checkReductionFactor(char *reductionFactorCLI)
+int validateFactorInput(char *charFactorInput)
 {
     /* if reduction factor is an integer */
-    if (atoi(reductionFactorCLI))
+    if (atoi(charFactorInput))
     {
-        int reductionFactor = atoi(reductionFactorCLI);
+        int intFactor = atoi(charFactorInput);
         /* if reduction factor is less than or equal to 0 */
-        if (reductionFactor <= 0)
+        if (intFactor > 0)
         {
-            /* print an error message        */
-            printf("ERROR: Miscellaneous (reduction factor invalid)\n");
-            /* return an error code          */
-            return ERROR_MISCELLANEOUS; 
+            /* Return with success code */
+            return EXIT_NO_ERRORS;
         }
     }
-    else
-    {   
-        /* print an error message        */
-        printf("ERROR: Miscellaneous (reduction factor invalid)\n");
-        /* return an error code          */
-        return ERROR_MISCELLANEOUS; 
-    }
 
+    //IF ABOVE FAILS:
+    /* print an error message        */
+    printf("ERROR: Miscellaneous (factor invalid)\n");
+    /* return an error code          */
+    return ERROR_MISCELLANEOUS; 
+}
+
+/* FUNC: Check tiling output file template is correct */
+int validateTileOutputTemplate(char *outputTemplateString)
+{
+    /* if reduction factor is an integer */
+    char *targetString = "_<row>_<column>.pgm";
+
+    int i;
+    for (i = 0; i < strlen(targetString); i++)
+    {
+        if (outputTemplateString[strlen(outputTemplateString)-i-1] != targetString[strlen(targetString)-i-1])
+        {
+            /* print an error message        */
+            printf("ERROR: Miscellaneous (invalid output template)\n");
+            /* return an error code          */
+            return ERROR_MISCELLANEOUS;
+        }
+    }
+    
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
 }
 
 /* FUNC: Frees the image data 2d array */
-void freeImageData (unsigned char **imageData, int height)
+void freeImageData (Image *imagePointer)
 {
     int i;
-    for (i = 0; i < height; i++)
+    for (i = 0; i < imagePointer->height; i++)
     {
-        free(imageData[i]);
+        free(imagePointer->imageData[i]);
     }
-    free(imageData);
+    free(imagePointer->imageData);
 }

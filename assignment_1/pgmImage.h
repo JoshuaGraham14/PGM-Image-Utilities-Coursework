@@ -1,3 +1,6 @@
+#ifndef IMAGE_HEADER_FILE
+#define IMAGE_HEADER_FILE
+
 typedef struct ImageStruct
 {
     unsigned char magic_number[2];
@@ -32,3 +35,5 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer);
 
 /* FUNC: writes to an input file data from an input Image */
 int writepgmFile(char *filename, Image *imagePointer);
+
+#endif
