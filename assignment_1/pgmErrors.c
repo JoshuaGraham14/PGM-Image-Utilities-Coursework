@@ -44,7 +44,7 @@ int checkArgumentCount(int argc, int numOfArgs)
 }
 
 /* FUNC: checks the input file is valid */
-int checkInputFile(FILE *filePointer, char *filename)
+int checkInputFile(FILE *filePointer)
 {
     /* if it fails, return error code        */
     if (filePointer == NULL)
@@ -58,7 +58,7 @@ int checkInputFile(FILE *filePointer, char *filename)
 }
 
 /* FUNC: checks if the magic number is valid */
-int checkMagicNumber(FILE *filePointer, char *filename, Image *imagePointer, int mode)
+int checkMagicNumber(Image *imagePointer, int mode)
 {
     /* sanity check on the magic number      */
     /* if it fails, return error code        */
@@ -76,7 +76,7 @@ int checkMagicNumber(FILE *filePointer, char *filename, Image *imagePointer, int
 }
 
 /* FUNC: checks if the comment line is valid */
-int checkCommentLine(FILE *filePointer, char *filename, Image *imagePointer)
+int checkCommentLine(FILE *filePointer, Image *imagePointer)
 {
     int x = 1; //variable to count number of characters read.
     char *commentString = imagePointer->commentLine; //prepare pointer
@@ -99,7 +99,7 @@ int checkCommentLine(FILE *filePointer, char *filename, Image *imagePointer)
 }
 
 /* FUNC: checks if the dimensions is valid */
-int checkDimensions(FILE *filePointer, char *filename, int scanCount, Image *imagePointer)
+int checkDimensions(Image *imagePointer, int scanCount)
 {
 	/* must read exactly three values         */
     /* + check width and height are in bounds */
@@ -122,7 +122,7 @@ int checkDimensions(FILE *filePointer, char *filename, int scanCount, Image *ima
 }
 
 /* FUNC: checks if the max gray is valid */
-int checkMaxGray(FILE *filePointer, char *filename, int scanCount, Image *imagePointer)
+int checkMaxGray(Image *imagePointer, int scanCount)
 {
 	/* must read exactly three values        */
     /* + check maxGray is in bounds          */
@@ -143,7 +143,7 @@ int checkMaxGray(FILE *filePointer, char *filename, int scanCount, Image *imageP
 }
 
 /* FUNC: checks if the image malloc is valid for the 2d array*/
-int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer)
+int check2dImageDataMemoryAllocation(Image *imagePointer)
 {
     /* sanity check for memory allocation    */
     if (imagePointer->imageData == NULL)
@@ -159,7 +159,7 @@ int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *i
 }
 
 /* FUNC: checks if the image malloc is valid for each 1d array*/
-int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *imagePointer, int rowNum)
+int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
 {
     /* sanity check for memory allocation    */
     if (imagePointer->imageData[rowNum] == NULL)
@@ -175,7 +175,7 @@ int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, Image *i
 }
 
 /* FUNC: checks if the image pixel value is valid */
-int checkPixelValue(FILE *filePointer, char *filename, Image *imagePointer, int scanCount, int pixelValue)
+int checkPixelValue(Image *imagePointer, int scanCount, int pixelValue)
 {
     //printf("sc: %d; gv: %d", scanCount, pixelValue);
     if ((scanCount != 1) || (pixelValue < 0) || (pixelValue > 255))
@@ -191,7 +191,7 @@ int checkPixelValue(FILE *filePointer, char *filename, Image *imagePointer, int 
 }
 
 /* FUNC: checks if the imageData contains more pixels than specified by dimensions */
-int checkIfTooManyPixels (FILE *filePointer, char *filename, Image *imagePointer, int scanCount)
+int checkIfTooManyPixels (int scanCount)
 {
     //too many characters
     if (scanCount >=1)
@@ -203,7 +203,7 @@ int checkIfTooManyPixels (FILE *filePointer, char *filename, Image *imagePointer
 }
 
 /* FUNC: checks if the output file is valid */
-int checkOutputFile(FILE *filePointer, char *filename, Image *imagePointer)
+int checkOutputFile(FILE *filePointer)
 {
     /* check whether file opening worked     */
     if (filePointer == NULL)
@@ -219,7 +219,7 @@ int checkOutputFile(FILE *filePointer, char *filename, Image *imagePointer)
 }
 
 /* FUNC: checks the n bytes written to is valid */
-int checknBytesWritten(FILE *filePointer, char *filename, Image *imagePointer, size_t nBytesWritten)
+int checknBytesWritten(size_t nBytesWritten)
 {
     /* check that dimensions wrote correctly */
     if (nBytesWritten < 0)
@@ -252,6 +252,7 @@ int validateFactorInput(char *charFactorInput)
     //IF ABOVE FAILS:
     /* print an error message        */
     printf("ERROR: Miscellaneous (factor invalid)\n");
+    
     /* return an error code          */
     return ERROR_MISCELLANEOUS;
 }

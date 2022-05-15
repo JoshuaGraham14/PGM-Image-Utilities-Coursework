@@ -104,7 +104,7 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
 
     int returnVal;  //return value variable
     /* check whether file opening worked - return r only if not successful */
-    if ((returnVal = checkOutputFile(outputFile, filename, imagePointer)) != 0) return returnVal;
+    if ((returnVal = checkOutputFile(outputFile)) != 0) return returnVal;
     
     int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
     int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
@@ -113,7 +113,7 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly - return r only if not successful */
-	if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return returnVal;
+	if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
 
     int i;
     int j;
@@ -134,7 +134,7 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
             }
 
             /* sanity check on write         */
-            if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return returnVal;
+            if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
         }
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {

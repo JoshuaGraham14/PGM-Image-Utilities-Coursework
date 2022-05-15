@@ -19,19 +19,19 @@ void createNewImage(Image *imagePointer);
 int readpgmFile(char *filename, Image *imagePointer, int mode);
 
 /* FUNC: reads the Image magic number */
-int readMagicNumber (FILE *filePointer, char *filename, Image *imagePointer, int mode);
+int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode);
 
 /* FUNC: reads the Image comment line */
-int readCommentLine (FILE *filePointer, char *filename, Image *imagePointer);
+int readCommentLine (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: reads the Image dimensions */
-int readDimensions (FILE *filePointer, char *filename, Image *imagePointer);
+int readDimensions (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: reads the Image max gray */
-int readMaxGray (FILE *filePointer, char *filename, Image *imagePointer);
+int readMaxGray (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: reads the Image imageData */
-int readImageData (FILE *filePointer, char *filename, Image *imagePointer);
+int readImageData (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: writes to an input file data from an input Image */
 int writepgmFile(char *filename, Image *imagePointer);
