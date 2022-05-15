@@ -190,9 +190,9 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     return checkIfTooManyPixels(filePointer, filename, imagePointer, scanCount);
 }
 
-int errorCheck(FILE *filePointer, char *filename, Image *imagePointer)
+int outputError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode)
 {
-    int errorCode[] = {EXIT_NO_ERRORS, ERROR_BAD_ARGUMENT_COUNT, ERROR_BAD_FILE_NAME, ERROR_BAD_MAGIC_NUMBER, 
+    const int errorCodeArray[] = {EXIT_NO_ERRORS, ERROR_BAD_ARGUMENT_COUNT, ERROR_BAD_FILE_NAME, ERROR_BAD_MAGIC_NUMBER, 
 ERROR_BAD_COMMENT_LINE, ERROR_BAD_DIMENSIONS, ERROR_BAD_MAX_GRAY_VALUE, ERROR_IMAGE_MALLOC_FAILED, 
 ERROR_BAD_DATA, ERROR_OUTPUT_FAILED, ERROR_MISCELLANEOUS};
 
