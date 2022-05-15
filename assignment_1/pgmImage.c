@@ -45,35 +45,34 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
-    // NOTE: for the following functions, return the return value of the function only if it was not successful 
+    // NOTE: for the following functions, return the return value of the function only if it was not successful
     // ********************************************************************************************************
 
     /* check the input file to see if can be opened*/
-    int r; //return value variable.
-    if ((r = checkInputFile(inputFile, filename)) != 0) return r;
-    errorCheck(inputFile, filename, imagePointer);
+    int returnVal; //return value variable.
+    if ((returnVal = checkInputFile(inputFile, filename)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
-    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((returnVal = readCommentLine (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* read the magic number: */
-    if ((r = readMagicNumber (inputFile, filename, imagePointer, mode)) != 0) return r;
+    if ((returnVal = readMagicNumber (inputFile, filename, imagePointer, mode)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
     
-    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((returnVal = readCommentLine (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* read the dimensions: */
-    if ((r = readDimensions (inputFile, filename, imagePointer)) != 0) return r;
+    if ((returnVal = readDimensions (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
-    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((returnVal = readCommentLine (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* read the max gray value: */
-    if ((r = readMaxGray (inputFile, filename, imagePointer)) != 0) return r;
+    if ((returnVal = readMaxGray (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
-    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((returnVal = readCommentLine (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* read the image data: */
-    if ((r = readImageData (inputFile, filename, imagePointer)) != 0) return r;
+    if ((returnVal = readImageData (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
-    /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
+    /* comment check */if ((returnVal = readCommentLine (inputFile, filename, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     // ********************************************************************************************************
 
@@ -140,18 +139,18 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
 {
     int height = imagePointer->height;
     int width = imagePointer->width;
-    int r;
+    int returnVal;
 
     /* allocate the data pointer             */
     imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
     /* sanity check for memory allocation    */
-    if ((r = check2dImageDataMemoryAllocation(filePointer, filename, imagePointer)) != 0) return r;
+    if ((returnVal = check2dImageDataMemoryAllocation(filePointer, filename, imagePointer)) != 0) return returnVal;
 	int i;
     int j;
     for (i = 0; i < height; i++)
     {
         imagePointer->imageData[i] = malloc (width * sizeof(unsigned char));
-        if ((r = check1dImageDataMemoryAllocation(filePointer, filename, imagePointer, i)) != 0) return r;
+        if ((returnVal = check1dImageDataMemoryAllocation(filePointer, filename, imagePointer, i)) != 0) return returnVal;
     }
 
     //Read data:
@@ -178,8 +177,7 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
                 pixelValue=(pixelValue*imagePointer->maxGray)/255;
             }
 
-            //int r;
-            if ((r = checkPixelValue(filePointer, filename, imagePointer, scanCount, pixelValue)) != 0) return r;
+            if ((returnVal = checkPixelValue(filePointer, filename, imagePointer, scanCount, pixelValue)) != 0) return returnVal;
 
             imagePointer->imageData[i][j] = pixelValue;
         }
@@ -188,16 +186,6 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     scanCount = fscanf(filePointer, " %u", &pixelValue);
     /* IF too many pixels return 1 - //ELSE return 0. */
     return checkIfTooManyPixels(filePointer, filename, imagePointer, scanCount);
-}
-
-int outputError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode)
-{
-    const int errorCodeArray[] = {EXIT_NO_ERRORS, ERROR_BAD_ARGUMENT_COUNT, ERROR_BAD_FILE_NAME, ERROR_BAD_MAGIC_NUMBER, 
-ERROR_BAD_COMMENT_LINE, ERROR_BAD_DIMENSIONS, ERROR_BAD_MAX_GRAY_VALUE, ERROR_IMAGE_MALLOC_FAILED, 
-ERROR_BAD_DATA, ERROR_OUTPUT_FAILED, ERROR_MISCELLANEOUS};
-
-    printf("%d", errorCode[2]);
-    return 0;
 }
 
 /* FUNC: writes to an input file data from an input Image */
@@ -210,14 +198,14 @@ int writepgmFile(char *filename, Image *imagePointer)
     int width = imagePointer->width;
 
     /* check whether file opening worked     */
-    int r;
-    if ((r = checkOutputFile(outputFile, filename, imagePointer)) != 0) return r;
+    int returnVal;
+    if ((returnVal = checkOutputFile(outputFile, filename, imagePointer)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
     
     /* write magic number, size & gray value */
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly */
-	if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
+	if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
 
     int i;
     int j;
@@ -237,7 +225,7 @@ int writepgmFile(char *filename, Image *imagePointer)
             }
 
             /* sanity check on write         */
-            if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
+            if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
         }
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {

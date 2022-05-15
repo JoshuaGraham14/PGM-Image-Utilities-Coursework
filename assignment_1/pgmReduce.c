@@ -46,12 +46,12 @@ int main(int argc, char **argv)
 { /* main() */
 
     /* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 4 CLI arguments   */
-	if((r = checkArgumentCount(argc, 4)) != 0)
+	if((returnVal = checkArgumentCount(argc, 4)) != 0)
     {
         /* if there weren't 4 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
@@ -59,11 +59,11 @@ int main(int argc, char **argv)
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
-        return r;
+        return returnVal;
     }
 
     /* Check reduction factor is valid */
-    if((r = validateFactorInput(argv[2])) != 0) return r;
+    if((returnVal = validateFactorInput(argv[2])) != 0) return returnVal;
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
@@ -71,12 +71,12 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
-	if ((r = readpgmFile(argv[1], imagePtr, 0)) != 0) return r;
+	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
     /* Reduce the file */
     int reductionFactor = atoi(argv[2]); //get the reduction factor.
     /* Call the write reduced function - return r only if not successful */
-    if ((r = writeReduced(argv[3], imagePtr, reductionFactor)) != 0) return r;
+    if ((returnVal = writeReduced(argv[3], imagePtr, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");
@@ -102,9 +102,9 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
     int height = imagePointer->height;
     int width = imagePointer->width;
 
-    int r;  //return value variable
+    int returnVal;  //return value variable
     /* check whether file opening worked - return r only if not successful */
-    if ((r = checkOutputFile(outputFile, filename, imagePointer)) != 0) return r;
+    if ((returnVal = checkOutputFile(outputFile, filename, imagePointer)) != 0) return returnVal;
     
     int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
     int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
@@ -113,7 +113,7 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
     size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
 
 	/* check that dimensions wrote correctly - return r only if not successful */
-	if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
+	if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return returnVal;
 
     int i;
     int j;
@@ -134,7 +134,7 @@ int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
             }
 
             /* sanity check on write         */
-            if ((r = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return r;
+            if ((returnVal = checknBytesWritten(outputFile, filename, imagePointer, nBytesWritten)) != 0) return returnVal;
         }
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {

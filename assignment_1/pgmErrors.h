@@ -63,6 +63,9 @@ int validateFactorInput(char *charFactorInput);
 /* FUNC: Check tiling output file template is correct */
 int validateTileOutputTemplate(char *outputTemplateString);
 
+/* FUNC: Handles the string outputMessage and closing variables and pointers after an error occurs */
+int handleError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode);
+
 /* FUNC: Frees the image data 2d array */
 void freeImageData (Image *imagePointer);
 

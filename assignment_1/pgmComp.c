@@ -46,12 +46,12 @@ int main(int argc, char **argv)
 { /* main() */
 
 	/* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 3 CLI arguments   */
-	if((r = checkArgumentCount(argc, 3)) != 0)
+	if((returnVal = checkArgumentCount(argc, 3)) != 0)
     {
         /* if there weren't 3 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
-        return r;
+        return returnVal;
     }
 
 	/* create an imagePtr to store the pgm image data as an Image struct */
@@ -71,8 +71,8 @@ int main(int argc, char **argv)
     createNewImage(imagePtr2);
 
     /* Read data from both input files and only return r (the return value) if it wasn't successful */
-	if ((r = readpgmFile(argv[1], imagePtr1, 0)) != 0) return r;
-    if ((r = readpgmFile(argv[2], imagePtr2, 0)) != 0) return r;
+	if ((returnVal = readpgmFile(argv[1], imagePtr1, 0)) != 0) return returnVal;
+    if ((returnVal = readpgmFile(argv[2], imagePtr2, 0)) != 0) return returnVal;
 
     /* Compare the two files: */
     compareImages(imagePtr1, imagePtr2);

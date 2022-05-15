@@ -43,21 +43,20 @@ int main(int argc, char **argv)
 { /* main() */
 
 	/* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 3 CLI arguments   */
-	if((r = checkArgumentCount(argc, 3)) != 0)
+	if((returnVal = checkArgumentCount(argc, 3)) != 0)
     {
         /* if there weren't 3 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
             printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
-        /* else return the return value of the checkArgumentCount() */
-        /* method (i.e, ERROR_BAD_ARGUMENT_COUNT=1)                 */
-        return r;
+        /* else return the return value of the checkArgumentCount() method */
+        return returnVal;
     }
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
@@ -66,10 +65,10 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return r (the return value) if it reading wasn't successful */
-	if ((r = readpgmFile(argv[1], imagePtr, 0)) != 0) return r;
+	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
     /* Write data to output file and only return r (the return value) if it wasn't successful */
-	if ((r = writepgmFile(argv[2], imagePtr)) != 0) return r;
+	if ((returnVal = writepgmFile(argv[2], imagePtr)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("ECHOED\n");

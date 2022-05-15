@@ -36,6 +36,4 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer);
 /* FUNC: writes to an input file data from an input Image */
 int writepgmFile(char *filename, Image *imagePointer);
 
-int outputError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode);
-
 #endif
