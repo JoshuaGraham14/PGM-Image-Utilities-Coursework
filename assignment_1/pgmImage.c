@@ -51,6 +51,7 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
     /* check the input file to see if can be opened*/
     int r; //return value variable.
     if ((r = checkInputFile(inputFile, filename)) != 0) return r;
+    errorCheck(inputFile, filename, imagePointer);
 
     /* comment check */if ((r = readCommentLine (inputFile, filename, imagePointer)) != 0) return r;
 
@@ -187,6 +188,16 @@ int readImageData (FILE *filePointer, char *filename, Image *imagePointer)
     scanCount = fscanf(filePointer, " %u", &pixelValue);
     /* IF too many pixels return 1 - //ELSE return 0. */
     return checkIfTooManyPixels(filePointer, filename, imagePointer, scanCount);
+}
+
+int errorCheck(FILE *filePointer, char *filename, Image *imagePointer)
+{
+    int errorCode[] = {EXIT_NO_ERRORS, ERROR_BAD_ARGUMENT_COUNT, ERROR_BAD_FILE_NAME, ERROR_BAD_MAGIC_NUMBER, 
+ERROR_BAD_COMMENT_LINE, ERROR_BAD_DIMENSIONS, ERROR_BAD_MAX_GRAY_VALUE, ERROR_IMAGE_MALLOC_FAILED, 
+ERROR_BAD_DATA, ERROR_OUTPUT_FAILED, ERROR_MISCELLANEOUS};
+
+    printf("%d", errorCode[2]);
+    return 0;
 }
 
 /* FUNC: writes to an input file data from an input Image */
