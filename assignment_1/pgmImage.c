@@ -27,7 +27,15 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-/* FUNC: fills imagePointer with NULL data values for Image struct */
+/******************************************/
+/* FUNC: createNewImage                   */
+/* -> fills imagePointer with NULL data   */
+/* values for Image struct.               */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* Returns: (none)                        */
+/******************************************/
 void createNewImage(Image *imagePointer)
 {
     imagePointer -> magic_number[0]='0';
@@ -40,7 +48,18 @@ void createNewImage(Image *imagePointer)
     imagePointer->imageData=NULL;
 }
 
-/* FUNC: collection of other pgmImage methods - used to read in a pgmFile */
+/******************************************/
+/* FUNC: readpgmFile                      */
+/* -> collection of other pgmImage        */
+/* methods - used to read in a pgmFile    */
+/*                                        */
+/* Parameters:                            */
+/* - filename: char pointer               */
+/* - imagePointer: Image pointer          */
+/* - mode: integer (either 0, 1, 2)       */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readpgmFile(char *filename, Image *imagePointer, int mode)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
@@ -81,7 +100,19 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
     return EXIT_NO_ERRORS; //success
 }
 
-/* FUNC: reads the Image magic number */
+/******************************************/
+/* FUNC: readMagicNumber                  */
+/* -> reads the magic number from the     */
+/* file and stores the data in the        */
+/* imagePointer struct.                   */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* - mode: integer (either 0, 1, 2)       */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode)
 {
     /* read in the magic number              */
@@ -92,7 +123,18 @@ int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode)
     return checkMagicNumber(imagePointer, mode);
 }
 
-/* FUNC: reads the Image comment line */
+/******************************************/
+/* FUNC: readCommentLine                  */
+/* -> reads the comment line from the     */
+/* file and stores the data in the        */
+/* imagePointer struct.                   */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readCommentLine (FILE *filePointer, Image *imagePointer)
 {
     int scanCount = fscanf(filePointer, " "); // scan whitespace if present */
@@ -114,7 +156,18 @@ int readCommentLine (FILE *filePointer, Image *imagePointer)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: reads the Image dimensions */
+/******************************************/
+/* FUNC: readDimensions                  */
+/* -> reads the Image dimensions from the */
+/* file and stores the data in the        */
+/* imagePointer struct.                   */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readDimensions (FILE *filePointer, Image *imagePointer)
 {
     /* read in width, height          */
@@ -124,7 +177,18 @@ int readDimensions (FILE *filePointer, Image *imagePointer)
     return checkDimensions(imagePointer, scanCount);
 }
 
-/* FUNC: reads the Image max gray */
+/******************************************/
+/* FUNC: readMaxGray                      */
+/* -> reads the Max Gray value from the   */
+/* file and stores the data in the        */
+/* imagePointer struct.                   */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readMaxGray (FILE *filePointer, Image *imagePointer)
 {
     /* read in maxGray          */
@@ -134,7 +198,19 @@ int readMaxGray (FILE *filePointer, Image *imagePointer)
     return checkMaxGray(imagePointer, scanCount);
 }
 
-/* FUNC: reads the Image imageData */
+/******************************************/
+/* FUNC: readImageData                    */
+/* -> reads the Image data from the       */
+/* file and stores the data in the        */
+/* imagePointer struct in the imageData   */
+/* field.                                 */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int readImageData (FILE *filePointer, Image *imagePointer)
 {
     int height = imagePointer->height;
@@ -188,7 +264,18 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     return checkIfTooManyPixels(scanCount);
 }
 
-/* FUNC: writes to an input file data from an input Image */
+/******************************************/
+/* FUNC: writepgmFile                     */
+/* -> writes the data from the imagePointer*/
+/* struct to the file with the input      */
+/* filename.                              */
+/*                                        */
+/* Parameters:                            */
+/* - filename: filename string            */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int writepgmFile(char *filename, Image *imagePointer)
 {
     /* open a file for writing               */

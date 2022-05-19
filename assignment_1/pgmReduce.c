@@ -91,8 +91,14 @@ int main(int argc, char **argv)
 /* - imagePointer: Image pointer   */
 /* - reductionFactor: Reduction Factor */
 /*                                 */
-/* returns 0 on success            */
+/* Returns: 0 on success           */
 /* non-zero error code on fail     */
+/*                                 */
+/* Purpose:                        */
+/* Writes the input image to the   */
+/* input filname, but reducing the */
+/* image by a factor of            */
+/* (reductionFactor) parameter     */
 /***********************************/
 int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
 {

@@ -64,10 +64,10 @@ int main(int argc, char **argv)
     createNewImage(imagePtr); // fills imagePtr struct field values with NULL data 
 
     /* Read data from input file, store data in imagePtr                */
-    /* Only return r (the return value) if it reading wasn't successful */
+    /* Only return returnVal if it reading wasn't successful */
 	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
-    /* Write data to output file and only return r (the return value) if it wasn't successful */
+    /* Write data to output file and only return returnVal if it wasn't successful */
 	if ((returnVal = writepgmFile(argv[2], imagePtr)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */

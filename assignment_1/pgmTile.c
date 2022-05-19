@@ -11,9 +11,10 @@
 /***********************************/
 
 /***********************************/
-/* Reads two pgm files and compares*/
-/* them to see if they are         */
-/* logically equivalent.           */ 
+/* Reads a pgm file and splits it  */
+/* into nxn smaller images         */
+/* with corresponding position to  */
+/* the original image              */ 
 /***********************************/
 
 /***********************************/
@@ -30,7 +31,7 @@
 #include "pgmErrors.h"
 
 //tileImages function declared
-int writeTiles(char *filename, Image *imagePointer, int reductionFactor);
+int writeTiled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
@@ -38,7 +39,7 @@ int writeTiles(char *filename, Image *imagePointer, int reductionFactor);
 /* 4 CLI parameters:               */
 /* argv[0]: executable name        */
 /* argv[1]: input file name        */
-/* argv[2]: int reduction factor   */
+/* argv[2]: int tiling factor      */
 /* argv[3]: ouput file name        */
 /* returns 0 on success            */
 /* non-zero error code on fail     */
@@ -76,42 +77,45 @@ int main(int argc, char **argv)
 	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
     /* Tile the file */
-    int reductionFactor = atoi(argv[2]); //get the reduction factor.
+    int tilingFactor = atoi(argv[2]); //get the reduction factor.
     /* Call the write reduced function - return returnVal only if not successful */
-    if ((returnVal = writeTiles(argv[3], imagePtr, reductionFactor)) != 0) return returnVal;
+    if ((returnVal = writeTiled(argv[3], imagePtr, tilingFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("TILED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
 
-/***********************************/
-/* FUNC: writeReduced              */
-/*                                 */
-/* Parameters:                     */
-/* - filename: filename string     */
-/* - imagePointer: Image pointer   */
-/* - reductionFactor: Reduction Factor */
-/*                                 */
-/* returns 0 on success            */
-/* non-zero error code on fail     */
-/***********************************/
-int writeTiles(char *filename, Image *imagePointer, int reductionFactor)
+/******************************************/
+/* FUNC: writeTiled                       */
+/* -> splits the input image into         */
+/* tilingFactor * tilingFactor smaller    */
+/* images corresponding to parts of the   */
+/* image.                                 */
+/*                                        */
+/* Parameters:                            */
+/* - filename: filename string            */
+/* - imagePointer: Image pointer          */
+/* - tilingFactor: Tiling Factor          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
+int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
 {
     int height = imagePointer->height;
     int width = imagePointer->width;
 
     int ogSize = sizeof(filename);
 
-    char *filenameToWrite = malloc(ogSize * 8 * reductionFactor * reductionFactor);
+    char *filenameToWrite = malloc(ogSize * 8 * tilingFactor * tilingFactor);
     filename[strlen(filename)-19] = '\0';
     //printf("%s", filenameToWrite);
 
     int i;
     int j;
-    for (i = 0; i < reductionFactor; i++)
+    for (i = 0; i < tilingFactor; i++)
     {
-        for (j = 0; j < reductionFactor; j++)
+        for (j = 0; j < tilingFactor; j++)
         {
             sprintf(filenameToWrite, "%s%c%d%c%d%s", filename,'_', i, '_', j,".pgm");
             /* open a file for writing               */
@@ -120,8 +124,8 @@ int writeTiles(char *filename, Image *imagePointer, int reductionFactor)
             /* check whether file opening worked - return returnVal only if not successful */
             if ((returnVal = checkOutputFile(outputFile)) != 0) return returnVal;
 
-            int reducedWidth = (imagePointer->width)/(reductionFactor);
-            int reducedHeight = (imagePointer->height)/(reductionFactor);
+            int reducedWidth = (imagePointer->width)/(tilingFactor);
+            int reducedHeight = (imagePointer->height)/(tilingFactor);
 
             /* write magic number, reduced size & gray value */
             size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);

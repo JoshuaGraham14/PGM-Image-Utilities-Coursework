@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     Image *imagePtr2 = malloc(sizeof(Image));
     createNewImage(imagePtr2);
 
-    /* Read data from both input files and only return r (the return value) if it wasn't successful */
+    /* Read data from both input files and only return returnVal if it wasn't successful (i.e. func doesn't return 0) */
 	if ((returnVal = readpgmFile(argv[1], imagePtr1, 0)) != 0) return returnVal;
     if ((returnVal = readpgmFile(argv[2], imagePtr2, 0)) != 0) return returnVal;
 
@@ -81,15 +81,16 @@ int main(int argc, char **argv)
 
 /***********************************/
 /* FUNC: compareImages             */
+/* -> compares the two input image */
+/* pointers and prints "DIFFERENT" */
+/* if inputs are different or      */
+/* prints "IDENTICAL" if inputs are*/
+/* identical.                      */
 /*                                 */
 /* Parameters:                     */
 /* - inputImage1: Image pointer    */
 /* - inputImage2: Image pointer    */
-/*                                 */
-/* prints "DIFFERENT" if inputs    */
-/* are different or prints         */
-/* "IDENTICAL" if inputs are       */
-/* identical                       */
+/* Returns: (none)                 */
 /***********************************/
 void compareImages(Image *inputImage1, Image *inputImage2)
 {
@@ -109,7 +110,6 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     //COMPARE: image data
     /* iterate through each imageData array from each input */
     /* file simultaneously and compare the two values       */
-    
     int i;
     int j;
 
