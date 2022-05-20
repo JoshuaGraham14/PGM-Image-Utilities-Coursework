@@ -104,27 +104,28 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     {
         /* files are different */
         printf("DIFFERENT\n");
-        return;
+        return; //exit function
     }
 
     //COMPARE: image data
-    /* iterate through each imageData array from each input */
-    /* file simultaneously and compare the two values       */
-    int i;
-    int j;
+    
+    /* define for loop variables: */
+    int columnIndex;
+    int rowIndex;
 
-    int height = inputImage1->height;
-    int width = inputImage1->width;
-
-    for (i = 0; i < height; i++)
+    /* iterate through each imageData array from each input image */
+    /* file simultaneously and compare the two values.            */
+    for (columnIndex = 0; columnIndex < inputImage1->height; columnIndex++)
     {
-        for (j = 0; j < width; j++)
+        for (rowIndex = 0; rowIndex < inputImage1->width; rowIndex++)
         {
-            if(inputImage1->imageData[i][j] != inputImage2->imageData[i][j])
+            /* IF: the data at the same position in each of the images 2d imageData */
+            /* array are not equivalent, then the images are different.             */                                             
+            if(inputImage1->imageData[columnIndex][rowIndex] != inputImage2->imageData[columnIndex][rowIndex])
             {
                 /* files are different */
                 printf("DIFFERENT\n");
-                return;
+                return; //exit function
             }
         }
     }

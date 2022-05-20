@@ -157,7 +157,7 @@ int readCommentLine (FILE *filePointer, Image *imagePointer)
 }
 
 /******************************************/
-/* FUNC: readDimensions                  */
+/* FUNC: readDimensions                   */
 /* -> reads the Image dimensions from the */
 /* file and stores the data in the        */
 /* imagePointer struct.                   */
