@@ -60,7 +60,7 @@ int checkOutputFile(FILE *filePointer);
 /* FUNC: checks the n bytes written to is valid */
 int checknBytesWritten(size_t nBytesWritten);
 
-/* FUNC: Check reduction factor is an integer and is greater than 0 */
+/* FUNC: Check factor is an integer and is greater than 0 */
 int validateFactorInput(char *charFactorInput);
 
 /* FUNC: Check tiling output file template is correct */

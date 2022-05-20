@@ -13,11 +13,11 @@ typedef struct ImageStruct
 	unsigned char **imageData; //A 2d array containing the grey value of every pixel in the image.
 } Image;
 
+/* FUNC: collection of other pgmImage methods - used to read in a pgm file */
+int readpgmFile(char *filename, Image *imagePointer, int mode);
+
 /* FUNC: fills imagePointer with NULL data values for Image struct */
 void createNewImage(Image *imagePointer);
-
-/* FUNC: collection of other pgmImage methods - used to read in a pgmFile */
-int readpgmFile(char *filename, Image *imagePointer, int mode);
 
 /* FUNC: reads the Image magic number */
 int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode);
@@ -33,6 +33,9 @@ int readMaxGray (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: reads the Image imageData */
 int readImageData (FILE *filePointer, Image *imagePointer);
+
+/* FUNC: dynamically allocates memory to imageData array */
+int mallocImageDataArray(Image *imagePointer);
 
 /* FUNC: writes to an input file data from an input Image */
 int writepgmFile(char *filename, Image *imagePointer, int reductionFactor);

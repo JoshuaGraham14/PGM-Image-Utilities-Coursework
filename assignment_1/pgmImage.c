@@ -43,13 +43,14 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
-    createNewImage(imagePointer); // fills imagePtr struct field values with NULL data 
+    /* fills imagePtr struct field values with NULL data */
+    createNewImage(imagePointer); 
 
-    // NOTE: for the following functions, return the return value of the function only if it was not successful
-    // ********************************************************************************************************
+    /* NOTE: for the following functions, return the return value of the function only if it was not successful */
+    // **********************************************************************************************************
+    int returnVal; //return value variable.
 
     /* check the input file to see if can be opened*/
-    int returnVal; //return value variable.
     if ((returnVal = checkInputFile(inputFile)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* comment check */if ((returnVal = readCommentLine (inputFile, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
@@ -218,24 +219,10 @@ int readImageData (FILE *filePointer, Image *imagePointer)
 {
     int returnVal; //return value variable created
 
-    /* dynmaically allocate memory to imageData 2d array */
-    imagePointer->imageData = malloc(imagePointer->height * sizeof(*imagePointer->imageData));
-    /* sanity check for memory allocation for the whole 2d array */
-    if ((returnVal = check2dImageDataMemoryAllocation(imagePointer)) != 0) return returnVal;
+    /* Calls func to dynamically allocate memory for the imageData 2d array, returning returnVal on error. */
+    if ((returnVal = mallocImageDataArray(imagePointer)) != 0) return returnVal;
 
-	/* define for-loop variable counter: */
-    int pointerIndex;
-
-    /* iterate through each row in the 2d array */
-    for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
-    {
-        /* dynmaically allocate memory for each row in 2d array */
-        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(unsigned char));
-        /* sanity check for memory allocation for this row of the array */
-        if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, pointerIndex)) != 0) return returnVal;
-    }
-
-    //Variables to store data during for-loop:
+    /* Variables which store data during for-loop: */
     int pixelValue;
     int scanCount = 1;
 
@@ -280,6 +267,41 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     return checkIfTooManyPixels(scanCount);
 }
 
+/******************************************/
+/* FUNC: mallocImageDataArray             */
+/* -> dynamically allocates memory to the */
+/* imageData array. This func is called   */
+/* just before reading the pixel data     */
+/* from the input pgm file.               */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
+int mallocImageDataArray(Image *imagePointer)
+{
+    int returnVal; //return value variable created
+
+    /* dynamically allocate memory to imageData 2d array */
+    imagePointer->imageData = malloc(imagePointer->height * sizeof(*imagePointer->imageData));
+    /* sanity check for memory allocation for the whole 2d array */
+    if ((returnVal = check2dImageDataMemoryAllocation(imagePointer)) != 0) return returnVal;
+
+	/* define for-loop variable counter: */
+    int pointerIndex;
+    /* iterate through each row in the 2d array */
+    for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
+    {
+        /* dynamically allocate memory for each row in 2d array */
+        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(unsigned char));
+        /* sanity check for memory allocation for this row of the array */
+        if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, pointerIndex)) != 0) return returnVal;
+    }
+
+    return EXIT_NO_ERRORS;
+}
+
 /*******************************************/
 /* FUNC: writepgmFile                      */
 /* -> writes the data from the imagePointer*/
@@ -298,7 +320,7 @@ int readImageData (FILE *filePointer, Image *imagePointer)
 /*******************************************/
 int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
 {
-    /* open a file for writing               */
+    /* open a file for writing */
 	FILE *outputFile = fopen(filename, "w");
 
     int returnVal;  //return value variable
@@ -318,7 +340,6 @@ int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
     /* define for-loop variable counters: */
     int columnIndex;
     int rowIndex;
-
     /* nested iteratation through each element/pixelValue in the imageData array,   */
     /* BUT each loop increments by the reductionFactor in order to reduce the image */
     for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex+=reductionFactor)

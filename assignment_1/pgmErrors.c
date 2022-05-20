@@ -169,7 +169,7 @@ int checkDimensions(Image *imagePointer, int scanCount)
 }
 
 /******************************************/
-/* FUNC: checkDimensions                  */
+/* FUNC: checkMaxGray                  */
 /* -> checks if the max gray's valid.     */
 /*                                        */
 /* Parameters:                            */
@@ -300,7 +300,7 @@ int checkIfTooManyPixels (int scanCount)
 }
 
 /******************************************/
-/* FUNC: checkIfTooManyPixels             */
+/* FUNC: checkOutputFile                  */
 /* -> checks if the output file is valid. */
 /*                                        */
 /* Parameters:                            */
@@ -350,7 +350,7 @@ int checknBytesWritten(size_t nBytesWritten)
 
 /******************************************/
 /* FUNC: validateFactorInput              */
-/* ->  checks that inputted reduction     */
+/* -> checks that inputted reduction      */
 /* factor is an integer and greater than 0.*/
 /*                                        */
 /* Parameters:                            */
@@ -383,7 +383,7 @@ int validateFactorInput(char *charFactorInput)
 
 /******************************************/
 /* FUNC: validateTileOutputTemplate       */
-/* ->  Check tiling output file template  */
+/* -> Check tiling output file template   */
 /* is of correct format.                  */
 /*                                        */
 /* Parameters:                            */
@@ -423,7 +423,7 @@ int validateTileOutputTemplate(char *outputTemplateString)
 }
 
 /******************************************/
-/* FUNC: validateTileOutputTemplate       */
+/* FUNC: handleError                      */
 /* -> handles the string output message & */
 /* closing variables and pointers after   */
 /* an error occurs.                       */
@@ -496,7 +496,7 @@ int handleError(FILE *filePointer, char *filename, Image *imagePointer, int erro
 }
 
 /******************************************/
-/* FUNC: check1dImageDataMemoryAllocation */
+/* FUNC: freeImageData                    */
 /* -> frees the imagePointer->imageData   */
 /* 2d array.                              */
 /*                                        */
