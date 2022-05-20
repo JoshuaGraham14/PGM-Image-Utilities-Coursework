@@ -26,7 +26,19 @@
 #include "pgmErrors.h"
 #include "pgmImage.h"
 
-/* FUNC: checks the number of arguments supplied against the specified number of arguments */
+/******************************************/
+/* FUNC: checkArgumentCount               */
+/* -> checks the number of arguments      */
+/* supplied against the specified number  */
+/* of arguments.                          */
+/*                                        */
+/* Parameters:                            */
+/* - argc: integer num of arguments       */
+/* - numOfArgs: integer num of arguments  */
+/*              expected                  */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int checkArgumentCount(int argc, int numOfArgs)
 {
     if (argc != numOfArgs)
@@ -43,7 +55,15 @@ int checkArgumentCount(int argc, int numOfArgs)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks the input file is valid */
+/******************************************/
+/* FUNC: checkInputFile                   */
+/* -> checks the input file is valid.     */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* Returns: - 0 on success                */
+/*          - ERROR_BAD_FILE_NAME on fail */
+/******************************************/
 int checkInputFile(FILE *filePointer)
 {
     /* if it fails, return error code        */
@@ -57,7 +77,16 @@ int checkInputFile(FILE *filePointer)
 	return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the magic number is valid */
+/******************************************/
+/* FUNC: checkMagicNumber                 */
+/* -> checks if the magic number is valid.*/
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* - mode: integer (either 0, 1, 2)       */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int checkMagicNumber(Image *imagePointer, int mode)
 {
     /* sanity check on the magic number      */
@@ -75,7 +104,16 @@ int checkMagicNumber(Image *imagePointer, int mode)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the comment line is valid */
+/******************************************/
+/* FUNC: checkCommentLine                 */
+/* -> checks if the comment line is valid.*/
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*       - ERROR_BAD_MAGIC_NUMBER on fail */
+/******************************************/
 int checkCommentLine(FILE *filePointer, Image *imagePointer)
 {
     int x = 1; //variable to count number of characters read.
@@ -98,7 +136,16 @@ int checkCommentLine(FILE *filePointer, Image *imagePointer)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the dimensions is valid */
+/******************************************/
+/* FUNC: checkDimensions                  */
+/* -> checks if the dimensions is valid.  */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* - scanCount: int number of values read */
+/* Returns: - 0 on success                */
+/*         - ERROR_BAD_DIMENSIONS on fail */
+/******************************************/
 int checkDimensions(Image *imagePointer, int scanCount)
 {
 	/* must read exactly three values         */
@@ -121,7 +168,16 @@ int checkDimensions(Image *imagePointer, int scanCount)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the max gray is valid */
+/******************************************/
+/* FUNC: checkDimensions                  */
+/* -> checks if the max gray's valid.     */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* - scanCount: int number of values read */
+/* Returns: - 0 on success                */
+/*     - ERROR_BAD_MAX_GRAY_VALUE on fail */
+/******************************************/
 int checkMaxGray(Image *imagePointer, int scanCount)
 {
 	/* must read exactly three values        */
@@ -142,7 +198,16 @@ int checkMaxGray(Image *imagePointer, int scanCount)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image malloc is valid for the 2d array*/
+/******************************************/
+/* FUNC: check2dImageDataMemoryAllocation */
+/* -> checks if the image malloc is valid */
+/* for the 2d array.                      */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* Returns: - 0 on success                */
+/*    - ERROR_IMAGE_MALLOC_FAILED on fail */
+/******************************************/
 int check2dImageDataMemoryAllocation(Image *imagePointer)
 {
     /* sanity check for memory allocation    */
@@ -158,7 +223,17 @@ int check2dImageDataMemoryAllocation(Image *imagePointer)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image malloc is valid for each 1d array*/
+/******************************************/
+/* FUNC: check1dImageDataMemoryAllocation */
+/* -> checks if the image malloc is valid */
+/* for each 1d array.                     */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* - rowNum: integer row number to free   */
+/* Returns: - 0 on success                */
+/*    - ERROR_IMAGE_MALLOC_FAILED on fail */
+/******************************************/
 int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
 {
     /* sanity check for memory allocation    */
@@ -174,7 +249,18 @@ int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the image pixel value is valid */
+/******************************************/
+/* FUNC: checkPixelValue                  */
+/* -> checks if the image pixel value is  */
+/* valid.                                 */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* - scanCount: int number of values read */
+/* - pixelValue: int value of the pixel   */
+/* Returns: - 0 on success                */
+/*          - ERROR_BAD_DATA on fail      */
+/******************************************/
 int checkPixelValue(Image *imagePointer, int scanCount, int pixelValue)
 {
     //printf("sc: %d; gv: %d", scanCount, pixelValue);
@@ -190,19 +276,39 @@ int checkPixelValue(Image *imagePointer, int scanCount, int pixelValue)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the imageData contains more pixels than specified by dimensions */
+/******************************************/
+/* FUNC: checkIfTooManyPixels             */
+/* -> checks if the imageData contains    */
+/* more pixels than specified by          */
+/* dimensions.                            */
+/*                                        */
+/* Parameters:                            */
+/* - scanCount: int number of values read */
+/* Returns: - 0 on success                */
+/*          - ERROR_BAD_DATA on fail      */
+/******************************************/
 int checkIfTooManyPixels (int scanCount)
 {
-    //too many characters
+    /* YES IF: a pixel value has been detected after reading */
+    /* number of pixels specified by dimensions.             */
     if (scanCount >=1)
     {
         /* and return error code */
         return ERROR_BAD_DATA;
     }
+    /* else return with no error code */
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks if the output file is valid */
+/******************************************/
+/* FUNC: checkIfTooManyPixels             */
+/* -> checks if the output file is valid. */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* Returns: - 0 on success                */
+/*          - ERROR_OUTPUT_FAILED on fail */
+/******************************************/
 int checkOutputFile(FILE *filePointer)
 {
     /* check whether file opening worked     */
@@ -218,7 +324,16 @@ int checkOutputFile(FILE *filePointer)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: checks the n bytes written to is valid */
+/******************************************/
+/* FUNC: checknBytesWritten               */
+/* -> checks the num of bytes written is  */
+/* valid.                                 */
+/*                                        */
+/* Parameters:                            */
+/* - nBytesWritten: the num of bytes written */
+/* Returns: - 0 on success                */
+/*          - ERROR_OUTPUT_FAILED on fail */
+/******************************************/
 int checknBytesWritten(size_t nBytesWritten)
 {
     /* check that dimensions wrote correctly */
@@ -234,7 +349,18 @@ int checknBytesWritten(size_t nBytesWritten)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: Check reduction factor is an integer and is greater than 0 */
+/******************************************/
+/* FUNC: validateFactorInput              */
+/* ->  checks that inputted reduction     */
+/* factor is an integer and greater than 0.*/
+/*                                        */
+/* Parameters:                            */
+/* - charFactorInput: char pointer of     */
+/*                  command line inputted */
+/*                  factor.               */
+/* Returns: - 0 on success                */
+/*          - ERROR_MISCELLANEOUS on fail */
+/******************************************/
 int validateFactorInput(char *charFactorInput)
 {
     /* if reduction factor is an integer */
@@ -257,7 +383,18 @@ int validateFactorInput(char *charFactorInput)
     return ERROR_MISCELLANEOUS;
 }
 
-/* FUNC: Check tiling output file template is correct */
+/******************************************/
+/* FUNC: validateTileOutputTemplate       */
+/* ->  Check tiling output file template  */
+/* is of correct format.                  */
+/*                                        */
+/* Parameters:                            */
+/* - outputTemplateString: char pointer of*/
+/*                  command line inputted */
+/*                  template string.      */
+/* Returns: - 0 on success                */
+/*          - ERROR_MISCELLANEOUS on fail */
+/******************************************/
 int validateTileOutputTemplate(char *outputTemplateString)
 {
     /* if reduction factor is an integer */
@@ -279,7 +416,20 @@ int validateTileOutputTemplate(char *outputTemplateString)
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: Handles the string outputMessage and closing variables and pointers after an error occurs */
+/******************************************/
+/* FUNC: validateTileOutputTemplate       */
+/* ->  Handles the string output message  */
+/* & closing variables and pointers after */
+/* an error occurs.                       */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* - filename: char pointer               */
+/* - imagePointer: Image pointer          */
+/* - errorCode: integer corresponding to  */
+/*              the error which occured.  */
+/* Returns: - errorCode parameter         */
+/******************************************/
 int handleError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode)
 {
     char *errorStringsArray[8];
@@ -324,7 +474,16 @@ int handleError(FILE *filePointer, char *filename, Image *imagePointer, int erro
     return errorCode;
 }
 
-/* FUNC: Frees the image data 2d array */
+/******************************************/
+/* FUNC: check1dImageDataMemoryAllocation */
+/* -> frees the imagePointer.imageData 2d */
+/* array.                                 */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* Returns: - (none)                      */
+/******************************************/
+/* FUNC:  */
 void freeImageData (Image *imagePointer)
 {
     int i;
