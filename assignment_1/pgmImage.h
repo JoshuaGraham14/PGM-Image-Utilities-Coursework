@@ -35,6 +35,6 @@ int readMaxGray (FILE *filePointer, Image *imagePointer);
 int readImageData (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: writes to an input file data from an input Image */
-int writepgmFile(char *filename, Image *imagePointer);
+int writepgmFile(char *filename, Image *imagePointer, int reductionFactor);
 
 #endif

@@ -266,61 +266,75 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     return checkIfTooManyPixels(scanCount);
 }
 
-/******************************************/
-/* FUNC: writepgmFile                     */
+/*******************************************/
+/* FUNC: writepgmFile                      */
 /* -> writes the data from the imagePointer*/
-/* struct to the file with the input      */
-/* filename.                              */
-/*                                        */
-/* Parameters:                            */
-/* - filename: filename string            */
-/* - imagePointer: Image pointer          */
-/* Returns: - 0 on success                */
-/*          - non-zero error code on fail */
-/******************************************/
-int writepgmFile(char *filename, Image *imagePointer)
+/* struct to the file with the input       */
+/* filename. If the reductionFactor        */
+/* parameter != 1, then the file is reduced*/
+/* by that factor.                         */
+/*                                         */
+/* Parameters:                             */
+/* - filename: filename string             */
+/* - imagePointer: Image pointer           */
+/* - reductionFactor: Reduction Factor     */
+/*                    (1 = no reduction)   */
+/* Returns: - 0 on success                 */
+/*          - non-zero error code on fail  */
+/*******************************************/
+int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
 {
     /* open a file for writing               */
 	FILE *outputFile = fopen(filename, "w");
 
-    int height = imagePointer->height;
-    int width = imagePointer->width;
-
-    /* check whether file opening worked     */
-    int returnVal;
-    if ((returnVal = checkOutputFile(outputFile)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
+    int returnVal;  //return value variable
+    /* check whether file opening worked - return returnVal only if not successful */
+    if ((returnVal = checkOutputFile(outputFile)) != 0) return returnVal;
     
-    /* write magic number, size & gray value */
-    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], imagePointer->width, imagePointer->height, imagePointer->maxGray);
+    /* Create variables which store the width and height of the image after it has been reduced */
+    int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
+    int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
 
-	/* check that dimensions wrote correctly */
-	if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
+    /* write magic number, reduced size & gray value */
+    size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
 
-    int i;
-    int j;
-    for (i = 0; i < height; i++)
+	/* check that dimensions wrote correctly - only return returnVal if not successful */
+	if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
+
+    /* define for-loop variable counters: */
+    int columnIndex;
+    int rowIndex;
+
+    /* nested iteratation through each element/pixelValue in the imageData array,   */
+    /* BUT each loop increments by the reductionFactor in order to reduce the image */
+    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex+=reductionFactor)
     {
-        for (j = 0; j < width; j++)
+        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex+=reductionFactor)
         {
-            /* write the entry & whitespace  */
+            /* IF: the image is in ASCII format:   */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
-                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[i][j]);
+                /* write the entry & whitespace  */
+                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[columnIndex][rowIndex]);
             }
+            /* ELSE: the image is in binary format: */
             else 
             {
-                //printf("\n%d, %d", imagePointer->imageData[i][j], &imagePointer->imageData[i][j]);
-                fwrite(&imagePointer->imageData[i][j], 1, 1, outputFile);
+                /* write the entry in binary */
+                fwrite(&imagePointer->imageData[columnIndex][rowIndex], 1, 1, outputFile);
             }
 
-            /* sanity check on write         */
-            if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return handleError(outputFile, filename, imagePointer, returnVal);
+            /* sanity check on write by calling checknBytesWritten */
+            if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
         }
+
+        /* If the image is in ASCII format add a newline at the end of row column cycle */
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
             fprintf(outputFile, "%c", '\n');
         }
     }
-
+    
+    /* no errors so exit with success return code */
     return EXIT_NO_ERRORS;
 }

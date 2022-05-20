@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     imagePtr->magic_number[1] = '5';
 
     /* Write data to output file and only return returnVal if it wasn't successful */
-    if ((returnVal = writepgmFile(argv[2], imagePtr)) != 0) return returnVal;
+    if ((returnVal = writepgmFile(argv[2], imagePtr, 1)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("CONVERTED\n");
