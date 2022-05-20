@@ -116,7 +116,7 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     for (columnIndex = 0; columnIndex < inputImage1->height; columnIndex++)
     {
         for (rowIndex = 0; rowIndex < inputImage1->width; rowIndex++)
-        {
+        { /*per pixel*/
             /* IF: the data at the same position in each of the images 2d imageData */
             /* array are not equivalent, then the images are different.             */                                             
             if(inputImage1->imageData[columnIndex][rowIndex] != inputImage2->imageData[columnIndex][rowIndex])
@@ -125,7 +125,7 @@ void compareImages(Image *inputImage1, Image *inputImage2)
                 printf("DIFFERENT\n");
                 return; //exit function
             }
-        }
+        } /*per pixel*/
     }
 
     /* if no differences found -> files are identical */

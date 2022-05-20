@@ -12,9 +12,9 @@
 
 /***********************************/
 /* Reads a pgm file and splits it  */
-/* into nxn smaller images         */
-/* with corresponding position to  */
-/* the original image              */ 
+/* into nxn smaller images, with   */
+/* corresponding position to the   */
+/* original image.                 */ 
 /***********************************/
 
 /***********************************/
@@ -66,18 +66,19 @@ int main(int argc, char **argv)
 
     /* Check reduction factor is valid */
     if((returnVal = validateFactorInput(argv[2])) != 0) return returnVal;
+    /* Check outputfile template format is valid */
     if((returnVal = validateTileOutputTemplate(argv[3])) != 0) return returnVal;
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
 
     /* Read data from input file, store data in imagePtr                */
-    /* Only return returnVal (the return value) if it reading wasn't successful */
+    /* Only return returnVal if it reading wasn't successful */
 	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
-    /* Tile the file */
-    int tilingFactor = atoi(argv[2]); //get the reduction factor.
-    /* Call the write reduced function - return returnVal only if not successful */
+    /* - Tile the file - */
+    int tilingFactor = atoi(argv[2]); //get the tiling factor.
+    /* Call the writeTiled - only return returnVal if not successful */
     if ((returnVal = writeTiled(argv[3], imagePtr, tilingFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
@@ -101,64 +102,81 @@ int main(int argc, char **argv)
 /******************************************/
 int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
 {
-    int height = imagePointer->height;
-    int width = imagePointer->width;
+    /* Dynamically allocate memory for tiledImageFilename.                              */
+    int sizeOfTileSuffix = strlen("_x_y.pgm");
+    char *tiledImageFilename = malloc(sizeof(filename) * tilingFactor * tilingFactor * sizeOfTileSuffix);
 
-    int ogSize = sizeof(filename);
+    /* filename is truncated so that it removes the template suffix, */
+    /* so that it only contains the base name of the file.           */
+    int sizeOfTemplateSuffix = strlen("_<row>_<column>.pgm");
+    filename[strlen(filename)-sizeOfTemplateSuffix] = '\0';
 
-    char *filenameToWrite = malloc(ogSize * 8 * tilingFactor * tilingFactor);
-    filename[strlen(filename)-19] = '\0';
-    //printf("%s", filenameToWrite);
+    /* define for-loop variable counters: */
+    int rowPosition;
+    int columnPosition;
 
-    int i;
-    int j;
-    for (i = 0; i < tilingFactor; i++)
+    /* iterate through the row and column tilingFactor permutations */
+    for (rowPosition = 0; rowPosition < tilingFactor; rowPosition++)
     {
-        for (j = 0; j < tilingFactor; j++)
-        {
-            sprintf(filenameToWrite, "%s%c%d%c%d%s", filename,'_', i, '_', j,".pgm");
-            /* open a file for writing               */
-            FILE *outputFile = fopen(filenameToWrite, "w");
+        for (columnPosition = 0; columnPosition < tilingFactor; columnPosition++)
+        { /*per tiled image*/
+            /* Construct tiledImageFilename (the current tile file to write to) to by   */
+            /* concatenating: (filename, '_', rowPosition, '_', columnPosition, ".pgm"). */
+            sprintf(tiledImageFilename, "%s%c%d%c%d%s", filename,'_', rowPosition, '_', columnPosition,".pgm");
+
+            /* open the current tile as a file for writing               */
+            FILE *outputFile = fopen(tiledImageFilename, "w");
             int returnVal;  //return value variable
-            /* check whether file opening worked - return returnVal only if not successful */
+            /* check whether file opening worked - only return returnVal if unsuccessful */
             if ((returnVal = checkOutputFile(outputFile)) != 0) return returnVal;
 
+            /* Create variables for the tile image's width and height after it has been reduced */
             int reducedWidth = (imagePointer->width)/(tilingFactor);
             int reducedHeight = (imagePointer->height)/(tilingFactor);
 
-            /* write magic number, reduced size & gray value */
+            /* write magic number, reduced size & gray value for the tiled image */
             size_t nBytesWritten = fprintf(outputFile, "P%c\n%d %d\n%d\n", imagePointer->magic_number[1], reducedWidth, reducedHeight, imagePointer->maxGray);
             /* check that dimensions wrote correctly - return returnVal only if not successful */
             if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
 
-            int x;
-            int y;
-            for (x = i*reducedHeight; x < i*reducedHeight + reducedHeight; x++)
-            {
-                for (y = j*reducedWidth; y < j*reducedWidth + reducedWidth; y++)
-                {
-                    //printf("%d\n", imagePointer->imageData[x][y]);
-                    /* write the entry & whitespace  */
+            /* define for-loop variable counters: */
+            int columnIndex;
+            int rowIndex;
+
+            /* nested iteratation through each element/pixelValue in the imageData array, */
+            /* BUT each loop starts at the relative position on the grid for that tile.   */
+            for (columnIndex = rowPosition*reducedHeight; columnIndex < rowPosition*reducedHeight + reducedHeight; columnIndex++)
+            { /*per row of pixels*/
+                for (rowIndex = columnPosition*reducedWidth; rowIndex < columnPosition*reducedWidth + reducedWidth; rowIndex++)
+                { /*per pixel*/
+                    /* IF: the image is in ASCII format:   */
                     if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
                     {
-                        nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[x][y]);
+                        /* write the entry & whitespace  */
+                        nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[columnIndex][rowIndex]);
                     }
+                    /* ELSE: the image is in binary format: */
                     else 
                     {
-                        //printf("\n%d, %d", imagePointer->imageData[i][j], &imagePointer->imageData[i][j]);
-                        fwrite(&imagePointer->imageData[x][y], 1, 1, outputFile);
+                        /* write the entry in binary */
+                        fwrite(&imagePointer->imageData[columnIndex][rowIndex], 1, 1, outputFile);
                     }
 
-                    /* sanity check on write         */
+                    /* sanity check on write, by calling checknBytesWritten */
                     if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
-                }
+                } /*per pixel*/
+
+                /* If the image is in ASCII format add a newline at the end of row column cycle */
                 if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
                 {
                     fprintf(outputFile, "%c", '\n');
                 }
-            }
-            filenameToWrite[strlen(filenameToWrite)-8] = '\0';
-        }
+
+            } /*per row of pixels*/
+
+            /* reset tiledImageFilename by removing suffix (i.e. "_x_y.pgm")     */
+            tiledImageFilename[strlen(tiledImageFilename)-sizeOfTileSuffix] = '\0';
+        } /*per tiled image*/
     }
     
     /* no errors so exit with success return code */

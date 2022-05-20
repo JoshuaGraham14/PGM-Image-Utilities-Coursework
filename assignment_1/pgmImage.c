@@ -139,17 +139,18 @@ int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode)
 /******************************************/
 int readCommentLine (FILE *filePointer, Image *imagePointer)
 {
-    int scanCount = fscanf(filePointer, " "); // scan whitespace if present */
-    //printf("SC:%d\n", scanCount);
+    /* scan whitespace if present */
+    int scanCount = fscanf(filePointer, " "); 
+
     /* check for a comment line              */
 	char nextChar = fgetc(filePointer);
 	if (nextChar == '#')
-    { /* comment line                */
+    { /* comment line */
 		/* allocate buffer               */
 		imagePointer->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
         /* check the comment line is valid */
         return checkCommentLine(filePointer, imagePointer);
-    }
+    } /* comment line */
 	else
     { /* not a comment line */
 		/* put character back            */
@@ -308,9 +309,9 @@ int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
     /* nested iteratation through each element/pixelValue in the imageData array,   */
     /* BUT each loop increments by the reductionFactor in order to reduce the image */
     for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex+=reductionFactor)
-    {
+    { /*per row of pixels*/
         for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex+=reductionFactor)
-        {
+        { /*per pixel*/
             /* IF: the image is in ASCII format:   */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
@@ -324,16 +325,16 @@ int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
                 fwrite(&imagePointer->imageData[columnIndex][rowIndex], 1, 1, outputFile);
             }
 
-            /* sanity check on write by calling checknBytesWritten */
+            /* sanity check on write, by calling checknBytesWritten */
             if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
-        }
+        } /*per pixel*/
 
         /* If the image is in ASCII format add a newline at the end of row column cycle */
         if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
         {
             fprintf(outputFile, "%c", '\n');
         }
-    }
+    } /*per row of pixels*/
     
     /* no errors so exit with success return code */
     return EXIT_NO_ERRORS;
