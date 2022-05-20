@@ -61,7 +61,6 @@ int main(int argc, char **argv)
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    createNewImage(imagePtr); // fills imagePtr struct field values with NULL data 
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return returnVal if it reading wasn't successful */

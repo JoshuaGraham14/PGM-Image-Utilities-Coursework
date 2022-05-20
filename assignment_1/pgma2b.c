@@ -59,13 +59,12 @@ int main(int argc, char **argv)
 
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    createNewImage(imagePtr); // fills imagePtr1 struct field values with NULL data 
 
     /* Read data from input file, store data in imagePtr   */
     /* Only return returnVal if reading wasn't successful  */
     if ((returnVal = readpgmFile(argv[1], imagePtr, 1)) != 0) return returnVal;
 
-    /* Set the magicNumber to "P5" as the ASCII file will be written to in binary */
+    /* Set the magicNumber to "P5" which will cause the ASCII image to be written to in binary */
     imagePtr->magic_number[1] = '5';
 
     /* Write data to output file and only return returnVal if it wasn't successful */

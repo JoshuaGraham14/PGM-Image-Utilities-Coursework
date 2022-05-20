@@ -64,11 +64,9 @@ int main(int argc, char **argv)
 
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr1 = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    createNewImage(imagePtr1); // fills imagePtr1 struct field values with NULL data 
 
     /* do the same for imagePtr2/second input file */
     Image *imagePtr2 = malloc(sizeof(Image));
-    createNewImage(imagePtr2);
 
     /* Read data from both input files and only return returnVal if it wasn't successful (i.e. func doesn't return 0) */
 	if ((returnVal = readpgmFile(argv[1], imagePtr1, 0)) != 0) return returnVal;

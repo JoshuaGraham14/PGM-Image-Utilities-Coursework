@@ -28,27 +28,6 @@
 #include "pgmImage.h"
 
 /******************************************/
-/* FUNC: createNewImage                   */
-/* -> fills imagePointer with NULL data   */
-/* values for Image struct.               */
-/*                                        */
-/* Parameters:                            */
-/* - imagePointer: Image pointer          */
-/* Returns: (none)                        */
-/******************************************/
-void createNewImage(Image *imagePointer)
-{
-    imagePointer -> magic_number[0]='0';
-    imagePointer -> magic_number[1]='0';
-    imagePointer -> magic_Number= (unsigned short *) imagePointer->magic_number;
-    imagePointer -> commentLine=NULL;
-    imagePointer -> width=0;
-    imagePointer -> height=0;
-    imagePointer -> maxGray=255;
-    imagePointer->imageData=NULL;
-}
-
-/******************************************/
 /* FUNC: readpgmFile                      */
 /* -> collection of other pgmImage        */
 /* methods - used to read in a pgmFile    */
@@ -63,6 +42,8 @@ void createNewImage(Image *imagePointer)
 int readpgmFile(char *filename, Image *imagePointer, int mode)
 {
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
+
+    createNewImage(imagePointer); // fills imagePtr struct field values with NULL data 
 
     // NOTE: for the following functions, return the return value of the function only if it was not successful
     // ********************************************************************************************************
@@ -98,6 +79,27 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
     /* we're done with the file, so close it */
     fclose(inputFile);
     return EXIT_NO_ERRORS; //success
+}
+
+/******************************************/
+/* FUNC: createNewImage                   */
+/* -> fills imagePointer with NULL data   */
+/* values for Image struct.               */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer          */
+/* Returns: (none)                        */
+/******************************************/
+void createNewImage(Image *imagePointer)
+{
+    imagePointer -> magic_number[0]='0';
+    imagePointer -> magic_number[1]='0';
+    imagePointer -> magic_Number= (unsigned short *) imagePointer->magic_number;
+    imagePointer -> commentLine=NULL;
+    imagePointer -> width=0;
+    imagePointer -> height=0;
+    imagePointer -> maxGray=255;
+    imagePointer->imageData=NULL;
 }
 
 /******************************************/
