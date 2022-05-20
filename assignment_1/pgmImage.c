@@ -226,7 +226,7 @@ int readImageData (FILE *filePointer, Image *imagePointer)
 	/* define for-loop variable counter: */
     int pointerIndex;
 
-    /* iterate through the row and column tilingFactor permutations */
+    /* iterate through each row in the 2d array */
     for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
     {
         /* dynmaically allocate memory for each row in 2d array */

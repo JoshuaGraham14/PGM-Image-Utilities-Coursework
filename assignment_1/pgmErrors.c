@@ -362,11 +362,11 @@ int checknBytesWritten(size_t nBytesWritten)
 /******************************************/
 int validateFactorInput(char *charFactorInput)
 {
-    /* if reduction factor is an integer */
+    /* IF reduction factor is an integer */
     if (atoi(charFactorInput))
     {
         int intFactor = atoi(charFactorInput);
-        /* if reduction factor is less than or equal to 0 */
+        /* and check IF reduction factor is greater than 0 */
         if (intFactor > 0)
         {
             /* Return with success code */
@@ -377,7 +377,6 @@ int validateFactorInput(char *charFactorInput)
     //IF ABOVE FAILS:
     /* print an error message        */
     printf("ERROR: Miscellaneous (factor invalid)\n");
-    
     /* return an error code          */
     return ERROR_MISCELLANEOUS;
 }
@@ -396,20 +395,28 @@ int validateFactorInput(char *charFactorInput)
 /******************************************/
 int validateTileOutputTemplate(char *outputTemplateString)
 {
-    /* if reduction factor is an integer */
+    /* template string which we are expecting  */
     char *targetString = "_<row>_<column>.pgm";
 
-    int i;
-    for (i = 0; i < strlen(targetString); i++)
-    {
-        if (outputTemplateString[strlen(outputTemplateString)-i-1] != targetString[strlen(targetString)-i-1])
+    /* define for-loop variable counters: */
+    int charIndex;
+
+    /* iterate through the indexes of each character in the targetString string */
+    for (charIndex = 0; charIndex < strlen(targetString); charIndex++)
+    { /* per character index */
+
+        /* compares the characters at the same index (starting from the end */
+        /* of each string) to check IF they are not identical.              */
+        /* i.e. as the loop runs, it will check that the last 19 characters */
+        /* of the outputTemplateString parameter match the targetString.    */
+        if (outputTemplateString[strlen(outputTemplateString)-charIndex-1] != targetString[strlen(targetString)-charIndex-1])
         {
             /* print an error message        */
             printf("ERROR: Miscellaneous (invalid output template)\n");
             /* return an error code          */
             return ERROR_MISCELLANEOUS;
         }
-    }
+    } /* per character index */
     
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
@@ -417,8 +424,8 @@ int validateTileOutputTemplate(char *outputTemplateString)
 
 /******************************************/
 /* FUNC: validateTileOutputTemplate       */
-/* ->  Handles the string output message  */
-/* & closing variables and pointers after */
+/* -> handles the string output message & */
+/* closing variables and pointers after   */
 /* an error occurs.                       */
 /*                                        */
 /* Parameters:                            */
@@ -431,64 +438,83 @@ int validateTileOutputTemplate(char *outputTemplateString)
 /******************************************/
 int handleError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode)
 {
+    /* Array containing all the error messages (except from miscellaneous) */
+    /* NOTE: The first two error codes EXIT_NO_ERRORS and ERROR_BAD_ARGUMENT_COUNT */ 
+    /* are not stored in the errorStringsArray, so each index of the array is      */
+    /* shifted by 2 to its corresponding error code & message.                     */
     char *errorStringsArray[8];
-    errorStringsArray[0] = "ERROR: Bad File Name";
-    errorStringsArray[1] = "ERROR: Bad Magic Number";
-    errorStringsArray[2] = "ERROR: Bad Comment Line";
-    errorStringsArray[3] = "ERROR: Bad Dimensions";
-    errorStringsArray[4] = "ERROR: Bad Max Gray Value";
-    errorStringsArray[5] = "ERROR: Image Malloc Failed";
-    errorStringsArray[6] = "ERROR: Bad Data";
-    errorStringsArray[7] = "ERROR: Output Failed";
+    errorStringsArray[0] = "Bad File Name";
+    errorStringsArray[1] = "Bad Magic Number";
+    errorStringsArray[2] = "Bad Comment Line";
+    errorStringsArray[3] = "Bad Dimensions";
+    errorStringsArray[4] = "Bad Max Gray Value";
+    errorStringsArray[5] = "Image Malloc Failed";
+    errorStringsArray[6] = "Bad Data";
+    errorStringsArray[7] = "Output Failed";
 
-    //print error codes which have '(filename)' format:
-    if (errorCode >= 2 && errorCode <=6 || errorCode >=8 && errorCode <=9)
+    /* If errorCode = 7 (i.e. ERROR_IMAGE_MALLOC_FAILED) print the error code without '(filename)' format */ 
+    if (errorCode == 7)
     {
-        printf("%s (%s)\n", errorStringsArray[errorCode-2], filename);
+        /* Print the error message          */
+        /* NOTE: We minus 2 from errorCode because the first two error codes     */
+        /* EXIT_NO_ERRORS and ERROR_BAD_ARGUMENT_COUNT are not stored in the     */
+        /* errorStringsArray, so each index of the array is shifted by 2 to its  */
+        /* corresponding error code & message.                                   */
+        printf("ERROR: %s\n", errorStringsArray[errorCode-2]);
+        
     }
-    //else print other errors with a newline
+    /* ELSE: print error codes which have '(filename)' format: */
     else
     {
-        printf("%s\n", errorStringsArray[errorCode-2]);
+        printf("ERROR: %s (%s)\n", errorStringsArray[errorCode-2], filename);
     }
 
-    //Handle closing file and freeing memory
+    /* if block to handle closing file and freeing memory on failure: */
+    /* IF: after file open stage and before file write stage -> close the file on failure */
     if(errorCode >= 3 && errorCode <= 8)
     {
         /* close the file       */
         fclose(filePointer);
 
+        /* IF: after comment line stage -> free comment line on failure */
         if(errorCode >= 4)
         {
-            /* free memory           */
+            /* free comment line from memory  */
             free(imagePointer->commentLine);
         }
+
+        /* IF: after comment readpgmFile stage -> free imageData on failure */
         if(errorCode >= 8)
         {
-            /* calls freeImageData func to free imageData from memory */
+            /* calls freeImageData() func to free imageData from memory */
             freeImageData(imagePointer);
         }
     }
 
+    /* Pass the errorCode (the error code detected) through the function */
     return errorCode;
 }
 
 /******************************************/
 /* FUNC: check1dImageDataMemoryAllocation */
-/* -> frees the imagePointer.imageData 2d */
-/* array.                                 */
+/* -> frees the imagePointer->imageData   */
+/* 2d array.                              */
 /*                                        */
 /* Parameters:                            */
 /* - imagePointer: Image pointer          */
 /* Returns: - (none)                      */
 /******************************************/
-/* FUNC:  */
 void freeImageData (Image *imagePointer)
 {
-    int i;
-    for (i = 0; i < imagePointer->height; i++)
+    /* define for-loop variable counter: */
+    int pointerIndex;
+
+    /* iterate through each row in the 2d array */
+    for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
     {
-        free(imagePointer->imageData[i]);
+        /* free memory for the data at each index at the current row of the 2d array */
+        free(imagePointer->imageData[pointerIndex]);
     }
+    /* free memory of the 2d array */
     free(imagePointer->imageData);
 }
