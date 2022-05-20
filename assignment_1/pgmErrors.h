@@ -1,6 +1,8 @@
 #ifndef ERRORS_HEADER_FILE
 #define ERRORS_HEADER_FILE
-#include "pgmImage.h"
+#include "pgmImage.h" //include pgmImage file as Image struct it will
+                      //need to be passed into some of the functions
+                      //as arguments.
 
 /* Constants */
 #define MAGIC_NUMBER_RAW_PGM 0x3550
@@ -9,6 +11,7 @@
 #define MAX_IMAGE_DIMENSION 65536
 #define MAX_COMMENT_LINE_LENGTH 128
 
+/* Constants: Error Codes */
 #define EXIT_NO_ERRORS 0
 #define ERROR_BAD_ARGUMENT_COUNT 1
 #define ERROR_BAD_FILE_NAME 2

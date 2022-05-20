@@ -1,15 +1,16 @@
 #ifndef IMAGE_HEADER_FILE
 #define IMAGE_HEADER_FILE
 
+//ImageStruct will store the data for a pgm image.
 typedef struct ImageStruct
 {
-    unsigned char magic_number[2];
-	unsigned short *magic_Number;
-	char *commentLine;
-	unsigned int width;
-    unsigned int height;
-	unsigned int maxGray;
-	unsigned char **imageData;
+    unsigned char magic_number[2]; //A "magic number" for identifying the file type (either 'P2' or 'P5').
+	unsigned short *magic_Number; //A pointer to the magic_number char array.
+	char *commentLine; //A string of characters forming a comment line (if a line starts with #).
+	unsigned int width; //Width of the pgm image.
+    unsigned int height; //Height of the pgm image.
+	unsigned int maxGray; //The maximum gray value in the pgm image.
+	unsigned char **imageData; //A 2d array containing the grey value of every pixel in the image.
 } Image;
 
 /* FUNC: fills imagePointer with NULL data values for Image struct */
