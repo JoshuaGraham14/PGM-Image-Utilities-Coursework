@@ -30,7 +30,7 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
-//tileImages function declared
+//writeTiled function declared
 int writeTiled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
         return returnVal;
     }
 
-    /* Check reduction factor is valid */
+    /* Check tiling factor is valid */
     if((returnVal = validateFactorInput(argv[2])) != 0) return returnVal;
     /* Check outputfile template format is valid */
     if((returnVal = validateTileOutputTemplate(argv[3])) != 0) return returnVal;
