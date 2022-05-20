@@ -107,7 +107,7 @@ void compareImages(Image *inputImage1, Image *inputImage2)
 
     //COMPARE: image data
     
-    /* define for loop variables: */
+    /* define for-loop variable counters: */
     int columnIndex;
     int rowIndex;
 

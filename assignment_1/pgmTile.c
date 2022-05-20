@@ -161,6 +161,6 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
         }
     }
     
-    /* no errors so exit with return with success code */
+    /* no errors so exit with success return code */
     return EXIT_NO_ERRORS;
 }
