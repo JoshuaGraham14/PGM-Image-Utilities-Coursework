@@ -47,12 +47,12 @@ int main(int argc, char **argv)
 { /* main() */
 
 	/* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 5 CLI arguments   */
-	if((r = checkArgumentCount(argc, 5)) != 0)
+	if((returnVal = checkArgumentCount(argc, 5)) != 0)
     {
         /* if there weren't 5 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
@@ -60,37 +60,37 @@ int main(int argc, char **argv)
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
-        return r;
+        return returnVal;
     }
 
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr1 = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    if ((r = createNewImage(imagePtr1, argv[2], argv[3])) != 0) return r; // fills imagePtr struct field values with NULL data
 
     /* do the same for imagePtr2/second input file */
     Image *imagePtr2 = malloc(sizeof(Image));
-    if ((r = createNewImage(imagePtr2, argv[2], argv[3])) != 0) return r;
 
-    /* Read data from both input files and only return r (the return value) if it wasn't successful */
-	if ((r = readGtopoFile(argv[1], imagePtr1)) != 0) return r;
-    if ((r = readGtopoFile(argv[4], imagePtr2)) != 0) return r;
+    /* Read data from both input files and only return returnVal if it wasn't successful */
+    if ((returnVal = readGtopoFile(argv[1], imagePtr1, argv[2], argv[3])) != 0) return returnVal;
+    if ((returnVal = readGtopoFile(argv[4], imagePtr2, argv[2], argv[3])) != 0) return returnVal;
 
     /* Compare the two files: */
     compareImages(imagePtr1, imagePtr2);
 	return EXIT_NO_ERRORS;
 } /* main() */
 
+
 /***********************************/
 /* FUNC: compareImages             */
+/* -> compares the two input image */
+/* pointers and prints "DIFFERENT" */
+/* if inputs are different or      */
+/* prints "IDENTICAL" if inputs are*/
+/* identical.                      */
 /*                                 */
 /* Parameters:                     */
 /* - inputImage1: Image pointer    */
 /* - inputImage2: Image pointer    */
-/*                                 */
-/* prints "DIFFERENT" if inputs    */
-/* are different or prints         */
-/* "IDENTICAL" if inputs are       */
-/* identical                       */
+/* Returns: (none)                 */
 /***********************************/
 void compareImages(Image *inputImage1, Image *inputImage2)
 {
@@ -102,31 +102,30 @@ void compareImages(Image *inputImage1, Image *inputImage2)
     {
         /* files are different */
         printf("DIFFERENT\n");
-        return;
+        return; //exit function
     }
 
-    //COMPARE: image data
-    /* iterate through each imageData array from each input */
-    /* file simultaneously and compare the two values       */
+    //COMPARE: image data:
     
-    int i;
-    int j;
+    /* define for-loop variable counters: */
+    int columnIndex;
+    int rowIndex;
 
-    int height = inputImage1->height;
-    int width = inputImage1->width;
-
-    for (i = 0; i < height; i++)
+    /* iterate through each imageData array from each input image */
+    /* file simultaneously and compare the two values.            */
+    for (columnIndex = 0; columnIndex < inputImage1->height; columnIndex++)
     {
-        for (j = 0; j < width; j++)
-        {
-            //printf("inputImage1[%d][%d]: %d; inputImage2[%d][%d]: %d\n", i,j, inputImage1->imageData[i][j], i,j, inputImage2->imageData[i][j]);
-            if(inputImage1->imageData[i][j] != inputImage2->imageData[i][j])
+        for (rowIndex = 0; rowIndex < inputImage1->width; rowIndex++)
+        { /*per pixel*/
+            /* IF: the data at the same position in each of the images 2d imageData */
+            /* array are not equivalent, then the images are different.             */                                             
+            if(inputImage1->imageData[columnIndex][rowIndex] != inputImage2->imageData[columnIndex][rowIndex])
             {
                 /* files are different */
                 printf("DIFFERENT\n");
-                return;
+                return; //exit function
             }
-        }
+        } /*per pixel*/
     }
 
     /* if no differences found -> files are identical */

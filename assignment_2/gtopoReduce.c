@@ -27,8 +27,6 @@
 #include "gtopoErrors.h"
 #include "gtopoImage.h"
 
-//writeReduced function declared
-int writeReduced(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
@@ -47,12 +45,12 @@ int main(int argc, char **argv)
 { /* main() */
 
     /* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 6 CLI arguments   */
-	if((r = checkArgumentCount(argc, 6)) != 0)
+	if((returnVal = checkArgumentCount(argc, 6)) != 0)
     {
         /* if there weren't 4 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
@@ -60,64 +58,25 @@ int main(int argc, char **argv)
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
-        return r;
+        return returnVal;
     }
 
     /* Check reduction factor is valid */
-    if((r = checkReductionFactor(argv[4])) != 0) return r;
+    if((returnVal = validateFactorInput(argv[4])) != 0) return returnVal;
 	
 	/* create an imagePtr to store the pgm image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    if ((r = createNewImage(imagePtr, argv[2], argv[3])) != 0) return r; // fills imagePtr struct field values with NULL data
 
     /* Read data from input file, store data in imagePtr                */
-    /* Only return r (the return value) if it reading wasn't successful */
-	if ((r = readGtopoFile(argv[1], imagePtr)) != 0) return r;
+    /* Only return returnVal if it reading wasn't successful */
+	if ((returnVal = readGtopoFile(argv[1], imagePtr, argv[2], argv[3])) != 0) return returnVal;
 
     /* Reduce the file */
     int reductionFactor = atoi(argv[4]); //get the reduction factor.
-    /* Call the write reduced function - return r only if not successful */
-    if ((r = writeReduced(argv[5], imagePtr, reductionFactor)) != 0) return r;
+    /* Call the write reduced function - return returnVal only if not successful */
+    if ((returnVal = writeGtopoFile(argv[5], imagePtr, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
-
-/***********************************/
-/* FUNC: writeReduced              */
-/*                                 */
-/* Parameters:                     */
-/* - filename: filename string     */
-/* - imagePointer: Image pointer   */
-/* - reductionFactor: Reduction Factor */
-/*                                 */
-/* returns 0 on success            */
-/* non-zero error code on fail     */
-/***********************************/
-int writeReduced(char *filename, Image *imagePointer, int reductionFactor)
-{
-    /* open a file for writing               */
-	FILE *outputFile = fopen(filename, "w");
-
-    int height = imagePointer->height;
-    int width = imagePointer->width;
-
-    int r;  //return value variable
-    /* check whether file opening worked - return r only if not successful */
-    if ((r = checkOutputFile(outputFile, filename, imagePointer->imageData, height)) != 0) return r;
-
-    int i;
-    int j;
-    for (i = 0; i < height; i+=reductionFactor)
-    {
-        for (j = 0; j < width; j+=reductionFactor)
-        {
-            //printf("inputImage[%d][%d]: %d\n", i, j, imagePointer->imageData[i][j]);
-            writeValue(outputFile, &imagePointer->imageData[i][j]);
-        }
-    }
-    
-    /* no errors so exit with return with success code */  
-    return EXIT_NO_ERRORS;
-}

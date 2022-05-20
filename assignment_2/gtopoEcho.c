@@ -44,12 +44,12 @@ int main(int argc, char **argv)
 { /* main() */
 
 	/* check for correct number of arguments */
-    int r; //return value variable
+    int returnVal; //return value variable
     /* check if there were 5 CLI arguments   */
-	if((r = checkArgumentCount(argc, 5)) != 0)
+	if((returnVal = checkArgumentCount(argc, 5)) != 0)
     {
         /* if there weren't 5 CLI arguments:   */
-        if (r == -1)
+        if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
@@ -58,19 +58,18 @@ int main(int argc, char **argv)
         }
         /* else return the return value of the checkArgumentCount() */
         /* method (i.e, ERROR_BAD_ARGUMENT_COUNT=1)                 */
-        return r;
+        return returnVal;
     }
 
-	/* create an imagePtr to store the pgm image data as an Image struct */
+	/* create an imagePtr to store the gtopo image data as an Image struct */
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
-    if ((r = createNewImage(imagePtr, argv[2], argv[3])) != 0) return r; // fills imagePtr struct field values with NULL data
 
     /* Read data from input file, store data in imagePtr                */
-    /* Only return r (the return value) if it reading wasn't successful */
-	if ((r = readGtopoFile(argv[1], imagePtr)) != 0) return r;
+    /* Only return returnVal if reading wasn't successful */
+	if ((returnVal = readGtopoFile(argv[1], imagePtr, argv[2], argv[3])) != 0) return returnVal;
 
-    /* Write data to output file and only return r (the return value) if it wasn't successful */
-	if ((r = writeGtopoFile(argv[4], imagePtr)) != 0) return r;
+    /* Write data to output file and only return returnVal if it wasn't successful */
+	if ((returnVal = writeGtopoFile(argv[4], imagePtr, 1)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("ECHOED\n");

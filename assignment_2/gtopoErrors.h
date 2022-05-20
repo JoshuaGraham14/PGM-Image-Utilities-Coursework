@@ -1,3 +1,9 @@
+#ifndef ERRORS_HEADER_FILE
+#define ERRORS_HEADER_FILE
+#include "gtopoImage.h" //include pgmImage file as Image struct it will
+                      //need to be passed into some of the functions
+                      //as arguments.
+
 /* Constants */
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
@@ -5,6 +11,7 @@
 #define MAX_IMAGE_DIMENSION 65536
 #define MAX_COMMENT_LINE_LENGTH 128
 
+/* Constants: Error Codes */
 #define EXIT_NO_ERRORS 0
 #define ERROR_BAD_ARGUMENT_COUNT 1
 #define ERROR_BAD_FILE_NAME 2
@@ -17,13 +24,34 @@
 #define ERROR_OUTPUT_FAILED 9
 #define ERROR_MISCELLANEOUS 100
 
+/* FUNC: checks the number of arguments supplied against the specified number of arguments */
 int checkArgumentCount(int argc, int numOfArgs);
-int checkInputFile(FILE *filePointer, char *filename);
-int checkWidthAndHeight(char *width, char *height);
-int check2dImageDataMemoryAllocation(FILE *filePointer, char *filename, short **imageData);
-int check1dImageDataMemoryAllocation(FILE *filePointer, char *filename, short *imageData);
-int checkPixelValue(FILE *filePointer, char *filename, short **imageData, int pixelValue, int height);
-int checkOutputFile(FILE *filePointer, char *filename, short **imageData, int height);
-int checknBytesWritten(FILE *filePointer, char *filename, short **imageData, int height);
-int checkReductionFactor(char *reductionFactorCLI);
-void freeImageData (unsigned char **imageData, int height);
+
+/* FUNC: checks the input file is valid */
+int checkInputFile(FILE *filePointer);
+
+/* FUNC: checks if the inputted width and height are both integers and greater than 0 */
+int validateWidthAndHeight(char *width, char *height);
+
+/* FUNC: checks if the image malloc is valid for the 2d array*/
+int check2dImageDataMemoryAllocation(Image *imagePointer);
+
+/* FUNC: checks if the image malloc is valid for each 1d array*/
+int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum);
+
+/* FUNC: checks if the image pixel is valid */
+int checkPixelValue(Image *imagePointer, int pixelValue);
+
+/* FUNC: checks if the output file is valid */
+int checkOutputFile(FILE *filePointer);
+
+/* FUNC: checks the n bytes written to is valid */
+int checknBytesWritten(size_t nBytesWritten);
+
+/* FUNC: Check factor is an integer and is greater than 0 */
+int validateFactorInput(char *charFactorInput);
+
+/* FUNC: Frees the image data 2d array */
+void freeImageData (Image *imagePointer);
+
+#endif
