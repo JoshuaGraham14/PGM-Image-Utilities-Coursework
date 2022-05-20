@@ -30,7 +30,7 @@
 
 /******************************************/
 /* FUNC: readpgmFile                      */
-/* -> collection of other gtp[pImage      */
+/* -> collection of other gtopoImage      */
 /* methods - used to read in a pgmFile.   */
 /*                                        */
 /* Parameters:                            */
