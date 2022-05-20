@@ -61,14 +61,14 @@ int main(int argc, char **argv)
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
     createNewImage(imagePtr); // fills imagePtr1 struct field values with NULL data 
 
-    /* Read data from input file, store data in imagePtr                */
-    /* Only return r (the return value) if it reading wasn't successful */
+    /* Read data from input file, store data in imagePtr          */
+    /* Only return returnVal) if it reading wasn't successful     */
     if ((returnVal = readpgmFile(argv[1], imagePtr, 2)) != 0) return returnVal;
 
     /* Set the magicNumber to "P2" as the binary file will be written to in ASCII */
     imagePtr->magic_number[1] = '2';
 
-    /* Write data to output file and only return r (the return value) if it wasn't successful */
+    /* Write data to output file and only return returnVal if it wasn't successful */
     if ((returnVal = writepgmFile(argv[2], imagePtr)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
