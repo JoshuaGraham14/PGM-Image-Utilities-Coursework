@@ -216,54 +216,67 @@ int readMaxGray (FILE *filePointer, Image *imagePointer)
 /******************************************/
 int readImageData (FILE *filePointer, Image *imagePointer)
 {
-    int height = imagePointer->height;
-    int width = imagePointer->width;
-    int returnVal;
+    int returnVal; //return value variable created
 
-    /* allocate the data pointer             */
-    imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
-    /* sanity check for memory allocation    */
+    /* dynmaically allocate memory to imageData 2d array */
+    imagePointer->imageData = malloc(imagePointer->height * sizeof(*imagePointer->imageData));
+    /* sanity check for memory allocation for the whole 2d array */
     if ((returnVal = check2dImageDataMemoryAllocation(imagePointer)) != 0) return returnVal;
-	int i;
-    int j;
-    for (i = 0; i < height; i++)
+
+	/* define for-loop variable counter: */
+    int pointerIndex;
+
+    /* iterate through the row and column tilingFactor permutations */
+    for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
     {
-        imagePointer->imageData[i] = malloc (width * sizeof(unsigned char));
-        if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, i)) != 0) return returnVal;
+        /* dynmaically allocate memory for each row in 2d array */
+        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(unsigned char));
+        /* sanity check for memory allocation for this row of the array */
+        if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, pointerIndex)) != 0) return returnVal;
     }
 
-    //Read data:
+    //Variables to store data during for-loop:
     int pixelValue;
     int scanCount = 1;
 
-    for (i = 0; i < height; i++)
+    /* define for-loop variable counters: */
+    int columnIndex;
+    int rowIndex;
+
+    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex++)
     {
-        for (j = 0; j < width; j++)
+        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex++)
         {
-            //break;
+            /* IF: the image is in ASCII format:   */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
                 /* read next value               */
                 scanCount = fscanf(filePointer, " %u", &pixelValue);
             }
+            /* ELSE: the image is in binary format: */
             else
             {
                 /* read next binary value               */
                 scanCount = fread(&pixelValue, 1, 1, filePointer);
                 /* calibrate binary value by adding 256       */
                 pixelValue=(int)(unsigned char)pixelValue;
-                /* read binary value proportionate to 255     */
-                pixelValue=(pixelValue*imagePointer->maxGray)/255;
+                // /* read binary value proportionate to 255     */
+                // pixelValue=(pixelValue*imagePointer->maxGray)/255;
             }
 
+            /* sanity check that the pixelValue is valid */
             if ((returnVal = checkPixelValue(imagePointer, scanCount, pixelValue)) != 0) return returnVal;
 
-            imagePointer->imageData[i][j] = pixelValue;
+            /* Set corresponding index in the imageData 2d array to the pixelValue which has just been read */ 
+            imagePointer->imageData[columnIndex][rowIndex] = pixelValue;
         }
     }
     
+    /* Try read one more pixel from the file */
     scanCount = fscanf(filePointer, " %u", &pixelValue);
-    /* IF too many pixels return 1 - //ELSE return 0. */
+    /* sanity check for there being more pixels than specified by the Image dimensions  */
+    /* IF too many pixels are detected, return error code carried forwards from checkIfTooManyPixels function */
+    /* ELSE still return error code carried forwards from checkIfTooManyPixels function; but this time it will be 0 (success)*/
     return checkIfTooManyPixels(scanCount);
 }
 

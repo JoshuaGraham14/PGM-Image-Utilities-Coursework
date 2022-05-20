@@ -210,7 +210,7 @@ int checkMaxGray(Image *imagePointer, int scanCount)
 /******************************************/
 int check2dImageDataMemoryAllocation(Image *imagePointer)
 {
-    /* sanity check for memory allocation    */
+    /* sanity check for memory allocation of the 2d array */
     if (imagePointer->imageData == NULL)
     { /* malloc failed */
 
@@ -236,7 +236,7 @@ int check2dImageDataMemoryAllocation(Image *imagePointer)
 /******************************************/
 int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
 {
-    /* sanity check for memory allocation    */
+    /* sanity check for memory allocation of a value in that row of the 2d array */
     if (imagePointer->imageData[rowNum] == NULL)
     { /* malloc failed */
     
@@ -263,7 +263,6 @@ int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
 /******************************************/
 int checkPixelValue(Image *imagePointer, int scanCount, int pixelValue)
 {
-    //printf("sc: %d; gv: %d", scanCount, pixelValue);
     if ((scanCount != 1) || (pixelValue < 0) || (pixelValue > 255))
     { /* fscanf failed */
 
