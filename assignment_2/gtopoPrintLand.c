@@ -29,7 +29,7 @@
 int validateSeaHillMountain(char *sea, char *hill, char *mountain);
 
 //printImageToFile function declared
-void printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain);
+int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain);
 
 /***********************************/
 /* main routine                    */
@@ -73,13 +73,14 @@ int main(int argc, char **argv)
     if ((returnVal = readGtopoFile(argv[1], imageToPrint, argv[2], argv[3])) != 0) return returnVal;
 
     /* print the data of imageToPrint to the file: */
-    printImageToFile(imageToPrint, argv[4], argv[5], argv[6], argv[7]);
+    if ((returnVal = printImageToFile(imageToPrint, argv[4], argv[5], argv[6], argv[7])) != 0) return returnVal;
     
+    printf("PRINTED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
 
 
-void printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain)
+int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain)
 {
     int returnVal;  //return value variable
 
@@ -100,25 +101,23 @@ void printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill
         for (columnIndex = 0; columnIndex < imageToPrint->width; columnIndex++)
         { /*per pixel*/
 
-            // if (imageToPrint->imageData[rowIndex][columnIndex] <= atoi(sea))
-            // {
-            //     fprintf(outputFile, "%c", ' ');
-            // }
-            // else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(sea) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(hill))
-            // {
-            //     fprintf(outputFile, "%c", '.');
-            // }
-            // else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(hill) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(mountain))
-            // {
-            //     fprintf(outputFile, "%c", '^');
-            // }
-            // else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(mountain))
-            // {
-            //     fprintf(outputFile, "%c", 'A');
-            // }
-
             /* write the entry  */
-            fprintf(outputFile, "%d", imageToPrint->imageData[rowIndex][columnIndex]);
+            if (imageToPrint->imageData[rowIndex][columnIndex] <= atoi(sea))
+            {
+                fprintf(outputFile, "%c", ' ');
+            }
+            else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(sea) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(hill))
+            {
+                fprintf(outputFile, "%c", '.');
+            }
+            else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(hill) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(mountain))
+            {
+                fprintf(outputFile, "%c", '^');
+            }
+            else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(mountain))
+            {
+                fprintf(outputFile, "%c", 'A');
+            }
 
         } /*per pixel*/
 
