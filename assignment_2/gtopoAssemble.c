@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 	if ((returnVal = validateWidthAndHeight(argv[2], argv[3])) != 0) return returnVal;
 
     /* now that the inputted width and height have been validated, we can initialise the width and height and allocate memory for the Image's imageData */
-    initialiseImage(mainImage, atoi(argv[2]), atoi(argv[3])); //initialise the fields of the Image
+    initialiseImage(mainImage, argv[2], argv[3]); //initialise the fields of the Image
     mallocImageDataArray(mainImage); //allocate memory for the Image's imageData
 
     /* first validate the width and height of the mainImage, returning if they are not valid */
@@ -161,39 +161,6 @@ int checkArgumentCountAssemble(int argc)
 
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
-}
-
-/******************************************/
-/* FUNC: validateWidthAndHeight           */
-/* ->  checks that inputted width and     */
-/* height are both integers and greater   */
-/* than zero.                             */
-/*                                        */
-/* Parameters:                            */
-/* - width: char pointer to CL argument   */
-/* - height: char pointer to CL argument  */
-/* Returns: - 0 on success                */
-/*          - ERROR_MISCELLANEOUS on fail */
-/******************************************/
-int validateWidthAndHeight(char *width, char *height)
-{
-    /* if width and height are both integers */
-    if (atoi(width) && atoi(height))
-    {
-        int widthInt = atoi(width);
-        int heightInt = atoi(height);
-        /* if width or height are greater than 0 */
-        if (widthInt > 0 && heightInt > 0)
-        {
-            /* return with success code */
-            return EXIT_NO_ERRORS;
-        }
-    }
-
-    /* Unsuccessful, so print an error message: */ 
-    printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
-    /* and return an error code.         */
-    return ERROR_MISCELLANEOUS; 
 }
 
 /******************************************/

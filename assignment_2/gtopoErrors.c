@@ -91,30 +91,23 @@ int checkInputFile(FILE *filePointer)
 /******************************************/
 int validateWidthAndHeight(char *width, char *height)
 {
-    /* if reduction factor is an integer */
+    /* if width and height are both integers */
     if (atoi(width) && atoi(height))
     {
         int widthInt = atoi(width);
         int heightInt = atoi(height);
-        /* if reduction factor is less than or equal to 0 */
-        if (widthInt <= 0 || heightInt <= 0)
+        /* if width or height are greater than 0 */
+        if (widthInt > 0 && heightInt > 0)
         {
-            /* print an error message        */
-            printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
-            /* return an error code          */
-            return ERROR_MISCELLANEOUS; 
+            /* return with success code */
+            return EXIT_NO_ERRORS;
         }
     }
-    else
-    {   
-        /* print an error message        */
-        printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
-        /* return an error code          */
-        return ERROR_MISCELLANEOUS; 
-    }
 
-    /* ELSE return with success code */
-    return EXIT_NO_ERRORS;
+    /* Unsuccessful, so print an error message: */ 
+    printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
+    /* and return an error code.         */
+    return ERROR_MISCELLANEOUS; 
 }
 
 /******************************************/
