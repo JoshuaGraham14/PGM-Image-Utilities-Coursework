@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
 
     /* Read data from input file, store data in imagePtr                */
-    /* Only return returnVal if it reading wasn't successful */
+    /* Only return returnVal if reading wasn't successful */
 	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
     /* - Tile the file - */

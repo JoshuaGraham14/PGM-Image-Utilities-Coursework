@@ -44,7 +44,7 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
     FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
     /* fills imagePtr struct field values with NULL data */
-    createNewImage(imagePointer); 
+    initialiseImage(imagePointer); 
 
     /* NOTE: for the following functions, return the return value of the function only if it was not successful */
     // **********************************************************************************************************
@@ -91,7 +91,7 @@ int readpgmFile(char *filename, Image *imagePointer, int mode)
 /* - imagePointer: Image pointer          */
 /* Returns: (none)                        */
 /******************************************/
-void createNewImage(Image *imagePointer)
+void initialiseImage(Image *imagePointer)
 {
     imagePointer -> magic_number[0]='0';
     imagePointer -> magic_number[1]='0';
@@ -220,7 +220,7 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     int returnVal; //return value variable created
 
     /* Calls func to dynamically allocate memory for the imageData 2d array, returning returnVal on error. */
-    if ((returnVal = mallocImageDataArray(imagePointer)) != 0) return returnVal;
+    if ((returnVal = mallocImageDataArray(imagePointer, imagePointer->width, imagePointer->height)) != 0) return returnVal;
 
     /* Variables which store data during for-loop: */
     int pixelValue;
@@ -279,22 +279,22 @@ int readImageData (FILE *filePointer, Image *imagePointer)
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/
-int mallocImageDataArray(Image *imagePointer)
+int mallocImageDataArray(Image *imagePointer, int width, int height)
 {
     int returnVal; //return value variable created
 
     /* dynamically allocate memory to imageData 2d array */
-    imagePointer->imageData = malloc(imagePointer->height * sizeof(*imagePointer->imageData));
+    imagePointer->imageData = malloc(height * sizeof(*imagePointer->imageData));
     /* sanity check for memory allocation for the whole 2d array */
     if ((returnVal = check2dImageDataMemoryAllocation(imagePointer)) != 0) return returnVal;
 
 	/* define for-loop variable counter: */
     int pointerIndex;
     /* iterate through each row in the 2d array */
-    for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
+    for (pointerIndex = 0; pointerIndex < height; pointerIndex++)
     {
         /* dynamically allocate memory for each row in 2d array */
-        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(unsigned char));
+        imagePointer->imageData[pointerIndex] = malloc (width * sizeof(unsigned char));
         /* sanity check for memory allocation for this row of the array */
         if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, pointerIndex)) != 0) return returnVal;
     }

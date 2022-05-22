@@ -17,7 +17,7 @@ typedef struct ImageStruct
 int readpgmFile(char *filename, Image *imagePointer, int mode);
 
 /* FUNC: fills imagePointer with NULL data values for Image struct */
-void createNewImage(Image *imagePointer);
+void initialiseImage(Image *imagePointer);
 
 /* FUNC: reads the Image magic number */
 int readMagicNumber (FILE *filePointer, Image *imagePointer, int mode);
@@ -35,7 +35,7 @@ int readMaxGray (FILE *filePointer, Image *imagePointer);
 int readImageData (FILE *filePointer, Image *imagePointer);
 
 /* FUNC: dynamically allocates memory to imageData array */
-int mallocImageDataArray(Image *imagePointer);
+int mallocImageDataArray(Image *imagePointer, int width, int height);
 
 /* FUNC: writes to an input file data from an input Image */
 int writepgmFile(char *filename, Image *imagePointer, int reductionFactor);

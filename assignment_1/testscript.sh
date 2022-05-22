@@ -81,6 +81,32 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
+echo -n "Test 7 - pgmTile: "
+EXPECTED="TILED"
+RESULT=$(./pgmTile pgmFiles/first.pgm 2 "pgmFiles/tileFile_<row>_<column>.pgm")
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 8 - pgmAssemble: "
+EXPECTED="ASSEMBLED"
+RESULT=$(./pgmAssemble pgmFiles/outputImage.pgm 8 8 0 0 pgmFiles/tileFile_0_0.pgm 0 4 pgmFiles/tileFile_0_1.pgm 4 0 pgmFiles/tileFile_1_0.pgm 4 4 pgmFiles/tileFile_1_1.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
 #----------- Testing invalid pgm files ----------#
 echo -n -e "* TESTING INVALID PGM FILES *\n"
 
