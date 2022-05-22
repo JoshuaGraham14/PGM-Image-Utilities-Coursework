@@ -105,6 +105,7 @@ int createNewImage(Image *imagePointer, char *width, char *height)
 /******************************************/
 int readImageData (FILE *filePointer, Image *imagePointer)
 {
+    printf("NEW READ:\n");
     int returnVal; //return value variable created
 
     /* Calls func to dynamically allocate memory for the imageData 2d array, returning returnVal on error. */
@@ -124,7 +125,11 @@ int readImageData (FILE *filePointer, Image *imagePointer)
         {
             /* read pixel value by calling readValue() func */
             pixelValue = readValue(filePointer);
-            //printf("%d ", pixelValue);
+            if(columnIndex<20 && rowIndex <10)
+            {
+                printf("%d ", pixelValue);
+            }
+            
             //printf("\nx: %d ", x);
             //printf("\tNextpixelvalue: %d ", nextPixelValue);
             //printf("\tpixelValue: %d ", pixelValue);
@@ -136,7 +141,12 @@ int readImageData (FILE *filePointer, Image *imagePointer)
             /* Set corresponding index in the imageData 2d array to the pixelValue which has just been read */ 
             imagePointer->imageData[columnIndex][rowIndex] = pixelValue;
         }
+        if(columnIndex<20)
+        {
+            printf("\n");
+        }
     }
+    
 
     /* return with success code */ 
     return EXIT_NO_ERRORS;
@@ -169,7 +179,7 @@ int mallocImageDataArray(Image *imagePointer)
     for (pointerIndex = 0; pointerIndex < imagePointer->height; pointerIndex++)
     {
         /* dynamically allocate memory for each row in 2d array */
-        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(unsigned char));
+        imagePointer->imageData[pointerIndex] = malloc (imagePointer->width * sizeof(short));
         /* sanity check for memory allocation for this row of the array */
         if ((returnVal = check1dImageDataMemoryAllocation(imagePointer, pointerIndex)) != 0) return returnVal;
     }

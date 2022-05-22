@@ -118,7 +118,8 @@ void compareImages(Image *inputImage1, Image *inputImage2)
         for (rowIndex = 0; rowIndex < inputImage1->width; rowIndex++)
         { /*per pixel*/
             /* IF: the data at the same position in each of the images 2d imageData */
-            /* array are not equivalent, then the images are different.             */                                             
+            /* array are not equivalent, then the images are different.             */
+            printf("image1[%d][%d]=%d; image2[%d][%d]=%d\n", columnIndex, rowIndex, inputImage1->imageData[columnIndex][rowIndex], columnIndex, rowIndex, inputImage2->imageData[columnIndex][rowIndex]);                                   
             if(inputImage1->imageData[columnIndex][rowIndex] != inputImage2->imageData[columnIndex][rowIndex])
             {
                 /* files are different */
