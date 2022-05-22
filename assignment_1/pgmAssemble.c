@@ -106,17 +106,17 @@ int main(int argc, char **argv)
 	    if ((returnVal = readpgmFile(argv[tripletIndex+2], subImage, 0)) != 0) return returnVal;
 
         /* define for-loop variable counters: */
-        int columnIndex;
         int rowIndex;
+        int columnIndex;
         /* nested iteratation through each element/pixelValue in the imageData array,   */
         /* BUT each loop increments by the reductionFactor in order to reduce the image */
-        for (columnIndex = 0; columnIndex < subImage->height; columnIndex++)
+        for (rowIndex = 0; rowIndex < subImage->height; rowIndex++)
         { /*per row of pixels*/
-            for (rowIndex = 0; rowIndex < subImage->width; rowIndex++)
+            for (columnIndex = 0; columnIndex < subImage->width; columnIndex++)
             { /*per pixel*/
                 /* replace pixel of mainImage with the corresponding pixel of the subImage */
                 
-                mainImage->imageData[atoi(argv[tripletIndex])+columnIndex][atoi(argv[tripletIndex+1])+rowIndex] = subImage->imageData[columnIndex][rowIndex];
+                mainImage->imageData[atoi(argv[tripletIndex])+rowIndex][atoi(argv[tripletIndex+1])+columnIndex] = subImage->imageData[rowIndex][columnIndex];
 
             } /*per pixel*/
         }

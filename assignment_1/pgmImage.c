@@ -227,13 +227,13 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     int scanCount = 1;
 
     /* define for-loop variable counters: */
-    int columnIndex;
     int rowIndex;
+    int columnIndex;
 
-    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex++)
+    for (rowIndex = 0; rowIndex < imagePointer->height; rowIndex++)
     {
-        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex++)
-        {
+        for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex++)
+        { /*per pixel*/
             /* IF: the image is in ASCII format:   */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
@@ -255,8 +255,8 @@ int readImageData (FILE *filePointer, Image *imagePointer)
             if ((returnVal = checkPixelValue(imagePointer, scanCount, pixelValue)) != 0) return returnVal;
 
             /* Set corresponding index in the imageData 2d array to the pixelValue which has just been read */ 
-            imagePointer->imageData[columnIndex][rowIndex] = pixelValue;
-        }
+            imagePointer->imageData[rowIndex][columnIndex] = pixelValue;
+        } /*per pixel*/
     }
     
     /* Try read one more pixel from the file */
@@ -338,25 +338,25 @@ int writepgmFile(char *filename, Image *imagePointer, int reductionFactor)
 	if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
 
     /* define for-loop variable counters: */
-    int columnIndex;
     int rowIndex;
+    int columnIndex;
     /* nested iteratation through each element/pixelValue in the imageData array,   */
     /* BUT each loop increments by the reductionFactor in order to reduce the image */
-    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex+=reductionFactor)
+    for (rowIndex = 0; rowIndex < imagePointer->height; rowIndex+=reductionFactor)
     { /*per row of pixels*/
-        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex+=reductionFactor)
+        for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex+=reductionFactor)
         { /*per pixel*/
             /* IF: the image is in ASCII format:   */
             if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
             {
                 /* write the entry & whitespace  */
-                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[columnIndex][rowIndex]);
+                nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[rowIndex][columnIndex]);
             }
             /* ELSE: the image is in binary format: */
             else 
             {
                 /* write the entry in binary */
-                fwrite(&imagePointer->imageData[columnIndex][rowIndex], 1, 1, outputFile);
+                fwrite(&imagePointer->imageData[rowIndex][columnIndex], 1, 1, outputFile);
             }
 
             /* sanity check on write, by calling checknBytesWritten */

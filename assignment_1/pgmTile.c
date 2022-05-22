@@ -186,26 +186,26 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
             if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
 
             /* define for-loop variable counters: */
-            int columnIndex;
             int rowIndex;
+            int columnIndex;
 
             /* nested iteratation through each element/pixelValue in the imageData array, */
             /* BUT each loop starts at the relative position on the grid for that tile.   */
-            for (columnIndex = rowPosition*reducedHeight; columnIndex < rowPosition*reducedHeight + reducedHeight; columnIndex++)
+            for (rowIndex = rowPosition*reducedHeight; rowIndex < rowPosition*reducedHeight + reducedHeight; rowIndex++)
             { /*per row of pixels*/
-                for (rowIndex = columnPosition*reducedWidth; rowIndex < columnPosition*reducedWidth + reducedWidth; rowIndex++)
+                for (columnIndex = columnPosition*reducedWidth; columnIndex < columnPosition*reducedWidth + reducedWidth; columnIndex++)
                 { /*per pixel*/
                     /* IF: the image is in ASCII format:   */
                     if(*imagePointer->magic_Number == MAGIC_NUMBER_ASCII_PGM)
                     {
                         /* write the entry & whitespace  */
-                        nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[columnIndex][rowIndex]);
+                        nBytesWritten = fprintf(outputFile, "%d ", imagePointer->imageData[rowIndex][columnIndex]);
                     }
                     /* ELSE: the image is in binary format: */
                     else 
                     {
                         /* write the entry in binary */
-                        fwrite(&imagePointer->imageData[columnIndex][rowIndex], 1, 1, outputFile);
+                        fwrite(&imagePointer->imageData[rowIndex][columnIndex], 1, 1, outputFile);
                     }
 
                     /* sanity check on write, by calling checknBytesWritten */
