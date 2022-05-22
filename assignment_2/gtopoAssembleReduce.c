@@ -27,25 +27,23 @@
 #include "gtopoErrors.h"
 
 /* FUNC: checks the number of arguments is correct */
-int checkArgumentCountAssemble(int argc);
-
-// /* FUNC: checks if the inputted width and height are both integers and greater than 0 */
-// int validateWidthAndHeight(char *width, char *height);
+int checkArgumentCountAssembleReduce(int argc);
 
 /* FUNC: checks that both inputted row and column of the subimage are both integers and greater than or equal to 0 */
 int validateRowAndColumnPosition(char *row, char *column);
 
 /* FUNC: splits the input */
-int writeAssembled(char *filename, Image *imagePointer, int reductionFactor);
+int writeToMemoryAssembled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
 /*                                 */
-/* 4+3i CLI parameters:            */
+/* 5+3i CLI parameters:            */
 /* argv[0]: executable name        */
 /* argv[1]: output file name       */
 /* argv[2]: width of output image  */
 /* argv[3]: height of output image */
+/* argv[4]: reduction factor       */
 /* Remainder: quintuplets of:      */
 /* argv[3i+1]: start row position  */
 /* argv[3i+2]: start column position */
@@ -62,14 +60,14 @@ int main(int argc, char **argv)
     /* check for correct number of arguments */
     int returnVal; //return value variable
     /* check if there were correct CLI arguments   */
-	if((returnVal = checkArgumentCountAssemble(argc)) != 0)
+	if((returnVal = checkArgumentCountAssembleReduce(argc)) != 0)
     {
         /* if there weren't correct CLI arguments:   */
         if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
             /* output usage message and return 0 */
-            printf("Usage: %s outputImage.gtopo width height (row column inputImage.gtopo)+\n", argv[0]);
+            printf("Usage ./: %s outputArray.gtopo width height (row column inputArray.gtopo width height)+\n", argv[0]);
             return EXIT_NO_ERRORS;
         }
         /* else return the return value of the checkArgumentCount() method */
@@ -101,10 +99,6 @@ int main(int argc, char **argv)
         /* argv[quintupletIndex+3]: width of subimage     */
         /* argv[quintupletIndex+4]: height of subimage    */
 
-        //validateRowAndColumnPosition(argv[10], argv[11]);
-        // printf("%d, %s, %d\n", tripletIndex, argv[tripletIndex], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
-        // printf("%d, %s, %d\n", tripletIndex+1, argv[tripletIndex+1], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
-
         /* first validate the row and column position of the subImage, returning if they are not valid */
 	    if ((returnVal = validateRowAndColumnPosition(argv[quintupletIndex], argv[quintupletIndex+1])) != 0) return returnVal;
 
@@ -128,16 +122,18 @@ int main(int argc, char **argv)
         }
     }
 
-    /* Write mainImage data to filename and only return returnVal if it wasn't successful */
-    if ((returnVal = writeGtopoFile(argv[1], mainImage, 1)) != 0) return returnVal;
+    /* Reduce the file */
+    int reductionFactor = atoi(argv[4]); //get the reduction factor.
+    /* Call the write reduced function - return returnVal only if not successful */
+    if ((returnVal = writeGtopoFile(argv[1], mainImage, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
-    printf("ASSEMBLED\n");
+    printf("ASSEMBLE_REDUCED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
 
 /******************************************/
-/* FUNC: checkArgumentCountAssemble       */
+/* FUNC: checkArgumentCountAssembleReduce     */
 /* -> checks the number of arguments      */
 /* supplied against the specified number  */
 /* of arguments.                          */
@@ -147,9 +143,9 @@ int main(int argc, char **argv)
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/
-int checkArgumentCountAssemble(int argc)
+int checkArgumentCountAssembleReduce(int argc)
 {
-    if (argc < 9 || (argc-4)%5 != 0)
+    if (argc < 10 || (argc-5)%5 != 0)
     { /* wrong arg count */
         /* IF there were no arguments */
         if (argc == 1) return -1;
@@ -197,7 +193,7 @@ int validateRowAndColumnPosition(char *row, char *column)
 }
 
 /******************************************/
-/* FUNC: writeAssembled                       */
+/* FUNC: writeToMemoryAssembled               */
 /* -> splits the input image into         */
 /* tilingFactor * tilingFactor smaller    */
 /* images corresponding to parts of the   */
@@ -210,7 +206,7 @@ int validateRowAndColumnPosition(char *row, char *column)
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/
-int writeAssembled(char *filename, Image *imagePointer, int tilingFactor)
+int writeToMemoryAssembled(char *filename, Image *imagePointer, int tilingFactor)
 {
     return 0;
 }

@@ -125,6 +125,7 @@ int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill,
     } /*per row of pixels*/
 
     fclose(outputFile);
+    return EXIT_NO_ERRORS;
 }
 
 
