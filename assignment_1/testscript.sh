@@ -372,3 +372,55 @@ else
     echo -e "\t~ Expected: '${EXPECTED}'"
     echo -e "\t~ Received: '${RESULT}'"
 fi
+
+echo -n "Test 11 - 0 args for pgmTile: "
+EXPECTED="Usage: ./pgmTile inputImage.pgm tiling_factor outputImage_<row>_<column>.pgm"
+RESULT=$(./pgmTile)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 12 - 1 args for pgmTile: "
+EXPECTED="ERROR: Bad Argument Count"
+RESULT=$(./pgmTile pgmFiles/saturn.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 13 - 0 args for pgmAssemble: "
+EXPECTED="Usage: ./pgmAssemble outputImage.pgm width height (row column inputImage.pgm)+"
+RESULT=$(./pgmAssemble)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 14 - 1 args for pgmAssemble: "
+EXPECTED="ERROR: Bad Argument Count"
+RESULT=$(./pgmAssemble pgmFiles/saturn.pgm)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
