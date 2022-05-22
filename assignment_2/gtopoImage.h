@@ -13,7 +13,7 @@ typedef struct ImageStruct
 int readGtopoFile(char *filename, Image *imagePointer, char *width, char *height);
 
 /* FUNC: fills imagePointer with NULL data values for Image struct */
-int createNewImage(Image *imagePointer, char *width, char *height);
+int initialiseImage(Image *imagePointer, char *width, char *height);
 
 /* FUNC: reads the Image imageData */
 int readImageData (FILE *filePointer, Image *imagePointer);

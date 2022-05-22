@@ -50,7 +50,7 @@ int readGtopoFile(char *filename, Image *imagePointer, char *width, char *height
     int returnVal; //return value variable.
 
     /* fills imagePtr struct field values with NULL data */
-    if ((returnVal = createNewImage(imagePointer, width, height)) != 0) return returnVal;
+    if ((returnVal = initialiseImage(imagePointer, width, height)) != 0) return returnVal;
 
     /* check the input file to see if can be opened*/
     if ((returnVal = checkInputFile(filePointer)) != 0) return returnVal;
@@ -75,7 +75,7 @@ int readGtopoFile(char *filename, Image *imagePointer, char *width, char *height
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/
-int createNewImage(Image *imagePointer, char *width, char *height)
+int initialiseImage(Image *imagePointer, char *width, char *height)
 {
     int returnVal; //return value variable.
 
