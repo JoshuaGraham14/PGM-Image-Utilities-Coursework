@@ -83,7 +83,7 @@ fi
 
 echo -n "Test 7 - pgmTile: "
 EXPECTED="TILED"
-RESULT=$(./pgmTile pgmFiles/first.pgm 2 "pgmFiles/tileFile_<row>_<column>.pgm")
+RESULT=$(./pgmTile pgmFiles/toTile.pgm 2 "pgmFiles/tileFile_<row>_<column>.pgm")
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
 then
