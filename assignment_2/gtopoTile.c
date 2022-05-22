@@ -145,19 +145,19 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
             int reducedHeight = (imagePointer->height)/(tilingFactor);
 
             /* define for-loop variable counters: */
-            int columnIndex;
             int rowIndex;
+            int columnIndex;
 
             /* nested iteration through each element/pixelValue in the imageData array, */
             /* BUT each loop starts at the relative position on the grid for that tile.   */
-            for (columnIndex = rowPosition*reducedHeight; columnIndex < rowPosition*reducedHeight + reducedHeight; columnIndex++)
+            for (rowIndex = rowPosition*reducedHeight; rowIndex < rowPosition*reducedHeight + reducedHeight; rowIndex++)
             { /*per row of pixels*/
-                for (rowIndex = columnPosition*reducedWidth; rowIndex < columnPosition*reducedWidth + reducedWidth; rowIndex++)
+                for (columnIndex = columnPosition*reducedWidth; columnIndex < columnPosition*reducedWidth + reducedWidth; columnIndex++)
                 { /*per pixel*/
 
-                    printf("%d ", imagePointer->imageData[columnIndex][rowIndex]);
+                    printf("%d ", imagePointer->imageData[rowIndex][columnIndex]);
 
-                    writeValue(outputFile, &imagePointer->imageData[columnIndex][rowIndex]);
+                    writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
                     /* sanity check on write, by calling checknBytesWritten */
                     //if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;

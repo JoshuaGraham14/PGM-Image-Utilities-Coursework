@@ -105,7 +105,7 @@ int createNewImage(Image *imagePointer, char *width, char *height)
 /******************************************/
 int readImageData (FILE *filePointer, Image *imagePointer)
 {
-    printf("NEW READ:\n");
+    //printf("NEW READ:\n");
     int returnVal; //return value variable created
 
     /* Calls func to dynamically allocate memory for the imageData 2d array, returning returnVal on error. */
@@ -116,19 +116,19 @@ int readImageData (FILE *filePointer, Image *imagePointer)
     //int scanCount = 1;
 
     /* define for-loop variable counters: */
-    int columnIndex;
     int rowIndex;
+    int columnIndex;
 
-    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex++)
+    for (rowIndex = 0; rowIndex < imagePointer->height; rowIndex++)
     {
-        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex++)
+        for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex++)
         {
             /* read pixel value by calling readValue() func */
             pixelValue = readValue(filePointer);
-            if(columnIndex<20 && rowIndex <10)
-            {
-                printf("%d ", pixelValue);
-            }
+            // if(columnIndex<20 && rowIndex <10)
+            // {
+            //     printf("%d ", pixelValue);
+            // }
             
             //printf("\nx: %d ", x);
             //printf("\tNextpixelvalue: %d ", nextPixelValue);
@@ -139,12 +139,12 @@ int readImageData (FILE *filePointer, Image *imagePointer)
             if ((returnVal = checkPixelValue(imagePointer, pixelValue)) != 0) return returnVal;
 
             /* Set corresponding index in the imageData 2d array to the pixelValue which has just been read */ 
-            imagePointer->imageData[columnIndex][rowIndex] = pixelValue;
+            imagePointer->imageData[rowIndex][columnIndex] = pixelValue;
         }
-        if(columnIndex<20)
-        {
-            printf("\n");
-        }
+        // if(columnIndex<20)
+        // {
+        //     printf("\n");
+        // }
     }
     
 
@@ -216,18 +216,18 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
     int reducedWidth = (imagePointer->width+reductionFactor-1)/reductionFactor;
     int reducedHeight = (imagePointer->height+reductionFactor-1)/reductionFactor;
 
-     /* define for-loop variable counters: */
-    int columnIndex;
+    /* define for-loop variable counters: */
     int rowIndex;
+    int columnIndex;
 
     /* nested iteratation through each element/pixelValue in the imageData array,   */
     /* BUT each loop increments by the reductionFactor in order to reduce the image */
-    for (columnIndex = 0; columnIndex < imagePointer->height; columnIndex+=reductionFactor)
+    for (rowIndex = 0; rowIndex < imagePointer->height; rowIndex+=reductionFactor)
     { /*per row of pixels*/
-        for (rowIndex = 0; rowIndex < imagePointer->width; rowIndex+=reductionFactor)
+        for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex+=reductionFactor)
         { /*per pixel*/
             
-            writeValue(outputFile, &imagePointer->imageData[columnIndex][rowIndex]);
+            writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
             /* sanity check on write, by calling checknBytesWritten */
             //if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
