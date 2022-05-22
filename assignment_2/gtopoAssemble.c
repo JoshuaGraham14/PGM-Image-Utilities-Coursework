@@ -178,11 +178,8 @@ int checkArgumentCountAssemble(int argc)
 int validateRowAndColumnPosition(char *row, char *column)
 {
     /* if row and column are both integers (including 0)*/
-    if ((atoi(row) && atoi(column)) || 
-    (strcmp(row, "0") == 0 || atoi(column)) ||
-    (strcmp(column, "0") == 0 || atoi(row)) ||
-    (strcmp(row, "0") == 0 || strcmp(column, "0") == 0)
-    )
+    if ((atoi(row) || strcmp(row, "0") == 0) &&
+    (atoi(column) || strcmp(column, "0") == 0))
     {
         int rowInt = atoi(row);
         int columnInt = atoi(column);

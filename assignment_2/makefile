@@ -2,8 +2,8 @@ CC=gcc
 CCFLAGS=-g -std=c99 -Wall -Werror
 CFLAGS=-std=c99
 MODULES=gtopoErrors.o gtopoImage.o 
-MAINS=gtopoEcho.o gtopoComp.o gtopoReduce.o gtopoTile.o gtopoAssemble.o
-TARGETS=gtopoEcho gtopoComp gtopoReduce gtopoTile gtopoAssemble
+MAINS=gtopoEcho.o gtopoComp.o gtopoReduce.o gtopoTile.o gtopoAssemble.o gtopoPrintLand.o
+TARGETS=gtopoEcho gtopoComp gtopoReduce gtopoTile gtopoAssemble gtopoPrintLand
 
 all:	${TARGETS}
 
@@ -24,3 +24,6 @@ gtopoTile:	gtopoTile.o 	${MODULES}
 
 gtopoAssemble:	gtopoAssemble.o 	${MODULES}
 	${CC} 	${CCFLAGS} 	-o gtopoAssemble	 gtopoAssemble.o	 ${MODULES}
+
+gtopoPrintLand:	gtopoPrintLand.o 	${MODULES}
+	${CC} 	${CCFLAGS} 	-o gtopoPrintLand	 gtopoPrintLand.o	 ${MODULES}
