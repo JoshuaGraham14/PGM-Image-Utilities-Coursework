@@ -27,6 +27,9 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
+/* FUNC: checks the number of arguments is correct */
+int checkArgumentCountAssemble(int argc);
+
 /* FUNC: checks if the inputted width and height are both integers and greater than 0 */
 int validateWidthAndHeight(char *width, char *height);
 
@@ -57,20 +60,20 @@ int main(int argc, char **argv)
 
     /* check for correct number of arguments */
     int returnVal; //return value variable
-    /* check if there were 4 CLI arguments   */
-	// if((returnVal = checkArgumentCount(argc, 4)) != 0)
-    // {
-    //     /* if there weren't 4 CLI arguments:   */
-    //     if (returnVal == -1)
-    //     {
-    //         /* if there were no CLI arguments    */
-    //         /* output usage message and return 0 */
-    //         printf("Usage: %s outputImage.pgm width height (row column inputImage.pgm)+\n", argv[0]);
-    //         return EXIT_NO_ERRORS;
-    //     }
-    //     /* else return the return value of the checkArgumentCount() method */
-    //     return returnVal;
-    // }
+    /* check if there were correct CLI arguments   */
+	if((returnVal = checkArgumentCountAssemble(argc)) != 0)
+    {
+        /* if there weren't correct CLI arguments:   */
+        if (returnVal == -1)
+        {
+            /* if there were no CLI arguments    */
+            /* output usage message and return 0 */
+            printf("Usage: %s outputImage.pgm width height (row column inputImage.pgm)+\n", argv[0]);
+            return EXIT_NO_ERRORS;
+        }
+        /* else return the return value of the checkArgumentCount() method */
+        return returnVal;
+    }
 	
 	/* create an imagePtr to store the main pgm image data as an Image struct */
     Image *mainImage = malloc(sizeof(Image)); // dynamically allocate memory for mainImage
@@ -130,6 +133,33 @@ int main(int argc, char **argv)
     printf("ASSEMBLED\n");
 	return EXIT_NO_ERRORS;
 } /* main() */
+
+/******************************************/
+/* FUNC: checkArgumentCountAssemble       */
+/* -> checks the number of arguments      */
+/* supplied against the specified number  */
+/* of arguments.                          */
+/*                                        */
+/* Parameters:                            */
+/* - argc: integer num of arguments       */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
+int checkArgumentCountAssemble(int argc)
+{
+    if (argc >= 7 && (argc-4)%3 == 0)
+    { /* wrong arg count */
+        /* IF there were no arguments */
+        if (argc == 1) return -1;
+
+        /* ELSE output error message and return with error code */ 
+        printf("ERROR: Bad Argument Count\n");
+        return ERROR_BAD_ARGUMENT_COUNT;
+    } /* wrong arg count */
+
+    /* ELSE return with success code */
+    return EXIT_NO_ERRORS;
+}
 
 /******************************************/
 /* FUNC: validateWidthAndHeight           */
