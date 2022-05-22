@@ -172,3 +172,16 @@ else
     echo -e "\t~ Expected: '${EXPECTED}'"
     echo -e "\t~ Received: '${RESULT}'"
 fi
+
+echo -n "Test 15 - gtopoReduceAssemble view: "
+EXPECTED="PRINTED"
+RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_400.dem 108 54 nobackup/aa_printedGtopo -9999 100 500)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi

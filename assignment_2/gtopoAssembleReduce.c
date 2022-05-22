@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     /* create another Image as a temporary store of the image to insert's data */
     Image *subImage = malloc(sizeof(Image)); // dynamically allocate memory for subImage
 
-    for (int quintupletIndex = 4; quintupletIndex<argc-4; quintupletIndex+=5)
+    for (int quintupletIndex = 5; quintupletIndex<argc-5; quintupletIndex+=5)
     {
         /* NOTE: */
         /* argv[quintupletIndex]:  start row position     */
