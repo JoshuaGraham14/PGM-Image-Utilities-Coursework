@@ -382,47 +382,6 @@ int validateFactorInput(char *charFactorInput)
 }
 
 /******************************************/
-/* FUNC: validateTileOutputTemplate       */
-/* -> Check tiling output file template   */
-/* is of correct format.                  */
-/*                                        */
-/* Parameters:                            */
-/* - outputTemplateString: char pointer of*/
-/*                  command line inputted */
-/*                  template string.      */
-/* Returns: - 0 on success                */
-/*          - ERROR_MISCELLANEOUS on fail */
-/******************************************/
-int validateTileOutputTemplate(char *outputTemplateString)
-{
-    /* template string which we are expecting  */
-    char *targetString = "_<row>_<column>.pgm";
-
-    /* define for-loop variable counters: */
-    int charIndex;
-
-    /* iterate through the indexes of each character in the targetString string */
-    for (charIndex = 0; charIndex < strlen(targetString); charIndex++)
-    { /* per character index */
-
-        /* compares the characters at the same index (starting from the end */
-        /* of each string) to check IF they are not identical.              */
-        /* i.e. as the loop runs, it will check that the last 19 characters */
-        /* of the outputTemplateString parameter match the targetString.    */
-        if (outputTemplateString[strlen(outputTemplateString)-charIndex-1] != targetString[strlen(targetString)-charIndex-1])
-        {
-            /* print an error message        */
-            printf("ERROR: Miscellaneous (invalid output template)\n");
-            /* return an error code          */
-            return ERROR_MISCELLANEOUS;
-        }
-    } /* per character index */
-    
-    /* ELSE return with success code */
-    return EXIT_NO_ERRORS;
-}
-
-/******************************************/
 /* FUNC: handleError                      */
 /* -> handles the string output message & */
 /* closing variables and pointers after   */

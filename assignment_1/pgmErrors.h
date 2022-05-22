@@ -60,11 +60,8 @@ int checkOutputFile(FILE *filePointer);
 /* FUNC: checks the n bytes written to is valid */
 int checknBytesWritten(size_t nBytesWritten);
 
-/* FUNC: Check factor is an integer and is greater than 0 */
+/* FUNC: Check reduction factor is an integer and is greater than 0 */
 int validateFactorInput(char *charFactorInput);
-
-/* FUNC: Check tiling output file template is correct */
-int validateTileOutputTemplate(char *outputTemplateString);
 
 /* FUNC: Handles the string outputMessage and closing variables and pointers after an error occurs */
 int handleError(FILE *filePointer, char *filename, Image *imagePointer, int errorCode);
