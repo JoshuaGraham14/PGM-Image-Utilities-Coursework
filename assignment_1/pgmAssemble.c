@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 /******************************************/
 int checkArgumentCountAssemble(int argc)
 {
-    if (argc >= 7 && (argc-4)%3 == 0)
+    if (argc <= 7 || (argc-4)%3 != 0)
     { /* wrong arg count */
         /* IF there were no arguments */
         if (argc == 1) return -1;
