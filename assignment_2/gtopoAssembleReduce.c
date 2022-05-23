@@ -54,8 +54,6 @@ int checkArgumentCountAssembleReduce(int argc);
 int main(int argc, char **argv)
 { /* main() */
 
-    printf("argc: %d", argc);
-
     /* check for correct number of arguments */
     int returnVal; //return value variable
     /* check if there were correct CLI arguments   */
@@ -72,8 +70,6 @@ int main(int argc, char **argv)
         /* else return the return value of the checkArgumentCount() method */
         return returnVal;
     }
-
-    printf("argc: %d", argc);
 	
 	/* create an imagePtr to store the main gtopo image data as an Image struct */
     Image *mainImage = malloc(sizeof(Image)); // dynamically allocate memory for mainImage
@@ -93,8 +89,6 @@ int main(int argc, char **argv)
     /* iterate through quintuplets of command line arguments */
     for (int quintupletIndex = 5; quintupletIndex<argc-5; quintupletIndex+=5)
     {
-        printf("Iteration: %d", quintupletIndex);
-
         /* NOTE: */
         /* argv[quintupletIndex]:  start row position     */
         /* argv[quintupletIndex+1]: start column position */
