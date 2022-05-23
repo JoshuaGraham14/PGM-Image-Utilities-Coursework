@@ -124,6 +124,7 @@ int readImageData (FILE *inputFile, Image *imagePointer)
 
             /* Read pixel value by calling readValue() func: */
             pixelValue = readValue(inputFile);
+            //printf("%d ", pixelValue);
 
             /* sanity check that the pixelValue is valid */
             if ((returnVal = checkPixelValue(imagePointer, pixelValue)) != 0) return returnVal;

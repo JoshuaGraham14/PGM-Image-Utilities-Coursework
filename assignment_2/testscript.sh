@@ -70,7 +70,7 @@ fi
 
 echo -n "Test 8 - gtopoReduce and gtopoComp: "
 EXPECTED="IDENTICAL"
-RESULT=$(./gtopoComp nobackup/temp.dem 10 20 nobackup/temp2.dem)
+RESULT=$(./gtopoComp nobackup/temp.dem 10 5 nobackup/temp2.dem)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
 then
@@ -268,7 +268,33 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 7 - 0 args for gtopoAssemble: "
+echo -n "Test 7 - 0 args for gtopoTile: "
+EXPECTED="Usage: ./gtopoTile inputFile width height tiling_factor outputFile_<row>_<column>"
+RESULT=$(./gtopoTile)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 8 - 1 args for gtopoReduce: "
+EXPECTED="ERROR: Bad Argument Count"
+RESULT=$(./gtopoTile /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo_reduced_4_4.dem)
+VALUE=$?
+if [ "$EXPECTED" == "$RESULT" ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Expected: '${EXPECTED}'"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
+
+echo -n "Test 9 - 0 args for gtopoAssemble: "
 EXPECTED="Usage: ./gtopoAssemble outputImage.gtopo width height (row column inputImage.gtopo)+"
 RESULT=$(./gtopoAssemble)
 VALUE=$?
@@ -281,7 +307,7 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 8 - 1 args for gtopoAssemble: "
+echo -n "Test 10 - 1 args for gtopoAssemble: "
 EXPECTED="ERROR: Bad Argument Count"
 RESULT=$(./gtopoAssemble /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo_reduced_4_4.dem)
 VALUE=$?
@@ -294,7 +320,7 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 9 - 0 args for gtopoPrintLand: "
+echo -n "Test 11 - 0 args for gtopoPrintLand: "
 EXPECTED="Usage: ./gtopoPrintLand inputFile width height outputFile sea hill mountain"
 RESULT=$(./gtopoPrintLand)
 VALUE=$?
@@ -307,7 +333,7 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 10 - 1 args for gtopoPrintLand: "
+echo -n "Test 12 - 1 args for gtopoPrintLand: "
 EXPECTED="ERROR: Bad Argument Count"
 RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo_reduced_4_4.dem)
 VALUE=$?
@@ -320,7 +346,7 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 11 - 0 args for gtopoAssembleReduce: "
+echo -n "Test 13 - 0 args for gtopoAssembleReduce: "
 EXPECTED="Usage: ././gtopoAssembleReduce outputArray.gtopo width height (row column inputArray.gtopo width height)+"
 RESULT=$(./gtopoAssembleReduce)
 VALUE=$?
@@ -333,7 +359,7 @@ else
     echo -e "\t~ Received: '${RESULT}'"
 fi
 
-echo -n "Test 12 - 1 args for gtopoAssembleReduce: "
+echo -n "Test 14 - 1 args for gtopoAssembleReduce: "
 EXPECTED="ERROR: Bad Argument Count"
 RESULT=$(./gtopoAssembleReduce /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo_reduced_4_4.dem)
 VALUE=$?

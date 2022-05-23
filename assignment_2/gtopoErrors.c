@@ -320,7 +320,6 @@ int validateRowAndColumnPosition(char *row, char *column)
     return ERROR_MISCELLANEOUS;
 }
 
-
 /******************************************/
 /* FUNC: handleError                      */
 /* -> handles the string output message & */
