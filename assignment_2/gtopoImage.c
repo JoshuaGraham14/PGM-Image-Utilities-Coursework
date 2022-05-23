@@ -173,7 +173,7 @@ int mallocImageDataArray(Image *imagePointer)
 }
 
 /*******************************************/
-/* FUNC: writepgmFile                      */
+/* FUNC: writeGtopoFile                    */
 /* -> writes the data from the imagePointer*/
 /* struct to the file with the input       */
 /* filename. If the reductionFactor        */
@@ -221,7 +221,7 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
 }
 
 /******************************************/
-/* FUNC: readImageData                    */
+/* FUNC: readValue                        */
 /* -> reads the next value from the       */
 /* provided file and returns it.          */
 /*                                        */
@@ -269,7 +269,7 @@ short readValue(FILE *filePointer)
 }
 
 /******************************************/
-/* FUNC: readImageData                    */
+/* FUNC: writeValue                       */
 /* -> writes the provided pixel           */
 /* (valueToWrite) to the provided file.   */
 /*                                        */
