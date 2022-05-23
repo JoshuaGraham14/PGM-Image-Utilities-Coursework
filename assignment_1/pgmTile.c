@@ -108,7 +108,7 @@ int validateTileOutputTemplate(char *outputTemplateString)
     /* template string which we are expecting  */
     char *targetString = "_<row>_<column>.pgm";
 
-    /* define for-loop variable counters: */
+    /* define for-loop variable counter: */
     int charIndex;
 
     /* iterate through the indexes of each character in the targetString string */

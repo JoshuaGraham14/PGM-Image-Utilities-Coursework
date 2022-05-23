@@ -11,7 +11,8 @@
 /***********************************/
 
 /***********************************/
-/* Reads a pgm file and splits it  */
+/* Assembles a large image from    */
+/* smaller ones.                   */
 /***********************************/
 
 /***********************************/
@@ -27,6 +28,10 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
+/* NOTE: the following 4 functions are declared locally, rather than */
+/* declared in pgmImage.c, because pgmAssemble.c is the only file    */
+/* which uses this function.                                         */
+
 /* FUNC: checks the number of arguments is correct */
 int checkArgumentCountAssemble(int argc);
 
@@ -35,9 +40,6 @@ int validateWidthAndHeight(char *width, char *height);
 
 /* FUNC: checks that both inputted row and column of the subimage are both integers and greater than or equal to 0 */
 int validateRowAndColumnPosition(char *row, char *column);
-
-/* FUNC: splits the input */
-int writeAssembled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
@@ -77,32 +79,29 @@ int main(int argc, char **argv)
 	
 	/* create an imagePtr to store the main pgm image data as an Image struct */
     Image *mainImage = malloc(sizeof(Image)); // dynamically allocate memory for mainImage
-    initialiseImage(mainImage); //initialise the fields of the Image
+    initialiseImage(mainImage); //initialise the fields of the Image to NULL
 
     /* first validate the width and height of the mainImage, returning if they are not valid */
 	if ((returnVal = validateWidthAndHeight(argv[2], argv[3])) != 0) return returnVal;
     /* now that the inputted width and height have been validated, we can allocate memory for the Image's imageData */
     mallocImageDataArray(mainImage, atoi(argv[2]), atoi(argv[3]));
-    mainImage->width=atoi(argv[2]);
-    mainImage->height=atoi(argv[3]);
+    mainImage->width=atoi(argv[2]); //set the width of the mainImage
+    mainImage->height=atoi(argv[3]); //set the height of the mainImage
 
     /* create another Image as a temporary store of the image to insert's data */
     Image *subImage = malloc(sizeof(Image)); // dynamically allocate memory for subImage
 
     for (int tripletIndex = 4; tripletIndex<argc-2; tripletIndex+=3)
     {
-        /* NOTE: */
+        /* NOTE:                                       */
         /* argv[tripletIndex]: start row position      */
         /* argv[tripletIndex+1]: start column position */
         /* argv[tripletIndex+2]: subimage to insert    */
 
-        /* first validate the width and height of the subImage, returning if they are not valid */
-        //validateRowAndColumnPosition(argv[10], argv[11]);
-        // printf("%d, %s, %d\n", tripletIndex, argv[tripletIndex], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
-        // printf("%d, %s, %d\n", tripletIndex+1, argv[tripletIndex+1], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
+        /* first validate the inputted row and column position of the subImage, returning if they are not valid */
 	    if ((returnVal = validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1])) != 0) return returnVal;
 
-        /* Read data from input subImage file, store data in subImage */
+        /* Read data from the provided filename, and store the data in subImage */
 	    if ((returnVal = readpgmFile(argv[tripletIndex+2], subImage, 0)) != 0) return returnVal;
 
         /* define for-loop variable counters: */
@@ -114,19 +113,20 @@ int main(int argc, char **argv)
         { /*per row of pixels*/
             for (columnIndex = 0; columnIndex < subImage->width; columnIndex++)
             { /*per pixel*/
+
                 /* replace pixel of mainImage with the corresponding pixel of the subImage */
-                
                 mainImage->imageData[atoi(argv[tripletIndex])+rowIndex][atoi(argv[tripletIndex+1])+columnIndex] = subImage->imageData[rowIndex][columnIndex];
 
             } /*per pixel*/
         }
     }
 
+    /* set the magic number and maxGray of the mainImage */
     mainImage->magic_number[0]=subImage->magic_number[0];
     mainImage->magic_number[1]=subImage->magic_number[1];
     mainImage->maxGray=subImage->maxGray;
 
-    /* Write mainImage data to filename and only return returnVal if it wasn't successful */
+    /* Write mainImage data to filename, returning returnVal if it wasn't successful */
     if ((returnVal = writepgmFile(argv[1], mainImage, 1)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
@@ -147,6 +147,10 @@ int main(int argc, char **argv)
 /******************************************/
 int checkArgumentCountAssemble(int argc)
 {
+    /* Check that the number of arguments are at least 8 and that */
+    /* in addition to the first 4 mandatory arguments, check that */
+    /* additional arguments are only provided in triplets (i.e.   */
+    /* must be divisible by 3).                                   */
     if (argc <= 7 || (argc-4)%3 != 0)
     { /* wrong arg count */
         /* IF there were no arguments */
@@ -175,12 +179,13 @@ int checkArgumentCountAssemble(int argc)
 /******************************************/
 int validateWidthAndHeight(char *width, char *height)
 {
-    /* if width and height are both integers */
+    /* Check IF width and height are both integers */
     if (atoi(width) && atoi(height))
     {
+        /* Convert both width and height to integers */
         int widthInt = atoi(width);
         int heightInt = atoi(height);
-        /* if width or height are greater than 0 */
+        /* Check IF width or height are greater than 0 */
         if (widthInt > 0 && heightInt > 0)
         {
             /* return with success code */
@@ -188,7 +193,7 @@ int validateWidthAndHeight(char *width, char *height)
         }
     }
 
-    /* Unsuccessful, so print an error message: */ 
+    /* ELSE: Unsuccessful, so print an error message: */ 
     printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
     /* and return an error code.         */
     return ERROR_MISCELLANEOUS; 
@@ -208,13 +213,14 @@ int validateWidthAndHeight(char *width, char *height)
 /******************************************/
 int validateRowAndColumnPosition(char *row, char *column)
 {
-    /* if row and column are both integers (including 0)*/
+    /* check IF row and column are both integers (including 0)*/
     if ((atoi(row) || strcmp(row, "0") == 0) &&
     (atoi(column) || strcmp(column, "0") == 0))
     {
+        /* Convert both width and height to integers */
         int rowInt = atoi(row);
         int columnInt = atoi(column);
-        /* if reduction factor is greater than or equal to 0 */
+        /* check IF row and column are both greater than or equal to 0 */
         if (rowInt >= 0 || columnInt >= 0)
         {
             /* return with success code */
@@ -225,23 +231,4 @@ int validateRowAndColumnPosition(char *row, char *column)
     printf("ERROR: Miscellaneous (row or column parameter invalid)\n");
     /* return an error code          */
     return ERROR_MISCELLANEOUS;
-}
-
-/******************************************/
-/* FUNC: writeAssembled                       */
-/* -> splits the input image into         */
-/* tilingFactor * tilingFactor smaller    */
-/* images corresponding to parts of the   */
-/* image.                                 */
-/*                                        */
-/* Parameters:                            */
-/* - filename: filename string            */
-/* - imagePointer: Image pointer          */
-/* - tilingFactor: Tiling Factor          */
-/* Returns: - 0 on success                */
-/*          - non-zero error code on fail */
-/******************************************/
-int writeAssembled(char *filename, Image *imagePointer, int tilingFactor)
-{
-    return 0;
 }
