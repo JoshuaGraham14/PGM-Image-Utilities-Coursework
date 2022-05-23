@@ -12,7 +12,7 @@
 
 /***********************************/
 /* Reads a pgm file and splits it  */
-/* into nxn smaller images, with   */
+/* into n*n smaller images, with   */
 /* corresponding position to the   */
 /* original image.                 */ 
 /***********************************/
@@ -45,7 +45,7 @@ int writeTiled(char *filename, Image *imagePointer, int reductionFactor);
 /* argv[0]: executable name        */
 /* argv[1]: input file name        */
 /* argv[2]: int tiling factor      */
-/* argv[3]: ouput file name        */
+/* argv[3]: output file name       */
 /* returns 0 on success            */
 /* non-zero error code on fail     */
 /***********************************/

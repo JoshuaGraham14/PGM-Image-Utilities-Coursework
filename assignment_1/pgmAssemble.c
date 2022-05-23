@@ -28,7 +28,7 @@
 #include "pgmImage.h"
 #include "pgmErrors.h"
 
-/* NOTE: the following 4 functions are declared locally, rather than */
+/* NOTE: the following 3 functions are declared locally, rather than */
 /* declared in pgmImage.c, because pgmAssemble.c is the only file    */
 /* which uses this function.                                         */
 

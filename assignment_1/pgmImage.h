@@ -13,6 +13,8 @@ typedef struct ImageStruct
 	unsigned char **imageData; //A 2d array containing the grey value of every pixel in the image.
 } Image;
 
+/* NOTE: Full description of each function can be read in the corresponding .c file */
+
 /* FUNC: collection of other pgmImage methods - used to read in a pgm file */
 int readpgmFile(char *filename, Image *imagePointer, int mode);
 

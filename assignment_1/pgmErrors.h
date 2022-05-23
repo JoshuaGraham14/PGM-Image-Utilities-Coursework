@@ -24,6 +24,8 @@
 #define ERROR_OUTPUT_FAILED 9
 #define ERROR_MISCELLANEOUS 100
 
+/* NOTE: Full description of each function can be read in the corresponding .c file */
+
 /* FUNC: checks the number of arguments supplied against the specified number of arguments */
 int checkArgumentCount(int argc, int numOfArgs);
 

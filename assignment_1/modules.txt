@@ -96,3 +96,28 @@ INPUTS: 3 command-line parameters:
         - intFactor - integer factor n,
         - outputFile - pgm file.
 OUTPUTS: outputImage file contains a copy of the inputImage pgm file.
+
+
+Task V
+- Module pgmTile.c
+Takes in an input file of type .pgm (either ASCII or binary) and given reduction factor x, splits the image
+into n * n smaller images, with corresponing positions to the original image.
+INPUTS: 3 command-line parameters:
+        - inputFile - pgm file,
+        - intFactor - integer factor n,
+        - outputFile - output file template name.
+OUTPUTS: n * n smaller images, tiled according to rows and columns.
+
+
+Task VI
+- Module pgmAssemble.c
+Assembles a large image from smaller ones. 
+INPUTS: 3+3i command-line parameters:
+        - outputFile - pgm file name,
+        - width - of outputFile
+        - height - of outputFile
+Remainder: triplets of:
+        - row - start row position
+        - column - start column position
+        - subimage to insert
+OUTPUTS: the assembled image from the provided smaller images.

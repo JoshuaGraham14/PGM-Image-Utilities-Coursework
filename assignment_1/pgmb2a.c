@@ -62,6 +62,7 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr          */
     /* Only return returnVal) if it reading wasn't successful     */
+    /* NOTE: Pass in 2 for 3rd paramter as we are converting the format of the image from binary to ASCII */
     if ((returnVal = readpgmFile(argv[1], imagePtr, 2)) != 0) return returnVal;
 
     /* Set the magicNumber to "P2" which will cause the binary image to be written to in ASCII */

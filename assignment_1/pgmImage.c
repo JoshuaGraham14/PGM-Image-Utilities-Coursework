@@ -113,6 +113,9 @@ void initialiseImage(Image *imagePointer)
 /* - filePointer: FILE pointer to read    */
 /* - imagePointer: Image pointer          */
 /* - mode: integer (either 0, 1, 2)       */
+/*         0 -> no conversion             */
+/*         1 -> ASCII to binary           */
+/*         2 -> binary to ASCII           */
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/

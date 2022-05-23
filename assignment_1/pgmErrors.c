@@ -385,7 +385,8 @@ int validateFactorInput(char *charFactorInput)
 /* FUNC: handleError                      */
 /* -> handles the string output message & */
 /* closing variables and pointers after   */
-/* an error occurs.                       */
+/* an error occurs. This function is      */
+/* called every time an error is triggered.*/
 /*                                        */
 /* Parameters:                            */
 /* - filePointer: FILE pointer to read    */

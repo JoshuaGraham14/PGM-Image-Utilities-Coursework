@@ -11,8 +11,7 @@
 /***********************************/
 
 /***********************************/
-/* - Improved pgm echo -           */
-/* Takes in as input a file of     */
+/* Takes in an input a file of     */
 /* type .pgm and outputs it to a   */
 /* different file.                 */
 /***********************************/
@@ -64,9 +63,11 @@ int main(int argc, char **argv)
 
     /* Read data from input file, store data in imagePtr                */
     /* Only return returnVal if it reading wasn't successful */
+    /* NOTE: Pass in 0 for 3rd paramter as we are not converting the format of the image */
 	if ((returnVal = readpgmFile(argv[1], imagePtr, 0)) != 0) return returnVal;
 
     /* Write data to output file and only return returnVal if it wasn't successful */
+    /* NOTE: Pass in 1 for 3rd parameter as we are not reducing the size of the image */
 	if ((returnVal = writepgmFile(argv[2], imagePtr, 1)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
