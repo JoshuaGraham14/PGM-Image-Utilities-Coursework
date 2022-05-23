@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     /* Check reduction factor is valid */
     if((returnVal = validateFactorInput(argv[4])) != 0) return returnVal;
 	
-	/* create an image ptr to store the pgm image data as an Image struct */
+	/* create an image ptr to store the gtopo image data as an Image struct */
     Image *imageToReduce = malloc(sizeof(Image)); // dynamically allocate memory for imageToReduce
 
     /* Read data from input file, store data in imageToReduce                */
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
     /* Reduce the file */
     int reductionFactor = atoi(argv[4]); //get the reduction factor.
-    /* Call the writeGtopoFile function with the 3rd parameter being the reduction factor */
+    /* NOTE: Pass in reuction for 3rd parameter as we are reducing the size of the image by the reduction factor */
     if ((returnVal = writeGtopoFile(argv[5], imageToReduce, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */

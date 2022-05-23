@@ -35,7 +35,7 @@ int checkArgumentCountAssembleReduce(int argc);
 /***********************************/
 /* main routine                    */
 /*                                 */
-/* 5+3i CLI parameters:            */
+/* 5+5i CLI parameters:            */
 /* argv[0]: executable name        */
 /* argv[1]: output file name       */
 /* argv[2]: width of output image  */

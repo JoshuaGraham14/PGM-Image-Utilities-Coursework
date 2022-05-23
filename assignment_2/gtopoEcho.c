@@ -69,6 +69,7 @@ int main(int argc, char **argv)
 	if ((returnVal = readGtopoFile(argv[1], imagePtr, argv[2], argv[3])) != 0) return returnVal;
 
     /* Write data to output file and only return returnVal if it wasn't successful */
+    /* NOTE: Pass in 1 for 3rd parameter as we are not reducing the size of the image */
 	if ((returnVal = writeGtopoFile(argv[4], imagePtr, 1)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */

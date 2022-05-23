@@ -29,9 +29,9 @@
 
 
 /******************************************/
-/* FUNC: readpgmFile                      */
+/* FUNC: readGtopoFile                    */
 /* -> collection of other gtopoImage      */
-/* methods - used to read in a pgmFile.   */
+/* methods - used to read in a gtopo File.*/
 /*                                        */
 /* Parameters:                            */
 /* - filename: char pointer               */
@@ -122,7 +122,7 @@ int readImageData (FILE *inputFile, Image *imagePointer)
         for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex++)
         { /*per pixel*/
 
-            /* Read pixel value by calling readValue() func:           */
+            /* Read pixel value by calling readValue() func: */
             pixelValue = readValue(inputFile);
 
             /* sanity check that the pixelValue is valid */
@@ -142,7 +142,7 @@ int readImageData (FILE *inputFile, Image *imagePointer)
 /* -> dynamically allocates memory to the */
 /* imageData array. This func is called   */
 /* just before reading the pixel data     */
-/* from the input pgm file.               */
+/* from the input gtopo file.             */
 /*                                        */
 /* Parameters:                            */
 /* - imagePointer: Image pointer          */
@@ -212,6 +212,7 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
         for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex+=reductionFactor)
         { /*per pixel*/
             
+            /* write the current pixel to the file */
             writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
         } /*per pixel*/
@@ -241,22 +242,26 @@ short readValue(FILE *filePointer)
 
     /* Read first byte from the file and store result in left8bit */
     scanCount = fread(&left8bit, 1, 1, filePointer);
+    /* Check for fread error (i.e. if we haven't read just one value): */
     if (scanCount != 1)
     {
-        /* return larger value than 9999 to trigger error */
-        return 10000;
+        /* return one larger value than the maximum possible image */
+        /* dimensions, in order to trigger error.                  */
+        return MAX_IMAGE_DIMENSION+1;
     }
-    /* convert byte from unsigned to signed *
+    /* convert byte from unsigned to signed */
     left8bit -= 256; 
     
     /* Read next byte from the file and store result in right8bit */
     scanCount = fread(&right8bit, 1, 1, filePointer);
+    /* Check for fread error (i.e. if we haven't read just one value): */
     if (scanCount != 1)
     {
-        /* return larger value than 9999 to trigger error */
-        return 10000; 
+        /* return one larger value than the maximum possible image */
+        /* dimensions, in order to trigger error.                  */
+        return MAX_IMAGE_DIMENSION+1; 
     }
-    /* convert byte from unsigned to signed *
+    /* convert byte from unsigned to signed */
     right8bit -= 256;
 
     /* remove from right8bit */

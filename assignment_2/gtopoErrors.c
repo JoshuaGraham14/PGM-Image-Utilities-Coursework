@@ -175,7 +175,7 @@ int check1dImageDataMemoryAllocation(Image *imagePointer, int rowNum)
 /******************************************/
 int checkPixelValue(Image *imagePointer, int pixelValue)
 {
-    if ((pixelValue < -9999) || (pixelValue > 9999))
+    if ((pixelValue < MIN_IMAGE_DIMENSION) || (pixelValue > MAX_IMAGE_DIMENSION))
     { /* fscanf failed */
 
         /* return error code */
@@ -325,7 +325,8 @@ int validateRowAndColumnPosition(char *row, char *column)
 /* FUNC: handleError                      */
 /* -> handles the string output message & */
 /* closing variables and pointers after   */
-/* an error occurs.                       */
+/* an error occurs. This function is      */
+/* called every time an error is triggered.*/
 /*                                        */
 /* Parameters:                            */
 /* - filePointer: FILE pointer to read    */
@@ -375,7 +376,7 @@ int handleError(FILE *filePointer, char *filename, Image *imagePointer, int erro
         /* close the file       */
         fclose(filePointer);
 
-        /* IF: after comment readpgmFile stage -> free imageData on failure */
+        /* IF: after comment readGtopoFile stage -> free imageData on failure */
         if(errorCode >= 8)
         {
             /* calls freeImageData() func to free imageData from memory */

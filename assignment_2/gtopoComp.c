@@ -63,7 +63,7 @@ int main(int argc, char **argv)
         return returnVal;
     }
 
-	/* create an imagePtr to store the pgm image data as an Image struct */
+	/* create an imagePtr to store the gtopo image data as an Image struct */
     Image *imagePtr1 = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
 
     /* do the same for imagePtr2/second input file */

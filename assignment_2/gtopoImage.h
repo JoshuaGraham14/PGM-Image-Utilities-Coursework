@@ -9,6 +9,8 @@ typedef struct ImageStruct
 	short **imageData; //A 2d array containing the value of every pixel in the image.
 } Image;
 
+/* NOTE: Full description of each function can be read in the corresponding .c file */
+
 /* FUNC: collection of other gtopoImage methods - used to read in a gtopo file */
 int readGtopoFile(char *filename, Image *imagePointer, char *width, char *height);
 

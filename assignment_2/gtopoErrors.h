@@ -1,15 +1,12 @@
 #ifndef ERRORS_HEADER_FILE
 #define ERRORS_HEADER_FILE
-#include "gtopoImage.h" //include pgmImage file as Image struct it will
+#include "gtopoImage.h" //include gtopoImage file as Image struct it will
                       //need to be passed into some of the functions
                       //as arguments.
 
 /* Constants */
-#define MAGIC_NUMBER_RAW_PGM 0x3550
-#define MAGIC_NUMBER_ASCII_PGM 0x3250
-#define MIN_IMAGE_DIMENSION 1
-#define MAX_IMAGE_DIMENSION 65536
-#define MAX_COMMENT_LINE_LENGTH 128
+#define MIN_IMAGE_DIMENSION -9999
+#define MAX_IMAGE_DIMENSION 9999
 
 /* Constants: Error Codes */
 #define EXIT_NO_ERRORS 0
@@ -23,6 +20,8 @@
 #define ERROR_BAD_DATA 8
 #define ERROR_OUTPUT_FAILED 9
 #define ERROR_MISCELLANEOUS 100
+
+/* NOTE: Full description of each function can be read in the corresponding .c file */
 
 /* FUNC: checks the number of arguments supplied against the specified number of arguments */
 int checkArgumentCount(int argc, int numOfArgs);

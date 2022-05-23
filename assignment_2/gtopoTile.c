@@ -103,8 +103,6 @@ int main(int argc, char **argv)
 /******************************************/
 int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
 {
-    //printf("\nTILE\n");
-
     /* Dynamically allocate memory for tiledImageFilename.                              */
     int sizeOfTileSuffix = strlen("_x_y");
     char *tiledImageFilename = malloc(sizeof(filename) * tilingFactor * tilingFactor * sizeOfTileSuffix);
@@ -127,13 +125,6 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
             /* concatenating: (filename, '_', rowPosition, '_', columnPosition).      */
             sprintf(tiledImageFilename, "%s%c%d%c%d", filename,'_', rowPosition, '_', columnPosition);
 
-            // if(rowPosition<=8 || columnPosition <=8)
-            // {
-            //     continue;
-            // }
-
-            //printf("\n~ %s ~\n", tiledImageFilename);
-
             /* open the current tile as a file for writing               */
             FILE *outputFile = fopen(tiledImageFilename, "w");
             int returnVal;  //return value variable
@@ -147,7 +138,6 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
             /* define for-loop variable counters: */
             int rowIndex;
             int columnIndex;
-
             /* nested iteration through each element/pixelValue in the imageData array, */
             /* BUT each loop starts at the relative position on the grid for that tile.   */
             for (rowIndex = rowPosition*reducedHeight; rowIndex < rowPosition*reducedHeight + reducedHeight; rowIndex++)
@@ -155,24 +145,17 @@ int writeTiled(char *filename, Image *imagePointer, int tilingFactor)
                 for (columnIndex = columnPosition*reducedWidth; columnIndex < columnPosition*reducedWidth + reducedWidth; columnIndex++)
                 { /*per pixel*/
 
-                    //printf("%d ", imagePointer->imageData[rowIndex][columnIndex]);
-
+                    /* write the current pixel to the file */
                     writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
-                    /* sanity check on write, by calling checknBytesWritten */
-                    //if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
-
                 } /*per pixel*/
-                //printf("\n");
             } /*per row of pixels*/
 
             /* reset tiledImageFilename by removing suffix (i.e. "_x_y")     */
             tiledImageFilename[strlen(tiledImageFilename)-sizeOfTileSuffix] = '\0';
 
-            //break;
 
         } /*per tiled image*/
-        //break;
     }
     
     /* no errors so exit with success return code */
