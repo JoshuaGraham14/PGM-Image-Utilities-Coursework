@@ -54,6 +54,8 @@ int checkArgumentCountAssembleReduce(int argc);
 int main(int argc, char **argv)
 { /* main() */
 
+    printf("argc: %d", argc);
+
     /* check for correct number of arguments */
     int returnVal; //return value variable
     /* check if there were correct CLI arguments   */
