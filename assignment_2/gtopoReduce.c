@@ -27,7 +27,6 @@
 #include "gtopoErrors.h"
 #include "gtopoImage.h"
 
-
 /***********************************/
 /* main routine                    */
 /*                                 */
@@ -49,7 +48,7 @@ int main(int argc, char **argv)
     /* check if there were 6 CLI arguments   */
 	if((returnVal = checkArgumentCount(argc, 6)) != 0)
     {
-        /* if there weren't 4 CLI arguments:   */
+        /* if there weren't 6 CLI arguments:   */
         if (returnVal == -1)
         {
             /* if there were no CLI arguments    */
@@ -64,17 +63,17 @@ int main(int argc, char **argv)
     /* Check reduction factor is valid */
     if((returnVal = validateFactorInput(argv[4])) != 0) return returnVal;
 	
-	/* create an imagePtr to store the pgm image data as an Image struct */
-    Image *imagePtr = malloc(sizeof(Image)); // dynamically allocate memory for imagePtr
+	/* create an image ptr to store the pgm image data as an Image struct */
+    Image *imageToReduce = malloc(sizeof(Image)); // dynamically allocate memory for imageToReduce
 
-    /* Read data from input file, store data in imagePtr                */
+    /* Read data from input file, store data in imageToReduce                */
     /* Only return returnVal if it reading wasn't successful */
-	if ((returnVal = readGtopoFile(argv[1], imagePtr, argv[2], argv[3])) != 0) return returnVal;
+	if ((returnVal = readGtopoFile(argv[1], imageToReduce, argv[2], argv[3])) != 0) return returnVal;
 
     /* Reduce the file */
     int reductionFactor = atoi(argv[4]); //get the reduction factor.
-    /* Call the write reduced function - return returnVal only if not successful */
-    if ((returnVal = writeGtopoFile(argv[5], imagePtr, reductionFactor)) != 0) return returnVal;
+    /* Call the writeGtopoFile function with the 3rd parameter being the reduction factor */
+    if ((returnVal = writeGtopoFile(argv[5], imageToReduce, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");

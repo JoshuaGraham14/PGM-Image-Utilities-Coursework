@@ -10,7 +10,9 @@
 /***********************************/
 
 /***********************************/
-/*                                      */
+/* Takes a single gtopo30 file and */
+/* outputs the 2D array to a .txt  */
+/* file as a visual representation.*/
 /***********************************/
 
 /***********************************/
@@ -26,9 +28,11 @@
 #include "gtopoImage.h"
 #include "gtopoErrors.h"
 
+/*FUNC: validates the three inputs to see if they are integers and greater than 0. */
 int validateSeaHillMountain(char *sea, char *hill, char *mountain);
 
-//printImageToFile function declared
+/*FUNC: prints inputted Image to file in the specified format, with terrain*/
+/* outputted relative to the sea, hill and mountain inputted values.       */
 int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain);
 
 /***********************************/
@@ -67,7 +71,7 @@ int main(int argc, char **argv)
     }
 
 	/* create an imagePtr to store the gtopo image data as an Image struct */
-    Image *imageToPrint = malloc(sizeof(Image)); //dynamically allocate memory for imagePtr
+    Image *imageToPrint = malloc(sizeof(Image)); //dynamically allocate memory for imageToPrint
 
     /* Read data from the Image file and only return returnVal if it wasn't successful */
     if ((returnVal = readGtopoFile(argv[1], imageToPrint, argv[2], argv[3])) != 0) return returnVal;
@@ -80,11 +84,27 @@ int main(int argc, char **argv)
 } /* main() */
 
 
+/******************************************/
+/* FUNC: printImageToFile                 */
+/* ->  prints inputted Image to file in   */
+/* the specified format, with terrain     */
+/* outputted relative to the sea, hill    */
+/* and mountain inputted values.          */
+/*                                        */
+/* Parameters:                            */
+/* - imagePointer: Image pointer to print */
+/* - filename: char pointer               */
+/* - sea: char pointer to sea value       */
+/* - hill: char pointer to hill value     */
+/* - mountain: char pointer to mountain value */
+/* Returns: - 0 on success                */
+/*          - non-zero error code on fail */
+/******************************************/
 int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill, char *mountain)
 {
-    int returnVal;  //return value variable
+    int returnVal; //return value variable
 
-    //Validate sea, hill and mountain inputs
+    //First validate sea, hill and mountain values
     if ((returnVal = validateSeaHillMountain(sea, hill, mountain)) != 0) return returnVal;
 
     /* open a file for writing */
@@ -101,19 +121,23 @@ int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill,
         for (columnIndex = 0; columnIndex < imageToPrint->width; columnIndex++)
         { /*per pixel*/
 
-            /* write the entry  */
+            /* Write the entry to the file:  */
+            // Sea (i.e. value 􏰁 sea) -> print ' '
             if (imageToPrint->imageData[rowIndex][columnIndex] <= atoi(sea))
             {
                 fprintf(outputFile, "%c", ' ');
             }
+            // Low ground (sea < value <= hill) -> print '.'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(sea) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(hill))
             {
                 fprintf(outputFile, "%c", '.');
             }
+            // High ground (hill < value <= mountain) -> print '^'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(hill) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(mountain))
             {
                 fprintf(outputFile, "%c", '^');
             }
+            // Mountains (mountain < value) -> print 'A'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(mountain))
             {
                 fprintf(outputFile, "%c", 'A');
@@ -121,36 +145,40 @@ int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill,
 
         } /*per pixel*/
 
+        /* print newline at the end of every row */
         fprintf(outputFile, "%c", '\n');
     } /*per row of pixels*/
 
-    fclose(outputFile);
+    fclose(outputFile); //close the file
     return EXIT_NO_ERRORS;
 }
 
-
 /******************************************/
-/* FUNC: validateWidthAndHeight           */
-/* ->  checks that inputted width and     */
-/* height are both integers and greater   */
-/* than zero.                             */
+/* FUNC: validateSeaHillMountain          */
+/* ->  checks that inputted 'sea' and     */
+/* 'hill' and 'mountain' values are all   */
+/* integers and greater than or equal to  */
+/* zero.                                  */
 /*                                        */
 /* Parameters:                            */
-/* - width: char pointer to CL argument   */
-/* - height: char pointer to CL argument  */
+/* - sea: char pointer to sea value       */
+/* - hill: char pointer to hill value     */
+/* - mountain: char pointer to mountain value */
 /* Returns: - 0 on success                */
 /*          - ERROR_MISCELLANEOUS on fail */
 /******************************************/
 int validateSeaHillMountain(char *sea, char *hill, char *mountain)
 {
+    /* check IF sea, hill and mountain are both integers (including 0)*/
     if ((atoi(sea) || strcmp(sea, "0") == 0) &&
     (atoi(hill) || strcmp(hill, "0") == 0) &&
     (atoi(mountain) || strcmp(mountain, "0") == 0))
     {
+        /* Convert sea, hill and mountain to integers */
         int seaInt = atoi(sea);
         int hillInt = atoi(hill);
         int mountainInt = atoi(mountain);
-        /* if width or height are greater than 0 */
+        /* check IF sea, hill and mountain are all within bounds */
         if ((seaInt >= -9999 && seaInt <= 9999) &&
         (hillInt >= -9999 && hillInt <= 9999) &&
         (mountainInt >= -9999 && mountainInt <= 9999))

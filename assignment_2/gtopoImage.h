@@ -24,9 +24,6 @@ int mallocImageDataArray(Image *imagePointer);
 /* FUNC: writes to an input file data from an input Image */
 int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor);
 
-/* FUNC: gets the size of a gtopo Image */
-int getImageSize(FILE *filePointer);
-
 /* FUNC: reads the next value from the provided file and returns it */
 short readValue(FILE *filePointer);
 

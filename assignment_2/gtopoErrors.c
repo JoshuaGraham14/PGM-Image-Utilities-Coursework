@@ -91,12 +91,13 @@ int checkInputFile(FILE *filePointer)
 /******************************************/
 int validateWidthAndHeight(char *width, char *height)
 {
-    /* if width and height are both integers */
+    /* Check IF width and height are both integers */
     if (atoi(width) && atoi(height))
     {
+        /* Convert both width and height to integers */
         int widthInt = atoi(width);
         int heightInt = atoi(height);
-        /* if width or height are greater than 0 */
+        /* Check IF width or height are greater than 0 */
         if (widthInt > 0 && heightInt > 0)
         {
             /* return with success code */
@@ -104,7 +105,7 @@ int validateWidthAndHeight(char *width, char *height)
         }
     }
 
-    /* Unsuccessful, so print an error message: */ 
+    /* ELSE: Unsuccessful, so print an error message: */
     printf("ERROR: Miscellaneous (width or height parameter invalid)\n");
     /* and return an error code.         */
     return ERROR_MISCELLANEOUS; 
@@ -210,32 +211,6 @@ int checkOutputFile(FILE *filePointer)
     return EXIT_NO_ERRORS;
 }
 
-
-/******************************************/
-/* FUNC: checknBytesWritten               */
-/* -> checks the num of bytes written is  */
-/* valid.                                 */
-/*                                        */
-/* Parameters:                            */
-/* - nBytesWritten: the num of bytes written */
-/* Returns: - 0 on success                */
-/*          - ERROR_OUTPUT_FAILED on fail */
-/******************************************/
-int checknBytesWritten(size_t nBytesWritten)
-{
-    // /* check that dimensions wrote correctly */
-    // if (nBytesWritten < 0)
-    // { /* dimensional write failed    */
-
-    //     /* return an error code          */
-    //     return ERROR_OUTPUT_FAILED;
-
-    // } /* dimensional write failed    */
-
-    /* ELSE return with success code */
-    return EXIT_NO_ERRORS;
-}
-
 /******************************************/
 /* FUNC: validateFactorInput              */
 /* -> checks that inputted reduction      */
@@ -308,6 +283,41 @@ int validateTileOutputTemplate(char *outputTemplateString)
     
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
+}
+
+/******************************************/
+/* FUNC: validateRowAndColumnPosition     */
+/* ->  checks that inputted row and       */
+/* column positions are both integers and */
+/* greater than zero.                     */
+/*                                        */
+/* Parameters:                            */
+/* - row: char pointer to CL argument   */
+/* - column: char pointer to CL argument  */
+/* Returns: - 0 on success                */
+/*          - ERROR_MISCELLANEOUS on fail */
+/******************************************/
+int validateRowAndColumnPosition(char *row, char *column)
+{
+    /* check IF row and column are both integers (including 0)*/
+    if ((atoi(row) || strcmp(row, "0") == 0) &&
+    (atoi(column) || strcmp(column, "0") == 0))
+    {
+        /* Convert both row and column to integers */
+        int rowInt = atoi(row);
+        int columnInt = atoi(column);
+        /* check IF row and column are both greater than or equal to 0 */
+        if (rowInt >= 0 || columnInt >= 0)
+        {
+            /* return with success code */
+            return EXIT_NO_ERRORS;
+        }
+    }
+
+    /* Unsuccessful, so print an error message: */ 
+    printf("ERROR: Miscellaneous (row or column parameter invalid)\n");
+    /* return an error code          */
+    return ERROR_MISCELLANEOUS;
 }
 
 

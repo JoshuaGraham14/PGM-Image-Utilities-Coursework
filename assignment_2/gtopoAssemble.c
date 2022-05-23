@@ -10,7 +10,9 @@
 /***********************************/
 
 /***********************************/
-/* Reads a gtopo file and splits it  */
+/* Assembles a large image from    */
+/* smaller ones and writes it to   */
+/* the specified file.             */
 /***********************************/
 
 /***********************************/
@@ -28,15 +30,6 @@
 
 /* FUNC: checks the number of arguments is correct */
 int checkArgumentCountAssemble(int argc);
-
-// /* FUNC: checks if the inputted width and height are both integers and greater than 0 */
-// int validateWidthAndHeight(char *width, char *height);
-
-/* FUNC: checks that both inputted row and column of the subimage are both integers and greater than or equal to 0 */
-int validateRowAndColumnPosition(char *row, char *column);
-
-/* FUNC: splits the input */
-int writeAssembled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
@@ -86,12 +79,10 @@ int main(int argc, char **argv)
     initialiseImage(mainImage, argv[2], argv[3]); //initialise the fields of the Image
     mallocImageDataArray(mainImage); //allocate memory for the Image's imageData
 
-    /* first validate the width and height of the mainImage, returning if they are not valid */
-	if ((returnVal = validateWidthAndHeight(argv[2], argv[3])) != 0) return returnVal;
-
     /* create another Image as a temporary store of the image to insert's data */
     Image *subImage = malloc(sizeof(Image)); // dynamically allocate memory for subImage
 
+    /* iterate through quintuplets of command line arguments */
     for (int quintupletIndex = 4; quintupletIndex<argc-4; quintupletIndex+=5)
     {
         /* NOTE: */
@@ -100,10 +91,6 @@ int main(int argc, char **argv)
         /* argv[quintupletIndex+2]: subimage to insert    */
         /* argv[quintupletIndex+3]: width of subimage     */
         /* argv[quintupletIndex+4]: height of subimage    */
-
-        //validateRowAndColumnPosition(argv[10], argv[11]);
-        // printf("%d, %s, %d\n", tripletIndex, argv[tripletIndex], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
-        // printf("%d, %s, %d\n", tripletIndex+1, argv[tripletIndex+1], validateRowAndColumnPosition(argv[tripletIndex], argv[tripletIndex+1]));
 
         /* first validate the row and column position of the subImage, returning if they are not valid */
 	    if ((returnVal = validateRowAndColumnPosition(argv[quintupletIndex], argv[quintupletIndex+1])) != 0) return returnVal;
@@ -120,8 +107,8 @@ int main(int argc, char **argv)
         { /*per row of pixels*/
             for (columnIndex = 0; columnIndex < subImage->width; columnIndex++)
             { /*per pixel*/
+
                 /* replace pixel of mainImage with the corresponding pixel of the subImage */
-                
                 mainImage->imageData[atoi(argv[quintupletIndex])+rowIndex][atoi(argv[quintupletIndex+1])+columnIndex] = subImage->imageData[rowIndex][columnIndex];
 
             } /*per pixel*/
@@ -149,6 +136,10 @@ int main(int argc, char **argv)
 /******************************************/
 int checkArgumentCountAssemble(int argc)
 {
+    /* Check that the number of arguments are at least 9 and that */
+    /* in addition to the first 4 mandatory arguments, check that */
+    /* additional arguments are only provided in quintuplets (i.e.*/
+    /* must be divisible by 5).                                   */
     if (argc < 9 || (argc-4)%5 != 0)
     { /* wrong arg count */
         /* IF there were no arguments */
@@ -161,56 +152,4 @@ int checkArgumentCountAssemble(int argc)
 
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
-}
-
-/******************************************/
-/* FUNC: validateRowAndColumnPosition     */
-/* ->  checks that inputted row and       */
-/* column positions are both integers and */
-/* greater than zero.                     */
-/*                                        */
-/* Parameters:                            */
-/* - row: char pointer to CL argument   */
-/* - column: char pointer to CL argument  */
-/* Returns: - 0 on success                */
-/*          - ERROR_MISCELLANEOUS on fail */
-/******************************************/
-int validateRowAndColumnPosition(char *row, char *column)
-{
-    /* if row and column are both integers (including 0)*/
-    if ((atoi(row) || strcmp(row, "0") == 0) &&
-    (atoi(column) || strcmp(column, "0") == 0))
-    {
-        int rowInt = atoi(row);
-        int columnInt = atoi(column);
-        /* if reduction factor is greater than or equal to 0 */
-        if (rowInt >= 0 || columnInt >= 0)
-        {
-            /* return with success code */
-            return EXIT_NO_ERRORS;
-        }
-    }
-    /* print an error message        */
-    printf("ERROR: Miscellaneous (row or column parameter invalid)\n");
-    /* return an error code          */
-    return ERROR_MISCELLANEOUS;
-}
-
-/******************************************/
-/* FUNC: writeAssembled                       */
-/* -> splits the input image into         */
-/* tilingFactor * tilingFactor smaller    */
-/* images corresponding to parts of the   */
-/* image.                                 */
-/*                                        */
-/* Parameters:                            */
-/* - filename: filename string            */
-/* - imagePointer: Image pointer          */
-/* - tilingFactor: Tiling Factor          */
-/* Returns: - 0 on success                */
-/*          - non-zero error code on fail */
-/******************************************/
-int writeAssembled(char *filename, Image *imagePointer, int tilingFactor)
-{
-    return 0;
 }

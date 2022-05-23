@@ -10,7 +10,10 @@
 /***********************************/
 
 /***********************************/
-/* Reads a gtopo file and splits it  */
+/* Assembles a large image from    */
+/* smaller ones and then reduces   */
+/* the large image by the reduction*/
+/* factor.                         */
 /***********************************/
 
 /***********************************/
@@ -28,12 +31,6 @@
 
 /* FUNC: checks the number of arguments is correct */
 int checkArgumentCountAssembleReduce(int argc);
-
-/* FUNC: checks that both inputted row and column of the subimage are both integers and greater than or equal to 0 */
-int validateRowAndColumnPosition(char *row, char *column);
-
-/* FUNC: splits the input */
-int writeToMemoryAssembled(char *filename, Image *imagePointer, int reductionFactor);
 
 /***********************************/
 /* main routine                    */
@@ -84,12 +81,12 @@ int main(int argc, char **argv)
     initialiseImage(mainImage, argv[2], argv[3]); //initialise the fields of the Image
     mallocImageDataArray(mainImage); //allocate memory for the Image's imageData
 
-    /* first validate the width and height of the mainImage, returning if they are not valid */
-	if ((returnVal = validateWidthAndHeight(argv[2], argv[3])) != 0) return returnVal;
-
     /* create another Image as a temporary store of the image to insert's data */
     Image *subImage = malloc(sizeof(Image)); // dynamically allocate memory for subImage
 
+    /* ----- ASSEMBLE TO MEMORY ----- */
+
+    /* iterate through quintuplets of command line arguments */
     for (int quintupletIndex = 5; quintupletIndex<argc-5; quintupletIndex+=5)
     {
         /* NOTE: */
@@ -102,29 +99,29 @@ int main(int argc, char **argv)
         /* first validate the row and column position of the subImage, returning if they are not valid */
 	    if ((returnVal = validateRowAndColumnPosition(argv[quintupletIndex], argv[quintupletIndex+1])) != 0) return returnVal;
 
-        /* Read data from input subImage file, store data in subImage */
+        /* Read data from input subImage file and store data in subImage */
 	    if ((returnVal = readGtopoFile(argv[quintupletIndex+2], subImage, argv[quintupletIndex+3], argv[quintupletIndex+4])) != 0) return returnVal;
 
         /* define for-loop variable counters: */
         int rowIndex;
         int columnIndex;
-        /* nested iteratation through each element/pixelValue in the imageData array,   */
-        /* BUT each loop increments by the reductionFactor in order to reduce the image */
+        /* nested iteratation through each element/pixelValue in the imageData array */
         for (rowIndex = 0; rowIndex < subImage->height; rowIndex++)
         { /*per row of pixels*/
             for (columnIndex = 0; columnIndex < subImage->width; columnIndex++)
             { /*per pixel*/
+
                 /* replace pixel of mainImage with the corresponding pixel of the subImage */
-                
                 mainImage->imageData[atoi(argv[quintupletIndex])+rowIndex][atoi(argv[quintupletIndex+1])+columnIndex] = subImage->imageData[rowIndex][columnIndex];
 
             } /*per pixel*/
         }
     }
 
-    /* Reduce the file */
+    /* ----- REDUCE AND WRITE TO FILE ----- */
+
     int reductionFactor = atoi(argv[4]); //get the reduction factor.
-    /* Call the write reduced function - return returnVal only if not successful */
+    /* Call the writeGtopoFile function with the 3rd parameter being the reduction factor */
     if ((returnVal = writeGtopoFile(argv[1], mainImage, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
@@ -133,7 +130,7 @@ int main(int argc, char **argv)
 } /* main() */
 
 /******************************************/
-/* FUNC: checkArgumentCountAssembleReduce     */
+/* FUNC: checkArgumentCountAssembleReduce */
 /* -> checks the number of arguments      */
 /* supplied against the specified number  */
 /* of arguments.                          */
@@ -145,6 +142,10 @@ int main(int argc, char **argv)
 /******************************************/
 int checkArgumentCountAssembleReduce(int argc)
 {
+    /* Check that the number of arguments are at least 10 and that */
+    /* in addition to the first 5 mandatory arguments, check that */
+    /* additional arguments are only provided in quintuplets (i.e.*/
+    /* must be divisible by 5).                                   */
     if (argc < 10 || (argc-5)%5 != 0)
     { /* wrong arg count */
         /* IF there were no arguments */
@@ -157,56 +158,4 @@ int checkArgumentCountAssembleReduce(int argc)
 
     /* ELSE return with success code */
     return EXIT_NO_ERRORS;
-}
-
-/******************************************/
-/* FUNC: validateRowAndColumnPosition     */
-/* ->  checks that inputted row and       */
-/* column positions are both integers and */
-/* greater than zero.                     */
-/*                                        */
-/* Parameters:                            */
-/* - row: char pointer to CL argument   */
-/* - column: char pointer to CL argument  */
-/* Returns: - 0 on success                */
-/*          - ERROR_MISCELLANEOUS on fail */
-/******************************************/
-int validateRowAndColumnPosition(char *row, char *column)
-{
-    /* if row and column are both integers (including 0)*/
-    if ((atoi(row) || strcmp(row, "0") == 0) &&
-    (atoi(column) || strcmp(column, "0") == 0))
-    {
-        int rowInt = atoi(row);
-        int columnInt = atoi(column);
-        /* if reduction factor is greater than or equal to 0 */
-        if (rowInt >= 0 || columnInt >= 0)
-        {
-            /* return with success code */
-            return EXIT_NO_ERRORS;
-        }
-    }
-    /* print an error message        */
-    printf("ERROR: Miscellaneous (row or column parameter invalid)\n");
-    /* return an error code          */
-    return ERROR_MISCELLANEOUS;
-}
-
-/******************************************/
-/* FUNC: writeToMemoryAssembled               */
-/* -> splits the input image into         */
-/* tilingFactor * tilingFactor smaller    */
-/* images corresponding to parts of the   */
-/* image.                                 */
-/*                                        */
-/* Parameters:                            */
-/* - filename: filename string            */
-/* - imagePointer: Image pointer          */
-/* - tilingFactor: Tiling Factor          */
-/* Returns: - 0 on success                */
-/*          - non-zero error code on fail */
-/******************************************/
-int writeToMemoryAssembled(char *filename, Image *imagePointer, int tilingFactor)
-{
-    return 0;
 }

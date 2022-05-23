@@ -43,24 +43,24 @@
 /******************************************/
 int readGtopoFile(char *filename, Image *imagePointer, char *width, char *height)
 {
-    FILE *filePointer = fopen(filename, "r"); //open file in read mode.
+    FILE *inputFile = fopen(filename, "r"); //open file in read mode.
 
     /* NOTE: for the following functions, return the return value of the function only if it was not successful */
     // **********************************************************************************************************
     int returnVal; //return value variable.
 
     /* fills imagePtr struct field values with NULL data */
-    if ((returnVal = initialiseImage(imagePointer, width, height)) != 0) return returnVal;
+    if ((returnVal = initialiseImage(imagePointer, width, height)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* check the input file to see if can be opened*/
-    if ((returnVal = checkInputFile(filePointer)) != 0) return returnVal;
+    if ((returnVal = checkInputFile(inputFile)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* read the image data: */
-    if ((returnVal = readImageData(filePointer, imagePointer)) != 0) return returnVal;
+    if ((returnVal = readImageData(inputFile, imagePointer)) != 0) return handleError(inputFile, filename, imagePointer, returnVal);
 
     /* we're done with the file, so close it */
-    fclose(filePointer);
-    return EXIT_NO_ERRORS; //success
+    fclose(inputFile);
+    return EXIT_NO_ERRORS; //return with success code
 }
 
 /******************************************/
@@ -103,9 +103,8 @@ int initialiseImage(Image *imagePointer, char *width, char *height)
 /* Returns: - 0 on success                */
 /*          - non-zero error code on fail */
 /******************************************/
-int readImageData (FILE *filePointer, Image *imagePointer)
+int readImageData (FILE *inputFile, Image *imagePointer)
 {
-    //printf("NEW READ:\n");
     int returnVal; //return value variable created
 
     /* Calls func to dynamically allocate memory for the imageData 2d array, returning returnVal on error. */
@@ -113,41 +112,27 @@ int readImageData (FILE *filePointer, Image *imagePointer)
 
     /* Variables which store data during for-loop: */
     int pixelValue;
-    //int scanCount = 1;
 
     /* define for-loop variable counters: */
     int rowIndex;
     int columnIndex;
-
+    /* nested iteratation through each element/pixelValue in the imageData array */
     for (rowIndex = 0; rowIndex < imagePointer->height; rowIndex++)
-    {
+    { /*per row of pixels*/
         for (columnIndex = 0; columnIndex < imagePointer->width; columnIndex++)
-        {
-            /* read pixel value by calling readValue() func */
-            pixelValue = readValue(filePointer);
-            // if(columnIndex<20 && rowIndex <10)
-            // {
-            //     printf("%d ", pixelValue);
-            // }
-            
-            //printf("\nx: %d ", x);
-            //printf("\tNextpixelvalue: %d ", nextPixelValue);
-            //printf("\tpixelValue: %d ", pixelValue);
-            //printf("\tmax: %d ", (imagePointer->imageData + nImageBytes));
+        { /*per pixel*/
+
+            /* Read pixel value by calling readValue() func:           */
+            pixelValue = readValue(inputFile);
 
             /* sanity check that the pixelValue is valid */
             if ((returnVal = checkPixelValue(imagePointer, pixelValue)) != 0) return returnVal;
 
             /* Set corresponding index in the imageData 2d array to the pixelValue which has just been read */ 
             imagePointer->imageData[rowIndex][columnIndex] = pixelValue;
-        }
-        // if(columnIndex<20)
-        // {
-        //     printf("\n");
-        // }
-    }
+        } /*per pixel*/
+    } /*per row of pixels*/
     
-
     /* return with success code */ 
     return EXIT_NO_ERRORS;
 }
@@ -229,58 +214,76 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
             
             writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
-            /* sanity check on write, by calling checknBytesWritten */
-            //if ((returnVal = checknBytesWritten(nBytesWritten)) != 0) return returnVal;
-
         } /*per pixel*/
     } /*per row of pixels*/
 
     return EXIT_NO_ERRORS;
 }
 
-/* FUNC: gets the size of a gtopo Image */
-int getImageSize(FILE *filePointer)
-{
-    short x=1;
-    int t = 0;
-
-    while (x!=0)
-    {
-        t+=1;
-        x = readValue(filePointer);
-    }
-
-    return t-1;
-}
-
-/* FUNC: reads the next value from the provided file and returns it */
+/******************************************/
+/* FUNC: readImageData                    */
+/* -> reads the next value from the       */
+/* provided file and returns it.          */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* Returns: - the value read as a short   */
+/******************************************/
 short readValue(FILE *filePointer)
 {
-    int left8bit;
-    int right8bit;
-    int scanCount;
+    /* NOTE:                                                                     */
+    /* We read in values one byte at a time. Therefore: read two consecutive bytes */
+    /* and combine them (in opposite order) to form a short (in big-endian format).*/ 
 
-    left8bit = 0;
+    int left8bit; //stores the first 8 bits read
+    int right8bit; //stores the next 8 bits read
+    int scanCount; //stores number of items read
+
+    /* Read first byte from the file and store result in left8bit */
     scanCount = fread(&left8bit, 1, 1, filePointer);
-    left8bit -= 256;
-    right8bit = 0;
+    if (scanCount != 1)
+    {
+        /* return larger value than 9999 to trigger error */
+        return 10000;
+    }
+    /* convert byte from unsigned to signed *
+    left8bit -= 256; 
+    
+    /* Read next byte from the file and store result in right8bit */
     scanCount = fread(&right8bit, 1, 1, filePointer);
+    if (scanCount != 1)
+    {
+        /* return larger value than 9999 to trigger error */
+        return 10000; 
+    }
+    /* convert byte from unsigned to signed *
     right8bit -= 256;
-    short positiveRight8bit = right8bit & 255; //remove negative
-    short result = (left8bit << 8) | positiveRight8bit; // shift by 8 then join with right positiveRight8bit.
 
+    /* remove from right8bit */
+    short positiveRight8bit = right8bit & 255; 
+    /* shift the left8bit by 8 then join with right positiveRight8bit. */
+    short result = (left8bit << 8) | positiveRight8bit; 
+
+    /* return the final value */
     return result;
 }
 
-/* FUNC: writes the provided pixel (valueToWrite) to the provided file */
+/******************************************/
+/* FUNC: readImageData                    */
+/* -> writes the provided pixel           */
+/* (valueToWrite) to the provided file.   */
+/*                                        */
+/* Parameters:                            */
+/* - filePointer: FILE pointer to read    */
+/* Returns: - the value read as a short   */
+/******************************************/
 void writeValue(FILE *filePointer, short *valueToWrite)
 {
-    char c1 = *valueToWrite >> 8;
-    char c2 = *valueToWrite & 0x00ff;
+    /* split the short into two bytes */
+    char c1 = *valueToWrite >> 8; //leftshift by 8 to get first byte
+    char c2 = *valueToWrite & 0x00ff; //AND comparison with 000000000111111111 to second byte.
 
-    // printf("\nc1: %d", c1);
-    // printf("\tc2: %d", c2);
-
+    /* write both bytes to the file */
     fwrite(&c1, 1, 1, filePointer);
     fwrite(&c2, 1, 1, filePointer);
 }
