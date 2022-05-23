@@ -91,6 +91,7 @@ int main(int argc, char **argv)
     /* create another Image as a temporary store of the image to insert's data */
     Image *subImage = malloc(sizeof(Image)); // dynamically allocate memory for subImage
 
+    /* iterate through triplets of command line arguments */
     for (int tripletIndex = 4; tripletIndex<argc-2; tripletIndex+=3)
     {
         /* NOTE:                                       */
@@ -217,7 +218,7 @@ int validateRowAndColumnPosition(char *row, char *column)
     if ((atoi(row) || strcmp(row, "0") == 0) &&
     (atoi(column) || strcmp(column, "0") == 0))
     {
-        /* Convert both width and height to integers */
+        /* Convert both row and column to integers */
         int rowInt = atoi(row);
         int columnInt = atoi(column);
         /* check IF row and column are both greater than or equal to 0 */

@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
     /* Reduce the file */
     int reductionFactor = atoi(argv[2]); //get the reduction factor.
-    /* Call the write reduced function - return r only if not successful */
+    /* Call the writepgmFile function with the 3rd parameter being the reduction factor */
     if ((returnVal = writepgmFile(argv[3], imagePtr, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
