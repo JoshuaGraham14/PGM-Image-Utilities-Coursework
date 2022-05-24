@@ -150,6 +150,13 @@ echo -n "Test 13 - gtopoPrintLand: "
 RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
 VALUE=$?
 echo -e "${RESULT}, code=${VALUE}"
+if [ "$VALUE" == 0 ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
 
 
 echo -n "Test 14 - gtopoReduceAssemble view: "
