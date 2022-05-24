@@ -156,6 +156,13 @@ echo -n "Test 14 - gtopoReduceAssemble view: "
 RESULT=$(bash ./COMP1921A2_handout/gtopoReduce400.sh)
 VALUE=$?
 echo -e "${RESULT}, code=${VALUE}"
+if [ "$VALUE" == 0 ]
+then
+    echo -e "PASSED, code=${VALUE}"
+else
+    echo -e "FAILED, code=${VALUE}"
+    echo -e "\t~ Received: '${RESULT}'"
+fi
 
 #----------- Testing invalid command line arguments ----------#
 echo -n -e "* TESTING INVALID COMMMAND LINE ARGUMENTS *\n"
