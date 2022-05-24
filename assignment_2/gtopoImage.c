@@ -216,33 +216,8 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
             /* write the current pixel to the file */
             writeValue(outputFile, &imagePointer->imageData[rowIndex][columnIndex]);
 
-            if (imagePointer->imageData[rowIndex][columnIndex] <= -9000)
-            {
-                printf(" ");
-            }
-            // Low ground (sea < value <= hill) -> print '.'
-            else if (imagePointer->imageData[rowIndex][columnIndex] > -9000 && imagePointer->imageData[rowIndex][columnIndex] <= 0)
-            {
-                printf(".");
-            }
-            // High ground (hill < value <= mountain) -> print '^'
-            else if (imagePointer->imageData[rowIndex][columnIndex] > 0 && imagePointer->imageData[rowIndex][columnIndex] <= 2000)
-            {
-                printf("^");
-            }
-            // Mountains (mountain < value) -> print 'A'
-            else if (imagePointer->imageData[rowIndex][columnIndex] > 2000)
-            {
-                printf("A");
-            }
-
         } /*per pixel*/
-
-        printf("\n");
     } /*per row of pixels*/
-
-    printf("C: %d ,R: %d\n", columnIndex, rowIndex);
-    printf("Total wrote: %d\n", columnIndex/reductionFactor);
 
     return EXIT_NO_ERRORS;
 }

@@ -161,7 +161,6 @@ fi
 echo -n "Test 14 - gtopoReduceAssemble view: "
 RESULT=$(bash ./COMP1921A2_handout/gtopoReduce400.sh)
 VALUE=$?
-echo -e "${RESULT}, code=${VALUE}"
 if [ "$VALUE" == 0 ]
 then
     echo -e "PASSED, code=${VALUE}"
