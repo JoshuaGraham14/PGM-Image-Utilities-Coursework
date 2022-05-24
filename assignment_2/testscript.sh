@@ -159,11 +159,9 @@ else
 fi
 
 echo -n "Test 14 - gtopoReduceAssemble view: "
-EXPECTED=""
 bash ./COMP1921A2_handout/gtopoReduce400.sh
-#RESULT=$(./COMP1921A2_handout/dems/gtopo30full_reduced_400.dem 108 54 nobackup/aa_printedGtopo30full_reduced_400 -9000 0 2000)
 VALUE=$?
-if [ "$EXPECTED" == "$RESULT" ]
+if [ "$VALUE" == "0" ]
 then
     echo -e "PASSED, code=${VALUE}"
 else

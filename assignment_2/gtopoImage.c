@@ -241,6 +241,9 @@ int writeGtopoFile(char *filename, Image *imagePointer, int reductionFactor)
         printf("\n");
     } /*per row of pixels*/
 
+    printf("C: %d ,R: %d\n", columnIndex, rowIndex);
+    printf("Total wrote: %d\n", columnIndex/reductionFactor);
+
     return EXIT_NO_ERRORS;
 }
 
