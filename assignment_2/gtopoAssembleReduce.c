@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 
     int reductionFactor = atoi(argv[4]); //get the reduction factor.
     /* Call the writeGtopoFile function with the 3rd parameter being the reduction factor */
-    if ((returnVal = writeGtopoFile(argv[1], mainImage, reductionFactor)) != 0) return returnVal;
+    if ((returnVal = writeGtopoFile("nobackup/assemble_reduce", mainImage, reductionFactor)) != 0) return returnVal;
 
 	/* at this point, we are done and can exit with a success code */
     printf("REDUCED\n");
