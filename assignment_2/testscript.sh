@@ -149,7 +149,6 @@ fi
 echo -n "Test 13 - gtopoPrintLand: "
 RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
 VALUE=$?
-echo -e "${RESULT}, code=${VALUE}"
 if [ "$VALUE" == 0 ]
 then
     echo -e "PASSED, code=${VALUE}"
@@ -162,7 +161,6 @@ fi
 echo -n "Test 14 - gtopoReduceAssemble view: "
 RESULT=$(bash ./COMP1921A2_handout/gtopoReduce400.sh)
 VALUE=$?
-echo -e "${RESULT}, code=${VALUE}"
 if [ "$VALUE" == 0 ]
 then
     echo -e "PASSED, code=${VALUE}"
