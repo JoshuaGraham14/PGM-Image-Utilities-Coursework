@@ -147,7 +147,7 @@ else
 fi
 
 echo -n "Test 13 - gtopoPrintLand: "
-EXPECTED="PRINTED"
+EXPECTED=""
 RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo -9000 100 500)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
