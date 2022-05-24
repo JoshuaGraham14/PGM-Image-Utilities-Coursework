@@ -126,27 +126,32 @@ int printImageToFile(Image *imageToPrint, char *filename, char *sea, char *hill,
             if (imageToPrint->imageData[rowIndex][columnIndex] <= atoi(sea))
             {
                 fprintf(outputFile, "%c", ' ');
+                printf(" ");
             }
             // Low ground (sea < value <= hill) -> print '.'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(sea) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(hill))
             {
                 fprintf(outputFile, "%c", '.');
+                printf(".");
             }
             // High ground (hill < value <= mountain) -> print '^'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(hill) && imageToPrint->imageData[rowIndex][columnIndex] <= atoi(mountain))
             {
                 fprintf(outputFile, "%c", '^');
+                printf("^");
             }
             // Mountains (mountain < value) -> print 'A'
             else if (imageToPrint->imageData[rowIndex][columnIndex] > atoi(mountain))
             {
                 fprintf(outputFile, "%c", 'A');
+                printf("A");
             }
 
         } /*per pixel*/
 
         /* print newline at the end of every row */
         fprintf(outputFile, "%c", '\n');
+        printf("\n");
     } /*per row of pixels*/
 
     fclose(outputFile); //close the file
