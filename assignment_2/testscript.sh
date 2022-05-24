@@ -147,22 +147,8 @@ else
 fi
 
 echo -n "Test 13 - gtopoPrintLand: "
-EXPECTED=""
+EXPECTED=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
 RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
-VALUE=$?
-if [ "$EXPECTED" == "$RESULT" ]
-then
-    echo -e "PASSED, code=${VALUE}"
-else
-    echo -e "FAILED, code=${VALUE}"
-    echo -e "\t~ Expected: '${EXPECTED}'"
-    echo -e "\t~ Received: '${RESULT}'"
-fi
-
-echo -n "Test 14 - gtopoAssemble: "
-EXPECTED=""
-RESULT=$(./gtopoAssemble nobackup/assembleTest.dem 80 10 0 0 nobackup/gtopo_reduced_3_5 20 10 0 20 nobackup/gtopo_reduced_3_6 20 10 0 40 nobackup/gtopo_reduced_3_7 20 10 0 60 nobackup/gtopo_reduced_3_8 20 10)
-RESULT=$(./gtopoPrintLand nobackup/assembleTest.dem 80 10 nobackup/aa_printedAssembleTest -9000 100 500)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
 then
@@ -176,7 +162,7 @@ fi
 echo -n "Test 15 - gtopoReduceAssemble view: "
 EXPECTED=""
 bash ./COMP1921A2_handout/gtopoReduce400.sh
-RESULT=$(./COMP1921A2_handout/dems/gtopo30full_reduced_400.dem 108 54 nobackup/aa_printedGtopo30full_reduced_400 -9999 0 2000)
+RESULT=$(./COMP1921A2_handout/dems/gtopo30full_reduced_400.dem 108 54 nobackup/aa_printedGtopo30full_reduced_400 -9000 0 2000)
 VALUE=$?
 if [ "$EXPECTED" == "$RESULT" ]
 then
