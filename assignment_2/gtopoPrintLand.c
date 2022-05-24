@@ -79,8 +79,7 @@ int main(int argc, char **argv)
     /* print the data of imageToPrint to the file: */
     if ((returnVal = printImageToFile(imageToPrint, argv[4], argv[5], argv[6], argv[7])) != 0) return returnVal;
     
-    printf("PRINTED\n");
-	return EXIT_NO_ERRORS;
+    return EXIT_NO_ERRORS;
 } /* main() */
 
 
