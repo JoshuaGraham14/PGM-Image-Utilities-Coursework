@@ -147,28 +147,11 @@ else
 fi
 
 echo -n "Test 13 - gtopoPrintLand: "
-RESULT=$(./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
-VALUE=$?
-if [ "$VALUE" == "0" ]
-then
-    echo -e "PASSED, code=${VALUE}"
-else
-    echo -e "FAILED, code=${VALUE}"
-    echo -e "\t~ Expected: '${EXPECTED}'"
-    echo -e "\t~ Received: '${RESULT}'"
-fi
+./gtopoPrintLand /vol/scratch/SoC/COMP1921/COMP1921A2_handout/dems/gtopo30full_reduced_216.dem 200 100 nobackup/aa_printedGtopo30full_reduced_216 -9000 100 500)
+
 
 echo -n "Test 14 - gtopoReduceAssemble view: "
 bash ./COMP1921A2_handout/gtopoReduce400.sh
-VALUE=$?
-if [ "$VALUE" == "0" ]
-then
-    echo -e "PASSED, code=${VALUE}"
-else
-    echo -e "FAILED, code=${VALUE}"
-    echo -e "\t~ Expected: '${EXPECTED}'"
-    echo -e "\t~ Received: '${RESULT}'"
-fi
 
 #----------- Testing invalid command line arguments ----------#
 echo -n -e "* TESTING INVALID COMMMAND LINE ARGUMENTS *\n"
