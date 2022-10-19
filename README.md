@@ -4,7 +4,9 @@
 /* ID: 201496708                   */
 /* sc21jg@leeds.ac.uk              */
 
-PGM Utilities README file
+PGM Utilities README file.
+
+Tools for the manipulation of pgm images:
 
 
 INSTRUCTIONS
