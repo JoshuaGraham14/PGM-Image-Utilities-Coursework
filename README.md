@@ -1,15 +1,8 @@
 # pgm-utlities-coursework
 
-/* Joshua Graham                   */
-/* ID: 201496708                   */
-/* sc21jg@leeds.ac.uk              */
+**_Tools for the manipulation of pgm images_**
 
-PGM Utilities README file.
-
-Tools for the manipulation of pgm images:
-
-
-INSTRUCTIONS
+Instructions
 ------------
 
 To run:
@@ -25,7 +18,7 @@ To run:
     - pgmAssemble
 
 
-MODULES
+Modules
 -------
 
 - Module pgmEcho.c -
