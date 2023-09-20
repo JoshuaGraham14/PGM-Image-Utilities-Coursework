@@ -1,4 +1,4 @@
-# pgm-utlities-coursework
+# Pgm Utlities Tool
 
 **_Tools for the manipulation of pgm images_**
 
